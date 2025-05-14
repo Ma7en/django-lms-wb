@@ -45,7 +45,7 @@ git branch -M main
 ```
 
 ```
-git remote add origin git@github.com:Ma7en/
+git remote add origin git@github.com:Ma7en/django-lms-wb
 ```
 
 ```
@@ -55,7 +55,7 @@ git push -u origin main
 `Step 3` : Clone.
 
 ```
-git clone git@github.com:Ma7en/
+git clone git@github.com:Ma7en/django-lms-wb
 ```
 
 `Step 4` : Pull.
@@ -404,7 +404,7 @@ Technologies used in the project:
 -   Django Framework
 -   ***
 
-<p align="left"><img src="https://profile-counter.glitch.me/iti-final-project-babackend/count.svg" alt="desphixs" /></p>
+<p align="left"><img src="https://profile-counter.glitch.me/django-lms-wb/count.svg" alt="desphixs" /></p>
 
 ---
 
