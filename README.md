@@ -434,4 +434,3 @@ Technologies used in the project:
         </td>
     </tr>
 </table>
-```
