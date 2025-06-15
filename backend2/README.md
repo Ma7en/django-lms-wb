@@ -1,4 +1,4 @@
-<h1 align="center" id="title"></h1>
+<h1 align="center" id="title"> Riyadah Academy </h1>
 
 <h2 id="description">Description</h2>
 
@@ -41,11 +41,11 @@ git commit -m "first commit"
 ```
 
 ```
-git branch -M main
+git branch -m main
 ```
 
 ```
-git remote add origin git@github.com:Ma7en/django-lms-wb
+git remote add origin git@github.com:Ma7en/django-v-riyadahacademy-1
 ```
 
 ```
@@ -55,7 +55,7 @@ git push -u origin main
 `Step 3` : Clone.
 
 ```
-git clone git@github.com:Ma7en/django-lms-wb
+git clone git@github.com:Ma7en/django-v-riyadahacademy-1
 ```
 
 `Step 4` : Pull.
@@ -120,6 +120,26 @@ source venv/bin/activate
 pip install django
 ```
 
+```
+pip install --upgrade pip
+```
+
+```
+pip install pillow
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 `Step 3` : Install requiremental Packages.
 
 ```
@@ -133,11 +153,11 @@ pip install -r requirements.txt
 `Step 4` : Create Project.
 
 ```
-django-admin startproject lmsweb
+django-admin startproject riyadahacademy .
 ```
 
 ```
-cd lmsweb
+cd riyadahacademy
 ```
 
 `Step 5` : Create Apps.
@@ -161,15 +181,15 @@ CREATE USER django_proj WITH PASSWORD 'django@@1';
 ```
 
 ```
-create database lmsweb;
+create database riyadahacademy;
 ```
 
 ```
-\c lmsweb;
+\c riyadahacademy;
 ```
 
 ```
-GRANT ALL PRIVILEGES ON DATABASE lmsweb TO django_proj;
+GRANT ALL PRIVILEGES ON DATABASE riyadahacademy TO django_proj;
 ```
 
 ```
@@ -201,15 +221,15 @@ python manage.py createsuperuser
 ```
 
 ```
-lmsweb_proj@gmail.com
+riyadahacademy_proj@gmail.com
 ```
 
 ```
-lmsweb_proj
+riyadahacademy_proj
 ```
 
 ```
-lmsweb@@1
+riyadahacademy@@1
 ```
 
 `Step 9` : Run Server.
@@ -221,11 +241,11 @@ python3 manage.py runserver
 `Step 10` : Info Admin.
 
 ```
-lmsweb_proj@gmail.com
+riyadahacademy_proj@gmail.com
 ```
 
 ```
-lmsweb@@1
+riyadahacademy@@1
 ```
 
 `Step 11` : Info Server.
@@ -256,6 +276,51 @@ wvenv\Scripts\activate
 pip install django
 ```
 
+```
+python.exe -m pip install --upgrade pip
+```
+
+```
+pip install djangorestframework
+```
+
+```
+pip install django-cors-headers
+```
+
+```
+pip install pillow
+```
+
+```
+pip install drf-yasg
+```
+
+```
+pip install djoser
+```
+
+```
+pip install django-filter
+```
+
+```
+pip install shortuuid
+```
+
+```
+pip install drf-nested-routers
+```
+
+```
+pip install reportlab
+```
+
+```
+
+```
+
+
 `Step 3` : Install requiremental Packages.
 
 ```
@@ -269,11 +334,11 @@ pip install -r wrequirements.txt
 `Step 4` : Create Project.
 
 ```
-django-admin startproject lmsweb
+django-admin startproject riyadahacademy
 ```
 
 ```
-cd lmsweb
+cd riyadahacademy
 ```
 
 `Step 5` : Create Apps.
@@ -297,15 +362,15 @@ CREATE USER django_proj WITH PASSWORD 'django@@1';
 ```
 
 ```
-create database lmsweb;
+create database riyadahacademy;
 ```
 
 ```
-\c lmsweb
+\c riyadahacademy
 ```
 
 ```
-GRANT ALL PRIVILEGES ON DATABASE lmsweb TO django_proj;
+GRANT ALL PRIVILEGES ON DATABASE riyadahacademy TO django_proj;
 ```
 
 ```
@@ -337,15 +402,15 @@ python manage.py createsuperuser
 ```
 
 ```
-lmsweb_proj@gmail.com
+riyadahacademy_proj@gmail.com
 ```
 
 ```
-lmsweb_proj
+riyadahacademy_proj
 ```
 
 ```
-lmsweb@@1
+riyadahacademy@@1
 ```
 
 `Step 9` : Run Server.
@@ -357,21 +422,17 @@ python manage.py runserver
 `Step 10` : Info Admin.
 
 ```
-lmsweb_proj@gmail.com
+riyadahacademy_proj@gmail.com
 ```
 
 ```
-lmsweb@@1
+riyadahacademy@@1
 ```
 
-`Step 11` : Run Server SMTP.
+`Step 11` : Info Server.
 
 ```
-https://github.com/mailhog/MailHog/releases
-```
-
-```
-http://localhost:8025
+m9ee9m+4@gmail.com
 ```
 
 ---
@@ -379,24 +440,9 @@ http://localhost:8025
 ## 🧐 Features :
 
 <ul>
-<li>
-    <b></b>
-</li>
-<li>
-    <b></b>
-</li>
-<li>
-    <b></b>
-</li>
-<li>
-    <b></b>
-</li>
-<li>
-    <b></b>
-</li>
-<li>
-    <b></b>
-</li>
+    <li>
+        <b>Riyadah Academy</b>
+    </li> 
 </ul>
 
 ---
@@ -406,9 +452,11 @@ http://localhost:8025
 Technologies used in the project:
 
 -   Django Framework
--   ***
+-   SQLite
 
-<p align="left"><img src="https://profile-counter.glitch.me/django-lms-wb/count.svg" alt="desphixs" /></p>
+---
+
+<p align="left"><img src="https://profile-counter.glitch.me/django-v-riyadahacademy-1/count.svg" alt="desphixs" /></p>
 
 ---
 
@@ -420,10 +468,7 @@ Technologies used in the project:
             <img src="https://avatars.githubusercontent.com/u/91129862?v=4"></img>
         </td>
         <td>
-            <img src="https://avatars.githubusercontent.com/u/82242327?v=4"></img>
-        </td>
-        <td>
-            <img src="https://avatars.githubusercontent.com/u/167586570?v=4"></img>
+            <img src="https://avatars.githubusercontent.com/u/135178714?v=4"></img>
         </td>
     </tr>
     <tr>
@@ -431,10 +476,7 @@ Technologies used in the project:
             <a href="https://github.com/Ma7en">Mazen Saad</a>
         </td>
         <td>
-            <a href="https://github.com/Ahmmedmohmed">Ahmed Mohmed</a>
-        </td>
-        <td>
-            <a href="https://github.com/gihannazmy">Gihan Elsayed</a>
+            <a href="https://github.com/shemo6870">Mahmoud Masry</a>
         </td>
     </tr>
 </table>
