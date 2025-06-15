@@ -831,6 +831,113 @@ class FamousSayingsSerializer(serializers.ModelSerializer):
 
 # ******************************************************************************
 # ==============================================================================
+# ***  Books  *** #
+class BookSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+
+    class Meta:
+        model = models.Book
+        fields = "__all__"
+       
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+ 
+
+
+class CategoryBookSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+
+    books = BookSerializer(
+        many=True, 
+        read_only=True, 
+        source='book_category_book'  # يستخدم related_name الموجود في الموديل
+    )
+
+    class Meta:
+        model = models.CategoryBook
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Proofreading Service   *** #
+class ProofreadingServiceSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.ProofreadingService
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Powerpoint   *** #
+class PowerpointSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.Powerpoint
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+class StudentPowerpointEnrollmentSerializer(serializers.ModelSerializer):
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    powerpoint = serializers.PrimaryKeyRelatedField(queryset=models.Powerpoint.objects.all()) 
+  
+    slug = serializers.SlugField(read_only=True)
+  
+    class Meta:
+        model = models.StudentPowerpointEnrollment
+        fields = '__all__'
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        representation['powerpoint'] = PowerpointSerializer(instance.powerpoint).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
 # *** ContactUs *** #
 class ContactUsUserSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
@@ -890,6 +997,8 @@ class NotificationBlogSerializer(serializers.ModelSerializer):
 
 
 class ReplyBlogSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
     likes_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -898,9 +1007,15 @@ class ReplyBlogSerializer(serializers.ModelSerializer):
 
     def get_likes_count(self, obj):
         return obj.likes.count()
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
 
 
 class CommentBlogSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     likes_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -909,9 +1024,15 @@ class CommentBlogSerializer(serializers.ModelSerializer):
     
     def get_likes_count(self, obj):
         return obj.likes.count()
-
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
 
 class BlogSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
     likes_count = serializers.SerializerMethodField(read_only=True)
     slug = serializers.SlugField(read_only=True)
     view = serializers.IntegerField(read_only=True)
@@ -931,9 +1052,16 @@ class BlogSerializer(serializers.ModelSerializer):
     
     def get_teach_list(self, obj):
         return obj.teach_list()
-    
+       
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+ 
 
 class CategoryBlogSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
     slug = serializers.SlugField(read_only=True)
     view = serializers.IntegerField(read_only=True)
     likes_count = serializers.SerializerMethodField(read_only=True)
@@ -954,7 +1082,11 @@ class CategoryBlogSerializer(serializers.ModelSerializer):
 
     def get_total_blog(self, obj):
         return obj.total_blog()
-
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
 
 
 

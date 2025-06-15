@@ -39,7 +39,7 @@ class CategorySection(models.Model):
     )
     
     image = models.ImageField(
-        upload_to="categorysection", 
+        upload_to="categorysection/images", 
         null=True,
         blank=True,
     )
@@ -1100,6 +1100,299 @@ class FamousSayings(models.Model):
         if self.slug == "" or self.slug == None:
             self.slug = slugify(self.title)[:50] + "-" + shortuuid.uuid()[:2]
         super(FamousSayings, self).save(*args, **kwargs)
+
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Books  *** #
+class CategoryBook(models.Model):
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='category_book_user',
+    )
+
+    title = models.CharField(max_length=1_000)
+    description = models.TextField(
+        max_length=10_000, 
+        null=True, 
+        blank=True,
+    )
+    
+    image = models.ImageField(
+        upload_to="categorybook/images", 
+        null=True,
+        blank=True,
+    )
+    image_url = models.URLField(null=True, blank=True)
+    
+    is_visible = models.BooleanField(default=True)
+
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    def total_book(self):
+        return Book.objects.filter(category=self).count()
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural="6-1] Categories Books"
+
+    def __str__(self) :
+        return f"{self.id}): ({self.title}) - [{self.user}] - ({self.is_visible})"
+    
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug == None:
+            self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
+        super(CategoryBook, self).save(*args, **kwargs)
+    
+
+
+class Book(models.Model):
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='book_user',
+    )
+    category = models.ForeignKey(
+        CategoryBook, 
+        on_delete=models.CASCADE, 
+        related_name='book_category_book',
+        null=True,
+        blank=True,
+    )
+
+    title = models.CharField(max_length=1_000, null=True, blank=True)
+    description = models.TextField(
+        max_length=10_000, 
+        null=True, 
+        blank=True,
+    )
+
+    image = models.ImageField(
+        upload_to="books/images", 
+        null=True,
+        blank=True,
+    )
+    image_url = models.URLField(null=True, blank=True)
+
+    file_word = models.FileField(upload_to="books/files/word", null=True, blank=True)
+    file_word_url = models.URLField(max_length=10_000, null=True, blank=True)
+
+    file_pdf = models.FileField(upload_to="books/files/pdf", null=True, blank=True)
+    file_pdf_url = models.URLField(max_length=10_000, null=True, blank=True)
+
+
+    is_visible = models.BooleanField(default=True)
+
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural="6-2] Books"
+
+    def __str__(self):
+        return f"{self.id}): ({self.title}) - [{self.user}] - ({self.is_visible})"
+    
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug == None:
+            self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
+        super(Book, self).save(*args, **kwargs)
+
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Proofreading Service   *** #
+class ProofreadingService(models.Model):
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='proofreading_service_user',
+    )
+    
+    STATUS_CHOICES = (
+        ("new", "جديد"),
+        ("under-processing", "قيد المعالجة"),
+        ("reply", "تم الرد"),
+    )
+    status = models.CharField(
+        max_length=1_000, 
+        choices=STATUS_CHOICES, 
+        default="new",
+    )
+
+    PROOFREADING_CHOICES = (
+        ("total_formation", "تشكيل كلي"),
+        ("end_words", "اواخر الكلمات"), 
+    )
+    type_proofreading = models.CharField(
+        max_length=1_000, 
+        choices=PROOFREADING_CHOICES, 
+        default="total_formation",
+    )
+
+    number_page = models.PositiveIntegerField(default=0)
+    receipt_period = models.PositiveIntegerField(default=0)
+
+    # EG 
+    # phone_number = models.CharField(
+    #     max_length=11,
+    #     validators=[
+    #         RegexValidator(
+    #             regex="^01[0|1|2|5][0-9]{8}$",
+    #             message="Phone must be start 010, 011, 012, 015 and all number contains 11 digits",
+    #         )
+    #     ],
+    #     null=True,
+    #     blank=True,
+    # )
+    # SR
+    phone_number = models.CharField(
+        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+        validators=[
+            RegexValidator(
+                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+            )
+        ],
+        # verbose_name="رقم الجوال السعودي",
+        null=True, 
+        blank=True,
+    )
+
+    # title = models.CharField(max_length=1_000)
+    state = models.CharField(max_length=1_000)
+    field_study = models.CharField(max_length=10_000)
+ 
+    
+    is_visible = models.BooleanField(default=True)
+
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+ 
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural="7-1. Proofreading Services"
+
+    def __str__(self) :
+        return f"{self.id}): [{self.user}] - ({self.is_visible})"
+    
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug == None:
+            self.slug = slugify(self.type_proofreading) + "-" + shortuuid.uuid()[:2]
+        super(ProofreadingService, self).save(*args, **kwargs)
+    
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Powerpoint   *** #
+class Powerpoint(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='powerpoint_user',
+    )
+
+    title = models.CharField(max_length=1_000)
+    description = models.TextField(max_length=10_000, null=True, blank=True)
+    image = models.ImageField(upload_to="powerpoint/images", null=True, blank=True)
+    image_url = models.URLField(null=True, blank=True)
+
+    file = models.FileField(upload_to="powerpoint/files", null=True, blank=True)
+    file_url = models.URLField(max_length=10_000, null=True, blank=True)
+
+    is_visible = models.BooleanField(default=True)
+
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = "8-1. Powerpoint"
+
+    def __str__(self):
+        return f"{self.id}): ({self.title}) - [{self.user}] - ({self.is_visible})"
+
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug is None:
+            self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
+        super(Powerpoint, self).save(*args, **kwargs)
+
+
+
+class StudentPowerpointEnrollment(models.Model):
+    student = models.ForeignKey(
+        User,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='student_Powerpoint_enrollment_user',
+    )
+    powerpoint = models.ForeignKey(
+        Powerpoint,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='student_powerpoint_enrollment_powerpoint',
+    )
+
+    price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        null=True,
+        blank=True,
+    )
+
+    enrolled_time = models.DateTimeField(auto_now_add=True)
+
+    payment_id = models.CharField(max_length=1_000, null=True, blank=True)
+    
+    completed = models.BooleanField(default=False)  # إضافة حقل للإكمال
+    completion_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)  # تاريخ الإكمال
+    certificate_id = models.UUIDField(default=uuid.uuid4, editable=False, null=True, blank=True) # unique=True
+
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:        
+        ordering = ['-created_at']
+        verbose_name_plural="8-2. Student Powerpoint Enrollment"
+
+    def __str__(self) :
+        return f"{self.id}): ({self.powerpoint}) - ({self.student})"
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***     *** #
+
 
 
 

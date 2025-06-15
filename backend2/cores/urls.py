@@ -903,6 +903,164 @@ urlpatterns = [
         name='famous-sayings-pk',
     ),
 
+ 
+    
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** 4) Books *** #
+    # (List) -book
+    path(
+        'category-book/list/', 
+        views.CategoryBookList.as_view(), 
+        name='category-book-list',
+    ),
+    # (List App)
+    path(
+        'category-book/list-app/', 
+        views.CategoryBookListApp.as_view(), 
+        name='category-book-list-app',
+    ),
+    # (List Admin)
+    path(
+        'category-book/list-admin/', 
+        views.CategoryBookListAdmin.as_view(), 
+        name='category-book-list-admin',
+    ),
+    # (List Result)
+    path(
+        'category-book/result/',  #?result=9
+        views.CategoryBookResultList.as_view(), 
+        name='category-book-result-list',
+    ),
+    # (PK)
+    path(
+        'category-book/<int:pk>/', 
+        views.CategoryBookPK.as_view(), 
+        name='category-book-pk',
+    ),
+   
+    
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # (Book)
+    # (List)
+    path(
+        'book/list/', 
+        views.BlogListView.as_view(), 
+        name='book-list',
+    ),
+    # (List App)
+    path(
+        'book/list-app/', 
+        views.BlogListApp.as_view(), 
+        name='book-list-app',
+    ),
+    # (List Admin)
+    path(
+        'book/list-admin/', 
+        views.BlogListAdmin.as_view(), 
+        name='book-list-admin',
+    ),
+    # (List Result)
+    path(
+        'book/result/',  #?result=9
+        views.BlogResultList.as_view(), 
+        name='book-result-list',
+    ),
+    # (PK)
+    path(
+        'book/<int:pk>/', 
+        views.BlogPkAPIView.as_view(), 
+        name='book-pk',
+    ),
+
+
+    
+ 
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** 7) Proofreading Service *** #
+    # (List) 
+    path(
+        'proofreading-service/list/', 
+        views.ProofreadingServiceList.as_view(), 
+        name='proofreading-service-list',
+    ),
+    # (List App)
+    path(
+        'proofreading-service/list-app/', 
+        views.ProofreadingServiceListApp.as_view(), 
+        name='proofreading-service-list-app',
+    ),
+    # (List Admin)
+    path(
+        'proofreading-service/list-admin/', 
+        views.ProofreadingServiceListAdmin.as_view(), 
+        name='proofreading-service-list-admin',
+    ),
+    # (List Result)
+    path(
+        'proofreading-service/result/',  #?result=9
+        views.ProofreadingServiceResultList.as_view(), 
+        name='proofreading-service-result-list',
+    ),
+    # (PK)
+    path(
+        'proofreading-service/<int:pk>/', 
+        views.ProofreadingServicePK.as_view(), 
+        name='proofreading-service-pk',
+    ),
+
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** 8) Powerpoint*** #
+    # (List) 
+    path(
+        'powerpoint/list/', 
+        views.PowerpointList.as_view(), 
+        name='powerpoint-list',
+    ),
+    # (List App)
+    path(
+        'powerpoint/list-app/', 
+        views.PowerpointListApp.as_view(), 
+        name='powerpoint-list-app',
+    ),
+    # (List Admin)
+    path(
+        'powerpoint/list-admin/', 
+        views.PowerpointListAdmin.as_view(), 
+        name='powerpoint-list-admin',
+    ),
+    # (List Result)
+    path(
+        'powerpoint/result/',  #?result=9
+        views.PowerpointResultList.as_view(), 
+        name='powerpoint-result-list',
+    ),
+    # (PK)
+    path(
+        'powerpoint/<int:pk>/', 
+        views.PowerpointPk.as_view(), 
+        name='powerpoint-pk',
+    ),
+
 
     path(
         '---------------------------------------------------------------------------------------------------------------/', 
