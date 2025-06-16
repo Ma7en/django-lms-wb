@@ -14,6 +14,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 # 
 from accounts.models import *
+# from backend2.accounts.models import *
 
 
 
@@ -219,8 +220,14 @@ class Course(models.Model):
     requirements = models.JSONField(default=list, null=True, blank=True)
     target_audience = models.JSONField(default=list, null=True, blank=True)
 
-    is_visible = models.BooleanField(default=True)
+    # 
+    is_live = models.BooleanField(default=False)
+    start_data = models.DateTimeField(auto_now=True) 
+    end_data = models.DateTimeField(auto_now=True) 
+    time_at = models.CharField(max_length=1_000)
 
+
+    is_visible = models.BooleanField(default=True)
  
     slug = models.SlugField(unique=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -361,6 +368,11 @@ class LessonInCourse(models.Model):
     # For Files Lessons
     uploaded_files  = models.JSONField(default=list)
 
+    # Answer form
+    answer_form = models.FileField(upload_to="course/lesson/answer", null=True, blank=True)
+    answer_form_url = models.URLField(max_length=10_000, null=True, blank=True)
+
+
     is_visible = models.BooleanField(default=True) #
     is_free = models.BooleanField(default=False)
 
@@ -376,6 +388,55 @@ class LessonInCourse(models.Model):
 
     def __str__(self):
         return f"{self.id}): [{self.section.course.title}] - [{self.section.title}] - ({self.title}) - ({self.is_visible})"
+
+
+
+class StudentAnswerInCourse(models.Model):
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='student_answer_in_course_student',
+    )
+    lesson = models.ForeignKey(
+        LessonInCourse,
+        on_delete=models.CASCADE,
+        related_name='student_answer_in_course_lesson',
+    )
+    
+    STATUS_CHOICES = (
+        ("new", "جديد"),
+        ("under-processing", "قيد المعالجة"),
+        ("reply", "تم الرد"),
+    )
+    status = models.CharField(
+        max_length=1_000, 
+        choices=STATUS_CHOICES, 
+        default="new",
+    )
+    
+    # Answer form
+    answer = models.FileField(upload_to="course/lesson/studentanswer", null=True, blank=True)
+    answer_url = models.URLField(max_length=10_000, null=True, blank=True) 
+
+    is_visible = models.BooleanField(default=True)
+ 
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = "1-7. Courses"
+
+    def __str__(self):
+        return f"{self.id}): [{self.student}] - ({self.is_visible})"
+
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug is None:
+            self.slug = slugify(self.created_at) + "-" + shortuuid.uuid()[:2]
+        super(StudentAnswerInCourse, self).save(*args, **kwargs)
+
 
 
 
@@ -457,6 +518,12 @@ class QuestionInCourse(models.Model):
 
 
 
+# ******************************************************************************
+# ==============================================================================
+# ***   *** #
+
+ 
+
 
 
 
@@ -492,6 +559,45 @@ class CouponCourse(models.Model):
 
 
 
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Packages Course  *** #
+class PackageCourse(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='package_course_user',
+    )
+
+
+    title = models.CharField(max_length=1_000)
+    description = models.TextField(max_length=10_000, null=True, blank=True)
+
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    courses = models.JSONField(default=list)    
+
+    is_visible = models.BooleanField(default=True)
+ 
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = "1-9. Courses"
+
+    def __str__(self):
+        return f"{self.id}): ({self.title})  - [{self.user}] - ({self.is_visible})"
+
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug is None:
+            self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
+        super(PackageCourse, self).save(*args, **kwargs)
 
 
 # ******************************************************************************
@@ -1315,11 +1421,22 @@ class Powerpoint(models.Model):
         related_name='powerpoint_user',
     )
 
+    # 
     title = models.CharField(max_length=1_000)
     description = models.TextField(max_length=10_000, null=True, blank=True)
     image = models.ImageField(upload_to="powerpoint/images", null=True, blank=True)
     image_url = models.URLField(null=True, blank=True)
 
+    # 
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    # 
+    rating = models.DecimalField(max_digits=3, decimal_places=1, default=0)
+    reviews_count = models.PositiveIntegerField(default=0)
+    students_count = models.PositiveIntegerField(default=0)
+
+    # 
     file = models.FileField(upload_to="powerpoint/files", null=True, blank=True)
     file_url = models.URLField(max_length=10_000, null=True, blank=True)
 
@@ -1329,6 +1446,19 @@ class Powerpoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    def total_enrolled_students(self):
+        return StudentPowerpointEnrollment.objects.filter(powerpoint=self).count()
+
+
+    # def course_rating(self):
+    #     course_rating = CourseRating.objects.filter(course=self).aggregate(avg_rating=models.Avg('rating'))
+    #     return course_rating['avg_rating']
+   
+    
+    def price_after_discount(self):
+        return self.price - self.discount
+    
+
     class Meta:
         ordering = ['-created_at']
         verbose_name_plural = "8-1. Powerpoint"

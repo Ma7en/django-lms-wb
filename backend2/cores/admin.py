@@ -127,6 +127,32 @@ admin.site.register(models.FamousSayings)
 
 # ******************************************************************************
 # ==============================================================================
+# *** Books *** #
+admin.site.register(models.CategoryBook)
+admin.site.register(models.Book)
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** ProofreadingService *** #
+admin.site.register(models.ProofreadingService)
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Powerpoint *** #
+admin.site.register(models.Powerpoint)
+admin.site.register(models.StudentPowerpointEnrollment)
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
 # *** Blogs *** #
 admin.site.register(models.CategoryBlog)
 admin.site.register(models.Blog)

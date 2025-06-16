@@ -52,6 +52,7 @@ from rest_framework.permissions import (
 
 # 
 from accounts.serializers import *
+# from backend2.accounts.serializers import *
 
 
 
@@ -644,6 +645,32 @@ class LessonInCourseCreateView(generics.CreateAPIView):
 
 # ******************************************************************************
 # ==============================================================================
+# *** Student Answer In Course *** #
+class StudentAnswerInCourseList(generics.ListCreateAPIView):
+    queryset = models.StudentAnswerInCourse.objects.all()
+    serializer_class = serializers.StudentAnswerInCourseSerializer
+
+
+class StudentAnswerInCoursePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.StudentAnswerInCourse.objects.all()
+    serializer_class = serializers.StudentAnswerInCourseSerializer
+
+
+
+class FetchStudentAnswerInCourseStatus(APIView): 
+
+    def get(self, request, student_id, lesson_id):
+        student = models.User.objects.filter(id=student_id).first()
+        lesson = models.LessonInCourse.objects.filter(id=lesson_id).first()
+        enroll_status = models.StudentAnswerInCourse.objects.filter(lesson=lesson, student=student).exists()
+        return Response({'bool': enroll_status})
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
 # *** File In Course *** #
 class FileInCourseList(generics.ListCreateAPIView):
     queryset = models.FileInCourse.objects.all()
@@ -798,6 +825,57 @@ class QuestionCreateView(generics.CreateAPIView):
 # class QuestionViewSet(viewsets.ModelViewSet):
 #     queryset = models.Question.objects.all()
 #     serializer_class = serializer.QuestionSerializer
+
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Packages Course *** #
+class PackageCourseList(generics.ListCreateAPIView):
+    queryset = models.PackageCourse.objects.all()
+    serializer_class = serializers.PackageCourseSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+
+
+class PackageCourseListApp(generics.ListCreateAPIView):
+    queryset = models.PackageCourse.objects.all()
+    serializer_class = serializers.PackageCourseSerializer
+    permission_classes = [AllowAny]
+
+
+class PackageCourseListAdmin(generics.ListCreateAPIView):
+    queryset = models.PackageCourse.objects.all()
+    serializer_class = serializers.PackageCourseSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class PackageCourseResultList(generics.ListCreateAPIView):
+    queryset = models.PackageCourse.objects.all()
+    serializer_class = serializers.PackageCourseSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+
+
+
+class PackageCoursePk(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.PackageCourse.objects.all()
+    serializer_class = serializers.PackageCourseSerializer
 
 
 
@@ -2629,7 +2707,7 @@ class ProofreadingServicePK(generics.RetrieveUpdateDestroyAPIView):
 
 # ******************************************************************************
 # ==============================================================================
-# ***   Powerpoint  ***
+# ***   Powerpoint   ***
 class PowerpointList(generics.ListCreateAPIView):
     queryset = models.Powerpoint.objects.all()
     serializer_class = serializers.PowerpointSerializer
@@ -2676,113 +2754,113 @@ class PowerpointPk(generics.RetrieveUpdateDestroyAPIView):
 
 # ******************************************************************************
 # ==============================================================================
-# *** Student Enroll Course *** #
-# class StudentEnrollCourseList(generics.ListCreateAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     pagination_class = StandardResultSetPagination
-#     # permission_classes = [IsAuthenticated]
+# *** Student Enroll Powerpoint *** #
+class StudentEnrollPowerpointList(generics.ListCreateAPIView):
+    queryset = models.StudentPowerpointEnrollment.objects.all()
+    serializer_class = serializers.StudentPowerpointEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
 
 
-# class StudentEnrollCoursePK(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     # permission_classes = [IsAuthenticated]
+class StudentEnrollPowerpointPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.StudentPowerpointEnrollment.objects.all()
+    serializer_class = serializers.StudentPowerpointEnrollmentSerializer
+    # permission_classes = [IsAuthenticated]
 
 
-# class EnrolledStuentPK(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
+class EnrolledStuentPowerpointPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.StudentPowerpointEnrollment.objects.all()
+    serializer_class = serializers.StudentPowerpointEnrollmentSerializer
 
 
-# def fetch_enroll_status(request,student_id,course_id):
-#     student = models.User.objects.filter(id=student_id).first()
-#     course = models.Course.objects.filter(id=course_id).first()
-#     enroll_status = models.StudentCourseEnrollment.objects.filter(course=course,student=student).count()
+def fetch_enroll_status(request,student_id,powerpoint_id):
+    student = models.User.objects.filter(id=student_id).first()
+    powerpoint = models.Powerpoint.objects.filter(id=powerpoint_id).first()
+    enroll_status = models.StudentPowerpointEnrollment.objects.filter(powerpoint=powerpoint,student=student).count()
 
-#     if enroll_status:
-#         return JsonResponse({'bool':True})
-#     else:
-#         return JsonResponse({'bool':False})
+    if enroll_status:
+        return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})
 
-# # class FetchEnrollStatusView(generics.RetrieveAPIView):
-# class FetchEnrollStatusView(APIView):
-#     # pagination_class = StandardResultSetPagination
-#     # permission_classes = [IsAuthenticated]
+# class FetchEnrollStatusView(generics.RetrieveAPIView):
+class FetchEnrollStatusPowerpointView(APIView):
+    # pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
 
-#     def get(self, request, student_id, course_id):
-#         student = models.User.objects.filter(id=student_id).first()
-#         course = models.Course.objects.filter(id=course_id).first()
-#         enroll_status = models.StudentCourseEnrollment.objects.filter(course=course, student=student).exists()
-#         return Response({'bool': enroll_status})
+    def get(self, request, student_id, powerpoint_id):
+        student = models.User.objects.filter(id=student_id).first()
+        powerpoint = models.Powerpoint.objects.filter(id=powerpoint_id).first()
+        enroll_status = models.StudentPowerpointEnrollment.objects.filter(powerpoint=powerpoint, student=student).exists()
+        return Response({'bool': enroll_status})
 
 
-# class EnrolledStuentCourseList(generics.ListCreateAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     pagination_class = StandardResultSetPagination
-#     permission_classes = [AllowAny]
-#     # permission_classes = [IsAuthenticated]
+class EnrolledStuentPowerpointList(generics.ListCreateAPIView):
+    queryset = models.StudentPowerpointEnrollment.objects.all()
+    serializer_class = serializers.StudentPowerpointEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = ""
-#         if 'course_id' in self.kwargs:
-#             course_id = self.kwargs['course_id']
-#             # course = models.Course.objects.get(pk=course_id)
-#             return models.StudentCourseEnrollment.objects.filter(course=course_id)
+    def get_queryset(self):
+        qs = ""
+        if 'powerpoint_id' in self.kwargs:
+            powerpoint_id = self.kwargs['powerpoint_id']
+            # course = models.Course.objects.get(pk=powerpoint_id)
+            return models.StudentCourseEnrollment.objects.filter(powerpoint=powerpoint_id)
         
 
-# class EnrolledAllStuentList(generics.ListCreateAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     pagination_class = StandardResultSetPagination
-#     permission_classes = [AllowAny]
-#     # permission_classes = [IsAuthenticated]
+class EnrolledAllStuentPowerpointList(generics.ListCreateAPIView):
+    queryset = models.StudentPowerpointEnrollment.objects.all()
+    serializer_class = serializers.StudentPowerpointEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = ""   
-#         if 'teacher_id' in self.kwargs:
-#             teacher_id = self.kwargs['teacher_id']
-#             teacher = models.User.objects.get(pk=teacher_id)
-#             return models.StudentCourseEnrollment.objects.filter(course__teacher=teacher).distinct()
+    def get_queryset(self):
+        qs = ""   
+        if 'teacher_id' in self.kwargs:
+            teacher_id = self.kwargs['teacher_id']
+            teacher = models.User.objects.get(pk=teacher_id)
+            return models.StudentPowerpointEnrollment.objects.filter(powerpoint__teacher=teacher).distinct()
        
 
-# class EnrolledStuentPkList(generics.ListCreateAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     pagination_class = StandardResultSetPagination
-#     permission_classes = [AllowAny]
-#     # permission_classes = [IsAuthenticated]
+class EnrolledStuentPowerpointPkList(generics.ListCreateAPIView):
+    queryset = models.StudentPowerpointEnrollment.objects.all()
+    serializer_class = serializers.StudentPowerpointEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = ""
-#         if 'student_id' in self.kwargs:
-#             student_id = self.kwargs['student_id']
-#             student = models.User.objects.get(pk=student_id)
-#             return models.StudentCourseEnrollment.objects.filter(student=student).distinct()
+    def get_queryset(self):
+        qs = ""
+        if 'student_id' in self.kwargs:
+            student_id = self.kwargs['student_id']
+            student = models.User.objects.get(pk=student_id)
+            return models.StudentPowerpointEnrollment.objects.filter(student=student).distinct()
         
 
-# class EnrolledRecomemdedStuentList(generics.ListCreateAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     pagination_class = StandardResultSetPagination
-#     permission_classes = [AllowAny]
-#     # permission_classes = [IsAuthenticated]
+class EnrolledRecomemdedStuentPowerpointList(generics.ListCreateAPIView):
+    queryset = models.StudentPowerpointEnrollment.objects.all()
+    serializer_class = serializers.StudentPowerpointEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = ""
+    def get_queryset(self):
+        qs = ""
 
-#         if 'studentId' in self.kwargs:
-#             student_id = self.kwargs['student_id']
-#             student = models.User.objects.get(pk=student_id)
-#             print(student.interseted_categories)
-#             queries = [Q(techs__iendwith=value) for value in student.interseted_categories]
-#             query = queries.pop()
-#             for item in queries:
-#                 query |= item
-#             qs = models.Course.objects.filter(query)
+        if 'studentId' in self.kwargs:
+            student_id = self.kwargs['student_id']
+            student = models.User.objects.get(pk=student_id)
+            print(student.interseted_categories)
+            queries = [Q(techs__iendwith=value) for value in student.interseted_categories]
+            query = queries.pop()
+            for item in queries:
+                query |= item
+            qs = models.Powerpoint.objects.filter(query)
 
-#         return qs
+        return qs
 
 
 

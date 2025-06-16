@@ -12,6 +12,9 @@ from rest_framework import serializers
 from accounts.serializers import *
 from accounts.models import *
 
+# from backend2.accounts.serializers import *
+# from backend2.accounts.models import *
+
 
 
 # 
@@ -90,8 +93,26 @@ class FileInCourseSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
+class StudentAnswerInCourseSerializer(serializers.ModelSerializer):
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+
+    class Meta:
+        model = models.StudentAnswerInCourse
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
 class LessonInCourseSerializer(serializers.ModelSerializer):
     files = FileInCourseSerializer(many=True, read_only=True)
+    studentanswers = StudentAnswerInCourseSerializer(many=True, read_only=True)
     # questions = QuestionInCourseSerializer(many=True, read_only=True)
 
     slug = serializers.SlugField(read_only=True)
@@ -221,6 +242,25 @@ class CourseSerializer(serializers.ModelSerializer):
     #             self.Meta.depth = 2
 
 
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Packages Course *** #
+class PackageCourseSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+    
+    class Meta:
+        model = models.PackageCourse
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
 
 
 

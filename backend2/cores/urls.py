@@ -327,6 +327,50 @@ urlpatterns = [
         name='lesson-create',
     ),
 
+   
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ), 
+    # Student Answer In Course studentanswer
+    # ()
+    path(
+        'courses/sections/lessons/student-answer/list/',
+        views.StudentAnswerInCourseList.as_view(), 
+        name='student-in-answer-list',
+    ),
+    # ()
+    path(
+        'courses/sections/lessons/student-answer/<int:pk>/',
+        views.StudentAnswerInCoursePK.as_view(), 
+        name='student-in-answer-pk',
+    ),
+    # ()
+    path(
+        'fetch-student-answer-in-course-status/<int:student_id>/<int:lesson_id>/', 
+        # views.fetch_enroll_status,
+        views.FetchStudentAnswerInCourseStatus.as_view(),
+        name="fetch-student-answer-in-course-status-student_id-lesson_id",
+    ),
+    
+    # path(
+    #     'courses/sections/<int:section_id>/lessons/', 
+    #     views.LessonInCourseListCreate.as_view(), 
+    #     name='lesson-list',
+    # ),
+
+    # path(
+    #     'courses/sections/<int:section_id>/lessons/<int:pk>/', 
+    #     views.LessonInCourseRetrieveUpdateDestroy.as_view(), 
+    #     name='lesson-detail',
+    # ),
+    # path(
+    #     'courses/sections/list/<int:section_id>/lessons/', 
+    #     views.LessonInCourseCreateView.as_view(), 
+    #     name='lesson-create',
+    # ),
+
 
 
 
@@ -404,6 +448,45 @@ urlpatterns = [
     # =================================================================
     # ***  *** #
     # path('courses/', include(router.urls)),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** Package Course *** #
+    # (List)
+    path(
+        'package-course/list/', 
+        views.PackageCourseList.as_view(), 
+        name='package-course-list',
+    ),
+    # (List App)
+    path(
+        'package-course/list-app/', 
+        views.PackageCourseListApp.as_view(), 
+        name='package-course-list-app',
+    ),
+    # (List Admin)
+    path(
+        'package-course/list-admin/', 
+        views.PackageCourseListAdmin.as_view(), 
+        name='package-course-list-admin',
+    ),
+    # (List Result)
+    path(
+        'package-course/result/',  #?result=9
+        views.PackageCourseResultList.as_view(), 
+        name='package-course-result-list',
+    ),
+    # (PK)
+    path(
+        'package-course/<int:pk>/', 
+        views.PackageCoursePk.as_view(), 
+        name='package-course-pk',
+    ),
+
 
 
     path(
@@ -1029,7 +1112,7 @@ urlpatterns = [
         views.Space.as_view(),
     ),
     # =================================================================
-    # *** 8) Powerpoint*** #
+    # *** 8) Powerpoint *** #
     # (List) 
     path(
         'powerpoint/list/', 
@@ -1059,6 +1142,62 @@ urlpatterns = [
         'powerpoint/<int:pk>/', 
         views.PowerpointPk.as_view(), 
         name='powerpoint-pk',
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** 9) Powerpoint  *** #
+    path(
+        'student-enroll-powerpoint/list/', 
+        views.StudentEnrollPowerpointList.as_view(),
+        name="student-enroll-powerpoint-list",
+    ),
+    path(
+        'student-enroll-powerpoint/<int:pk>/', 
+        views.StudentEnrollPowerpointPK.as_view(),
+        name="student-enroll-powerpoint-pk",
+    ),
+
+    path(
+        'student-enroll-powerpoint/', 
+        views.StudentEnrollPowerpointList.as_view(),
+        name="student-enroll-powerpoint",
+    ),
+    
+    path(
+        'fetch-enroll-status/<int:student_id>/<int:powerpoint_id>/', 
+        # views.fetch_enroll_status,
+        views.FetchEnrollStatusPowerpointView.as_view(),
+        name="fetch-enroll-status-student_id-powerpoint_id",
+    ),
+
+    #- 
+    path(
+        'fetch-enrolled-students/<int:powerpoint_id>/', 
+        views.EnrolledStuentPowerpointList.as_view(),
+        name="fetch-enrolled-students-powerpoint_id",
+    ),
+
+    path(
+        'fetch-all-enrolled-students/<int:teacher_id>/', 
+        views.EnrolledAllStuentPowerpointList.as_view(),
+        name="fetch-all-enrolled-students-teacher_id",
+    ),
+
+    path(
+        'fetch-enrolled-powerpoints/<int:student_id>/', 
+        views.EnrolledStuentPowerpointPkList.as_view(),
+        name="fetch-enrolled-powerpoints-student_id",
+    ),
+
+    path(
+        'fetch-recomemded-powerpoints/<int:student_id>/', 
+        views.EnrolledRecomemdedStuentPowerpointList.as_view(),
+        name="fetch-recomemded-powerpoints-student_id",
     ),
 
 
