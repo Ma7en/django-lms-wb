@@ -226,7 +226,6 @@ class Course(models.Model):
     end_data = models.DateTimeField(auto_now=True) 
     time_at = models.CharField(max_length=1_000)
 
-
     is_visible = models.BooleanField(default=True)
  
     slug = models.SlugField(unique=True, null=True, blank=True)
@@ -415,8 +414,9 @@ class StudentAnswerInCourse(models.Model):
     )
     
     # Answer form
-    answer = models.FileField(upload_to="course/lesson/studentanswer", null=True, blank=True)
-    answer_url = models.URLField(max_length=10_000, null=True, blank=True) 
+    # answer = models.FileField(upload_to="course/lesson/studentanswer", null=True, blank=True)
+    # answer_url = models.URLField(max_length=10_000, null=True, blank=True) 
+    uploaded_files  = models.JSONField(default=list)
 
     is_visible = models.BooleanField(default=True)
  
@@ -1370,15 +1370,21 @@ class ProofreadingService(models.Model):
     #     blank=True,
     # )
     # SR
+    # phone_number = models.CharField(
+    #     max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+    #             message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+    #         )
+    #     ],
+    #     # verbose_name="رقم الجوال السعودي",
+    #     null=True, 
+    #     blank=True,
+    # )
+    # All
     phone_number = models.CharField(
-        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
-        validators=[
-            RegexValidator(
-                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
-                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
-            )
-        ],
-        # verbose_name="رقم الجوال السعودي",
+        max_length=100,
         null=True, 
         blank=True,
     )
@@ -1557,6 +1563,7 @@ class ContactUsUser(models.Model):
     full_name = models.CharField(max_length=1_000)
     email = models.EmailField()
 
+    # EG
     # phone_number = models.CharField(
     #     max_length=11,
     #     validators=[
@@ -1568,15 +1575,22 @@ class ContactUsUser(models.Model):
     #     null=True,
     #     blank=True,
     # )
+    # SR
+    # phone_number = models.CharField(
+    #     max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+    #             message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+    #         )
+    #     ],
+    #     # verbose_name="رقم الجوال السعودي",
+    #     null=True, 
+    #     blank=True,
+    # )
+    # All
     phone_number = models.CharField(
-        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
-        validators=[
-            RegexValidator(
-                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
-                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
-            )
-        ],
-        # verbose_name="رقم الجوال السعودي",
+        max_length=100,
         null=True, 
         blank=True,
     )

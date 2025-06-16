@@ -124,7 +124,7 @@ class SuperuserProfile(models.Model):
     )
 
     bio = models.TextField(
-        max_length=10_00, 
+        max_length=1_000, 
         null=True, 
         blank=True,
     )
@@ -142,18 +142,25 @@ class SuperuserProfile(models.Model):
     #     blank=True,
     # )
     # SR
+    # phone_number = models.CharField(
+    #     max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+    #             message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+    #         )
+    #     ],
+    #     # verbose_name="رقم الجوال السعودي",
+    #     null=True, 
+    #     blank=True,
+    # )
+    # All
     phone_number = models.CharField(
-        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
-        validators=[
-            RegexValidator(
-                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
-                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
-            )
-        ],
-        # verbose_name="رقم الجوال السعودي",
+        max_length=100,
         null=True, 
         blank=True,
     )
+
     age = models.PositiveIntegerField(
         null=True,
         blank=True,
@@ -161,6 +168,7 @@ class SuperuserProfile(models.Model):
 
     
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
@@ -242,11 +250,12 @@ class AdminProfile(models.Model):
     )
 
     bio = models.TextField(
-        max_length=10_00, 
+        max_length=1_000, 
         null=True, 
         blank=True,
     )
 
+    # EG 
     # phone_number = models.CharField(
     #     max_length=11,
     #     validators=[
@@ -258,18 +267,26 @@ class AdminProfile(models.Model):
     #     null=True,
     #     blank=True,
     # )
+    # ER
+    # phone_number = models.CharField(
+    #     max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+    #             message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+    #         )
+    #     ],
+    #     # verbose_name="رقم الجوال السعودي",
+    #     null=True, 
+    #     blank=True,
+    # )
+    # All
     phone_number = models.CharField(
-        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
-        validators=[
-            RegexValidator(
-                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
-                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
-            )
-        ],
-        # verbose_name="رقم الجوال السعودي",
+        max_length=100,
         null=True, 
         blank=True,
     )
+
     age = models.PositiveIntegerField(
         null=True,
         blank=True,
@@ -278,6 +295,7 @@ class AdminProfile(models.Model):
     
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     # class Meta:
     #     """
@@ -353,6 +371,14 @@ class TeacherProfile(models.Model):
         null=True,
         blank=True,
     )
+    
+    bio = models.TextField(
+        max_length=1_000, 
+        null=True, 
+        blank=True,
+    )
+
+    # EG
     # phone_number = models.CharField(
     #     max_length=11,
     #     validators=[
@@ -364,31 +390,33 @@ class TeacherProfile(models.Model):
     #     null=True,
     #     blank=True,
     # )
-    
-    bio = models.TextField(
-        max_length=10_00, 
-        null=True, 
+    # SR
+    # phone_number = models.CharField(
+    #     max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+    #             message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+    #         )
+    #     ],
+    #     # verbose_name="رقم الجوال السعودي",
+    #     null=True, 
+    #     blank=True,
+    # )
+    # All
+    phone_number = models.CharField(
+        max_length=100,
+        null=True,
         blank=True,
     )
 
-    phone_number = models.CharField(
-        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
-        validators=[
-            RegexValidator(
-                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
-                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
-            )
-        ],
-        # verbose_name="رقم الجوال السعودي",
-        null=True, 
-        blank=True,
-    )
     age = models.PositiveIntegerField(
         null=True,
         blank=True,
     )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     # class Meta:
     #     """
@@ -488,11 +516,12 @@ class StaffProfile(models.Model):
     )
     
     bio = models.TextField(
-        max_length=10_00, 
+        max_length=1_000, 
         null=True, 
         blank=True,
     )
 
+    # EG
     # phone_number = models.CharField(
     #     max_length=11,
     #     validators=[
@@ -504,24 +533,33 @@ class StaffProfile(models.Model):
     #     null=True,
     #     blank=True,
     # )
+    # SR
+    # phone_number = models.CharField(
+    #     max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+    #             message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+    #         )
+    #     ],
+    #     # verbose_name="رقم الجوال السعودي",
+    #     null=True, 
+    #     blank=True,
+    # )
+    # All
     phone_number = models.CharField(
-        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
-        validators=[
-            RegexValidator(
-                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
-                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
-            )
-        ],
-        # verbose_name="رقم الجوال السعودي",
+        max_length=100,
         null=True, 
         blank=True,
     )
+
     age = models.PositiveIntegerField(
         null=True,
         blank=True,
     )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     # class Meta:
     #     """
@@ -570,11 +608,12 @@ class StudentProfile(models.Model):
     )
     
     bio = models.TextField(
-        max_length=10_00, 
+        max_length=1_000, 
         null=True, 
         blank=True,
     )
 
+    # EG
     # phone_number = models.CharField(
     #     max_length=11,
     #     validators=[
@@ -586,15 +625,22 @@ class StudentProfile(models.Model):
     #     null=True,
     #     blank=True,
     # )
+    # SR
+    # phone_number = models.CharField(
+    #     max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
+    #     validators=[
+    #         RegexValidator(
+    #             regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
+    #             message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
+    #         )
+    #     ],
+    #     # verbose_name="رقم الجوال السعودي",
+    #     null=True, 
+    #     blank=True,
+    # )
+    # All
     phone_number = models.CharField(
-        max_length=10,  # الأرقام السعودية تتكون من 10 أرقام (بدون +966)
-        validators=[
-            RegexValidator(
-                regex=r'^(05)(5|0|3|6|4|9|1|8|7|2)([0-9]{7})$',
-                message='يجب أن يبدأ رقم الهاتف بـ 05 ويحتوي على 10 أرقام صحيحة'
-            )
-        ],
-        # verbose_name="رقم الجوال السعودي",
+        max_length=100,
         null=True, 
         blank=True,
     )
@@ -605,6 +651,7 @@ class StudentProfile(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     # class Meta:
     #     """
@@ -642,6 +689,7 @@ class OneTimeOTP(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def is_expired(self):
         expiry_time = self.created_at + timedelta(minutes=10)

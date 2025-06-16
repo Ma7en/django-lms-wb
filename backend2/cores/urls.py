@@ -190,6 +190,24 @@ urlpatterns = [
         views.CourseListAdmin.as_view(),
         name="course-list",
     ),
+    # (List Is Live)
+    path(
+        "course-islive/list/",
+        views.CourseIsLiveList.as_view(),
+        name="course-islive-list",
+    ),
+    # (List Is Live App)
+    path(
+        "course-islive/list-app/",
+        views.CourseIsLiveListApp.as_view(),
+        name="course-islive-list-app",
+    ),
+    # (List Is Live Admin)
+    path(
+        "course-islive/list-admin/",
+        views.CourseIsLiveListAdmin.as_view(),
+        name="course-islive-list-admin",
+    ),
     # (List Result)
     path(
         "course/result/", #?result=9

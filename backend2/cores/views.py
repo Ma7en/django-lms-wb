@@ -297,7 +297,26 @@ class CourseListAdmin(generics.ListCreateAPIView):
         else:
             return models.Course.objects.filter(user=user)
 
-        
+
+class CourseIsLiveList(generics.ListCreateAPIView):
+    queryset = models.Course.objects.filter(is_live=True)
+    serializer_class = serializers.CourseSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class CourseIsLiveListApp(generics.ListCreateAPIView):
+    queryset = models.Course.objects.filter(is_live=True)
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [AllowAny]
+
+
+class CourseIsLiveListAdmin(generics.ListCreateAPIView):
+    queryset = models.Course.objects.filter(is_live=True)
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [IsAuthenticated]
+
+
 
 class CourseResultList(generics.ListCreateAPIView):
     queryset = models.Course.objects.all()
@@ -332,6 +351,15 @@ class CoursePK(generics.RetrieveUpdateDestroyAPIView):
     #         return models.Course.objects.all()
     #     else:
     #         return models.Course.objects.filter(user=user)
+
+
+
+
+class CourseIsLivePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Course.objects.all()
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [AllowAny]
+
 
 
 
