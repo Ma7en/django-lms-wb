@@ -208,6 +208,12 @@ urlpatterns = [
         views.CourseIsLiveListAdmin.as_view(),
         name="course-islive-list-admin",
     ),
+    # (List Is Free App)
+    path(
+        "course-isfree/list-app/",
+        views.CourseIsFreeListApp.as_view(),
+        name="course-isfree-list-app",
+    ),
     # (List Result)
     path(
         "course/result/", #?result=9
@@ -263,6 +269,12 @@ urlpatterns = [
         'courses/search/<str:searchstring>/', 
         views.CoursesSearchList.as_view(),
         name="courses-search-list",
+    ),
+    # (Search Is Live)
+    path(
+        'courses-islive/search/<str:searchstring>/', 
+        views.CoursesIsLiveSearchList.as_view(),
+        name="courses-islive-search-list",
     ),
 
    
@@ -503,6 +515,12 @@ urlpatterns = [
         'package-course/<int:pk>/', 
         views.PackageCoursePk.as_view(), 
         name='package-course-pk',
+    ),
+    # (Search)
+    path(
+        'package-courses/search/<str:searchstring>/', 
+        views.PackageCoursesSearchList.as_view(),
+        name="package-courses-search-list",
     ),
 
 
@@ -975,35 +993,40 @@ urlpatterns = [
     # *** 5) Famous Sayings *** #
     # (List)
     path(
-        'famous-sayings/list/', 
+        'famous-saying/list/', 
         views.FamousSayingsList.as_view(), 
-        name='famous-sayings-list',
+        name='famous-saying-list',
     ),
     # (List App)
     path(
-        'famous-sayings/list-app/', 
+        'famous-saying/list-app/', 
         views.FamousSayingsListApp.as_view(), 
-        name='famous-sayings-list-app',
+        name='famous-saying-list-app',
     ),
     # (List Admin)
     path(
-        'famous-sayings/list-admin/', 
+        'famous-saying/list-admin/', 
         views.FamousSayingsListAdmin.as_view(), 
-        name='famous-sayings-list-admin',
+        name='famous-saying-list-admin',
     ),
     # (List Result)
     path(
-        'famous-sayings/result/',  #?result=9
+        'famous-saying/result/',  #?result=9
         views.FamousSayingsResultList.as_view(), 
-        name='famous-sayings-result-list',
+        name='famous-saying-result-list',
     ),
     # (PK)
     path(
-        'famous-sayings/<int:pk>/', 
+        'famous-saying/<int:pk>/', 
         views.FamousSayingsPk.as_view(), 
-        name='famous-sayings-pk',
+        name='famous-saying-pk',
     ),
-
+    # (Search)
+    path(
+        'famous-sayings/search/<str:searchstring>/', 
+        views.FamousSayingsSearchList.as_view(),
+        name="famous-sayings-search-list",
+    ),
  
     
     path(
@@ -1042,6 +1065,12 @@ urlpatterns = [
         views.CategoryBookPK.as_view(), 
         name='category-book-pk',
     ),
+    # (Search)
+    path(
+        'category-book/search/<str:searchstring>/', 
+        views.CategoryBookSearchList.as_view(), 
+        name='category-book-search-list',
+    ),
    
     
 
@@ -1054,34 +1083,39 @@ urlpatterns = [
     # (List)
     path(
         'book/list/', 
-        views.BlogListView.as_view(), 
+        views.BookList.as_view(), 
         name='book-list',
     ),
     # (List App)
     path(
         'book/list-app/', 
-        views.BlogListApp.as_view(), 
+        views.BookListApp.as_view(), 
         name='book-list-app',
     ),
     # (List Admin)
     path(
         'book/list-admin/', 
-        views.BlogListAdmin.as_view(), 
+        views.BookListAdmin.as_view(), 
         name='book-list-admin',
     ),
     # (List Result)
     path(
         'book/result/',  #?result=9
-        views.BlogResultList.as_view(), 
+        views.BookResultList.as_view(), 
         name='book-result-list',
     ),
     # (PK)
     path(
         'book/<int:pk>/', 
-        views.BlogPkAPIView.as_view(), 
+        views.BookPk.as_view(), 
         name='book-pk',
     ),
-
+    # (Search)
+    path(
+        'book/search/<str:searchstring>/', 
+        views.BooksSearchList.as_view(),
+        name="book-search-list",
+    ),
 
     
  
@@ -1122,7 +1156,12 @@ urlpatterns = [
         views.ProofreadingServicePK.as_view(), 
         name='proofreading-service-pk',
     ),
-
+    # (Search)
+    path(
+        'proofreading-services/search/<str:searchstring>/', 
+        views.ProofreadingServicesSearchList.as_view(),
+        name="proofreading-services-search-list",
+    ),
 
 
     path(
@@ -1160,6 +1199,12 @@ urlpatterns = [
         'powerpoint/<int:pk>/', 
         views.PowerpointPk.as_view(), 
         name='powerpoint-pk',
+    ),
+    # (Search)
+    path(
+        'powerpoints/search/<str:searchstring>/', 
+        views.PowerpointsSearchList.as_view(),
+        name="powerpoint-search-list",
     ),
 
 
@@ -1224,7 +1269,7 @@ urlpatterns = [
         views.Space.as_view(),
     ),
     # =================================================================
-    # *** 4) Blogs *** #
+    # *** 4) Category Blogs *** #
     # (List)
     path(
         'category-blog/list/', 
@@ -1262,7 +1307,14 @@ urlpatterns = [
         views.CategoryBlogPKLike.as_view(),
         name='category-blog-pk-like',
     ),
-    
+    # (Search)
+    path(
+        'category-blogs/search/<str:searchstring>/', 
+        views.CategoryBlogSearchList.as_view(),
+        name="category-blogs-search-list",
+    ),
+
+
 
 
     path(
@@ -1307,7 +1359,12 @@ urlpatterns = [
         views.BlogPKLike.as_view(),
         name='blog-pk-like',
     ),
-    
+    # (Search)
+    path(
+        'blogs/search/<str:searchstring>/', 
+        views.BlogsSearchList.as_view(),
+        name="blogs-search-list",
+    ), 
 
 
     path(

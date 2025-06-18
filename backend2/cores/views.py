@@ -257,7 +257,7 @@ class SectionCourseCategoryList(generics.ListCreateAPIView):
 # ==============================================================================
 # *** Course *** #
 class CourseList(generics.ListCreateAPIView):
-    queryset = models.Course.objects.all()
+    queryset = models.Course.objects.filter(is_live=False)
     serializer_class = serializers.CourseSerializer
     pagination_class = StandardResultSetPagination
     permission_classes = [IsAuthenticated]
@@ -268,9 +268,9 @@ class CourseList(generics.ListCreateAPIView):
         
         user = self.request.user
         if user.is_superuser:
-            return models.Course.objects.all()
+            return models.Course.objects.filter(is_live=False)
         else:
-            return models.Course.objects.filter(user=user)
+            return models.Course.objects.filter(user=user, is_live=False)
 
 
 
@@ -282,7 +282,7 @@ class CourseListApp(generics.ListCreateAPIView):
 
 
 class CourseListAdmin(generics.ListCreateAPIView):
-    queryset = models.Course.objects.filter(is_visible=True)
+    queryset = models.Course.objects.filter(is_live=False)
     serializer_class = serializers.CourseSerializer
     permission_classes = [IsAuthenticated]
     # pagination_class = StandardResultSetPagination
@@ -293,9 +293,9 @@ class CourseListAdmin(generics.ListCreateAPIView):
         
         user = self.request.user
         if user.is_superuser:
-            return models.Course.objects.all()
+            return models.Course.objects.filter(is_live=False)
         else:
-            return models.Course.objects.filter(user=user)
+            return models.Course.objects.filter(user=user, is_live=False)
 
 
 class CourseIsLiveList(generics.ListCreateAPIView):
@@ -315,6 +315,13 @@ class CourseIsLiveListAdmin(generics.ListCreateAPIView):
     queryset = models.Course.objects.filter(is_live=True)
     serializer_class = serializers.CourseSerializer
     permission_classes = [IsAuthenticated]
+
+
+
+class CourseIsFreeListApp(generics.ListCreateAPIView):
+    queryset = models.Course.objects.filter(price=0)
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [AllowAny]
 
 
 
@@ -486,6 +493,29 @@ class PublicCourseList(generics.ListAPIView):
 
 class CoursesSearchList(generics.ListCreateAPIView):
     queryset = models.Course.objects.all()
+    serializer_class = serializers.CourseSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search)
+                |Q(level__icontains=search)
+                |Q(duration__icontains=search)
+                |Q(price__icontains=search)
+                |Q(duration__icontains=search)
+                |Q(language__icontains=search)
+                )
+        return qs
+
+
+class CoursesIsLiveSearchList(generics.ListCreateAPIView):
+    queryset = models.Course.objects.filter(is_live=True)
     serializer_class = serializers.CourseSerializer
     pagination_class = StandardResultSetPagination
     # permission_classes = [IsAuthenticated]
@@ -905,6 +935,27 @@ class PackageCoursePk(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.PackageCourse.objects.all()
     serializer_class = serializers.PackageCourseSerializer
 
+
+  
+
+class PackageCoursesSearchList(generics.ListCreateAPIView):
+    queryset = models.PackageCourse.objects.all()
+    serializer_class = serializers.PackageCourseSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                |Q(price__icontains=search) 
+                |Q(discount__icontains=search) 
+                )
+        return qs
 
 
 
@@ -2585,9 +2636,37 @@ class FamousSayingsPk(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
 
 
+
+
+class FamousSayingsSearchList(generics.ListCreateAPIView):
+    queryset = models.FamousSayings.objects.all()
+    serializer_class = serializers. FamousSayingsSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+
+
+
+
+
 # ******************************************************************************
 # ==============================================================================
-# ***  Book  ***
+# ***  Category Book  ***
 class CategoryBookList(generics.ListCreateAPIView):
     queryset = models.CategoryBook.objects.all()
     serializer_class = serializers.CategoryBookSerializer
@@ -2628,10 +2707,32 @@ class CategoryBookPK(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.CategoryBookSerializer
     permission_classes = [AllowAny]
  
-    
+
+class CategoryBookSearchList(generics.ListCreateAPIView):
+    queryset = models.CategoryBook.objects.all()
+    serializer_class = serializers.CategoryBookSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search)
+                |Q(grade__icontains=search)
+                )
+        return qs
  
 
-# 
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Book  ***
 class BookList(generics.ListCreateAPIView):
     queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializer
@@ -2668,12 +2769,28 @@ class BookResultList(generics.ListCreateAPIView):
 
 
 
-class BookPkAPIView(generics.RetrieveUpdateDestroyAPIView):
+class BookPk(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializer
  
   
 
+class BooksSearchList(generics.ListCreateAPIView):
+    queryset = models.Book.objects.all()
+    serializer_class = serializers.BookSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                )
+        return qs
 
 
 
@@ -2686,8 +2803,14 @@ class ProofreadingServiceList(generics.ListCreateAPIView):
     queryset = models.ProofreadingService.objects.all()
     serializer_class = serializers.ProofreadingServiceSerializer
     pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
     # permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        if self.request.user.is_student:
+            return models.ProofreadingService.objects.filter(user=self.request.user)
+        return models.ProofreadingService.objects.all()
+    
 
 class ProofreadingServiceListApp(generics.ListCreateAPIView):
     queryset = models.ProofreadingService.objects.all()
@@ -2723,7 +2846,30 @@ class ProofreadingServicePK(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
  
     
- 
+  
+  
+
+class ProofreadingServicesSearchList(generics.ListCreateAPIView):
+    queryset = models.ProofreadingService.objects.all()
+    serializer_class = serializers.ProofreadingServiceSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(status__icontains=search)
+                |Q(type_proofreading__icontains=search) 
+                |Q(number_page__icontains=search) 
+                |Q(receipt_period__icontains=search) 
+                |Q(phone_number__icontains=search) 
+                |Q(state__icontains=search) 
+                |Q(field_study__icontains=search) 
+                )
+        return qs
 
   
 
@@ -2777,6 +2923,25 @@ class PowerpointPk(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
 
     
+
+class PowerpointsSearchList(generics.ListCreateAPIView):
+    queryset = models.Powerpoint.objects.all()
+    serializer_class = serializers.PowerpointSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search)
+                |Q(price__icontains=search)
+                |Q(discount__icontains=search) 
+                )
+        return qs
  
 
 
@@ -3192,6 +3357,7 @@ class AppStatsView(generics.GenericAPIView):
 # *** Admin Dashboard Stats ***
 class AdminDashboardStatsView(generics.GenericAPIView):
     def get(self, request):
+        # 
         users_count = models.User.objects.count()
         superuser_count = models.User.objects.filter(is_superuser=True, is_staff=True).count()
         admins_count = models.User.objects.filter(is_admin=True).count()
@@ -3199,33 +3365,110 @@ class AdminDashboardStatsView(generics.GenericAPIView):
         staffs_count = models.User.objects.filter(is_superuser=False, is_staff=True).count()
         students_count = models.User.objects.filter(is_student=True).count()
 
+        #   
         categories_section_count = models.CategorySection.objects.count()
         sections_course_count = models.SectionCourse.objects.count()
 
+        # 
         courses_count = models.Course.objects.count()
+        courses_is_live_count = models.Course.objects.filter(is_live=True).count()
         sections_in_course_count = models.SectionInCourse.objects.count()
         lessons_count = models.LessonInCourse.objects.count()
 
+        # 
+        packages_course_count = models.PackageCourse.objects.count()
+        
+        # 
+        categories_book_count = models.CategoryBook.objects.count()
+
+        # 
+        books_count = models.Book.objects.count()
+
+        # 
+        powerpoints_count = models.Powerpoint.objects.count()
+
+        # 
+        proofreadingservices_count = models.ProofreadingService.objects.count()
+        proofreadingservices_replay_count = models.ProofreadingService.objects.filter(status="reply").count()
+  
+        # 
+        categories_blogs_count = models.CategoryBlog.objects.count()
+
+        # 
+        blogs_count = models.Blog.objects.count()
+
+        # 
+        famoussayings_count = models.FamousSayings.objects.count()
+
+
+        # 
         coupons_course_count = models.CouponCourse.objects.count()
         
+        # 
         total_enrolled_students = models.StudentCourseEnrollment.objects.count()
 
+        # 
         questionbanks_count = models.QuestionBank.objects.count()
+
 
         if 'user_id' in request.GET:
             user_id = request.GET['user_id']
             if user_id[-1] == "/":
                 user_id = user_id[:-1]
             user_id = int(user_id)
+
+            # 
             admin_categories_section_count = models.CategorySection.objects.filter(user=user_id).count()
             admin_sections_course_count = models.SectionCourse.objects.filter(user=user_id).count()
+            
+            # 
             admin_courses_count = models.Course.objects.filter(user=user_id).count()
+            
+            # 
+            admin_packages_course_count = models.PackageCourse.objects.filter(user=user_id).count()
+
+            # 
+            admin_categories_book_count = models.CategoryBook.objects.filter(user=user_id).count()
+            
+            # 
+            admin_books_count = models.Book.objects.filter(user=user_id).count()
+  
+            # 
+            admin_powerpoints_count = models.Powerpoint.objects.filter(user=user_id).count()
+  
+            # 
+            admin_proofreadingservices_count = models.ProofreadingService.objects.filter(user=user_id).count()
+
+            # 
+            admin_categories_blogs_count = models.CategoryBlog.objects.filter(user=user_id).count()
+  
+            # 
+            admin_blogs_count = models.Blog.objects.filter(user=user_id).count()
+  
+            # 
+            admin_famoussayings_count = models.FamousSayings.objects.filter(user=user_id).count()
+
+            # 
             admin_coupon_course_count = models.CouponCourse.objects.filter(user=user_id).count()
+            
+            # 
             admin_banks_count = models.QuestionBank.objects.filter(user=user_id).count()
         else:
             admin_categories_section_count = 0
             admin_sections_course_count = 0
             admin_courses_count = 0
+
+            # 
+            admin_packages_course_count = 0
+            admin_categories_book_count = 0
+            admin_books_count = 0
+            admin_powerpoints_count = 0
+            admin_proofreadingservices_count = 0
+            admin_categories_blogs_count = 0
+            admin_blogs_count = 0
+            admin_famoussayings_count = 0
+            
+            # 
             admin_coupon_course_count = 0
             admin_banks_count = 0
 
@@ -3233,6 +3476,7 @@ class AdminDashboardStatsView(generics.GenericAPIView):
         reviews_count = models.ReviewUser.objects.count()
 
         return Response({
+            # 
             'users_count': users_count,
             'superuser_count': superuser_count,
             'admins_count': admins_count,
@@ -3240,25 +3484,66 @@ class AdminDashboardStatsView(generics.GenericAPIView):
             'staffs_count': staffs_count,
             'students_count': students_count,
 
+            # 
             'categories_section_count': categories_section_count,
             'sections_course_count': sections_course_count,
 
+            # 
             'courses_count': courses_count,
+            'courses_is_live_count': courses_is_live_count,
             'sections_in_course_count': sections_in_course_count,
             'lessons_count': lessons_count,
+
+            # 
+            'packages_course_count': packages_course_count,
+            'admin_packages_course_count': admin_packages_course_count,
+
+            # 
+            'categories_book_count': categories_book_count,
+            'admin_categories_book_count': admin_categories_book_count,
+
+            # 
+            'books_count': books_count,
+            'admin_books_count': admin_books_count,
             
+            # 
+            'powerpoints_count': powerpoints_count,
+            'admin_powerpoints_count': admin_powerpoints_count,
+            
+            # 
+            'proofreadingservices_count': proofreadingservices_count,
+            'proofreadingservices_replay_count': proofreadingservices_replay_count,
+            'admin_proofreadingservices_count': admin_proofreadingservices_count,
+            
+            # 
+            'categories_blogs_count': categories_blogs_count,
+            'admin_categories_blogs_count': admin_categories_blogs_count,
+            
+            # 
+            'blogs_count': blogs_count,
+            'admin_blogs_count': admin_blogs_count,
+            
+            # 
+            'famoussayings_count': famoussayings_count,
+            'admin_famoussayings_count': admin_famoussayings_count,
+            
+            # 
             'coupons_course_count': coupons_course_count,
 
+            # 
             'total_enrolled_students': total_enrolled_students,
 
+            # 
             'questionbanks_count': questionbanks_count,
 
+            # 
             "admin_categories_section_count": admin_categories_section_count,
             "admin_sections_course_count": admin_sections_course_count,
             "admin_courses_count": admin_courses_count,
             "admin_coupon_course_count": admin_coupon_course_count,
             "admin_banks_count": admin_banks_count,
-
+            
+            # 
             'contacts_count': contacts_count,
             'reviews_count': reviews_count,
         })
@@ -3328,7 +3613,7 @@ class StudentDashboardStatsView(generics.GenericAPIView):
 
 # ******************************************************************************
 # ==============================================================================
-# ***  Blogs  ***
+# ***  Category Blogs  ***
 class CategoryBlogListView(generics.ListCreateAPIView):
     queryset = models.CategoryBlog.objects.all()
     serializer_class = serializers.CategoryBlogSerializer
@@ -3377,28 +3662,7 @@ class CategoryBlogPkAPIView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
     
-    # @action(detail=True, methods=['post'])
-    # def like(self, request, pk=None):
-    #     category = self.get_object()
-    #     user = request.user
-        
-    #     if user in category.likes.all():
-    #         category.likes.remove(user)
-    #         message = "Category unliked!"
-    #     else:
-    #         category.likes.add(user)
-    #         message = "Category liked!"
-    #         models.NotificationBlog.objects.create(
-    #             user=category.user,
-    #             message=f"{user.username} liked your category: {category.title}",
-    #             notification_type='like_post',
-    #             blog=None,
-    #             comment=None,
-    #             reply=None,
-    #         )
-        
-    #     return Response({"message": message, "likes_count": category.likes.count()})
-
+ 
 class CategoryBlogPKLike(APIView):
     def post(self, request, pk):
         try:
@@ -3430,7 +3694,32 @@ class CategoryBlogPKLike(APIView):
 
 
 
-# 
+class CategoryBlogSearchList(generics.ListCreateAPIView):
+    queryset = models.CategoryBlog.objects.all()
+    serializer_class = serializers.CategoryBlogSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Blogs  ***
 class BlogListView(generics.ListCreateAPIView):
     queryset = models.Blog.objects.all()
     serializer_class = serializers.BlogSerializer
@@ -3478,45 +3767,7 @@ class BlogPkAPIView(generics.RetrieveUpdateDestroyAPIView):
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-    
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     now = timezone.now()
-        
-    #     # Only count view if last view was more than 5 minutes ago or doesn't exist
-    #     last_view = request.session.get(f'blog_{instance.id}_last_view')
-    #     if not last_view or (now - timezone.datetime.fromisoformat(last_view)) > timedelta(minutes=5):
-    #         instance.views += 1
-    #         instance.save()
-    #         request.session[f'blog_{instance.id}_last_view'] = now.isoformat()
-        
-    #     serializer = self.get_serializer(instance)
-    #     return Response(serializer.data)
-    
-    # @action(detail=True, methods=['post'])
-    # def like(self, request, pk=None):
-    #     blog = self.get_object()
-    #     user = request.user
-        
-    #     if user in blog.likes.all():
-    #         blog.likes.remove(user)
-    #         message = "Blog unliked!"
-    #     else:
-    #         blog.likes.add(user)
-    #         message = "Blog liked!"
-    #         models.NotificationBlog.objects.create(
-    #             user=blog.user,
-    #             message=f"{user.username} liked your blog: {blog.title}",
-    #             notification_type='like_post',
-    #             blog=blog,
-    #             comment=None,
-    #             reply=None,
-    #         )
-        
-    #     return Response({"message": message, "likes_count": blog.likes.count()})
-
-
+     
 
 class BlogPKLike(APIView):
     def post(self, request, pk):
@@ -3548,11 +3799,37 @@ class BlogPKLike(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+ 
+  
+
+class BlogsSearchList(generics.ListCreateAPIView):
+    queryset = models.Blog.objects.all()
+    serializer_class = serializers.BlogSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                |Q(summary__icontains=search) 
+                )
+        return qs
 
 
 
 
-# 
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Comment Blogs  ***
 class CommentBlogListView(generics.ListCreateAPIView):
     queryset = models.CommentBlog.objects.all()
     serializer_class = serializers.CommentBlogSerializer
@@ -3574,29 +3851,7 @@ class CommentBlogListView(generics.ListCreateAPIView):
 class CommentBlogPKAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.CommentBlog.objects.all()
     serializer_class = serializers.CommentBlogSerializer
-
-    # @action(detail=True, methods=['post'])
-    # def like(self, request, pk=None):
-    #     comment = self.get_object()
-    #     user = request.user
-        
-    #     if user in comment.likes.all():
-    #         comment.likes.remove(user)
-    #         message = "Comment unliked!"
-    #     else:
-    #         comment.likes.add(user)
-    #         message = "Comment liked!"
-    #         models.NotificationBlog.objects.create(
-    #             user=comment.user,
-    #             message=f"{user.username} liked your comment",
-    #             notification_type='like_comment',
-    #             blog=comment.blog,
-    #             comment=comment,
-    #             reply=None,
-    #         )
-        
-    #     return Response({"message": message, "likes_count": comment.likes.count()})
-
+ 
 
 
 class CommentBlogPKLike(APIView):
@@ -3632,7 +3887,15 @@ class CommentBlogPKLike(APIView):
         
 
 
-# 
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Reply Blogs  *** 
 class ReplyBlogListView(generics.ListCreateAPIView):
     queryset = models.ReplyBlog.objects.all()
     serializer_class = serializers.ReplyBlogSerializer
@@ -3654,28 +3917,6 @@ class ReplyBlogListView(generics.ListCreateAPIView):
 class ReplyBlogPKAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.ReplyBlog.objects.all()
     serializer_class = serializers.ReplyBlogSerializer
-
-    # @action(detail=True, methods=['post'])
-    # def like(self, request, pk=None):
-    #     reply = self.get_object()
-    #     user = request.user
-        
-    #     if user in reply.likes.all():
-    #         reply.likes.remove(user)
-    #         message = "Reply unliked!"
-    #     else:
-    #         reply.likes.add(user)
-    #         message = "Reply liked!"
-    #         models.NotificationBlog.objects.create(
-    #             user=reply.user,
-    #             message=f"{user.username} liked your reply",
-    #             notification_type='like_reply',
-    #             blog=reply.comment.blog,
-    #             comment=reply.comment,
-    #             reply=reply,
-    #         )
-        
-    #     return Response({"message": message, "likes_count": reply.likes.count()})
 
 
 class ReplyBlogPKLike(APIView):
@@ -3713,7 +3954,15 @@ class ReplyBlogPKLike(APIView):
 
 
 
-# 
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Notification Blogs  ***
 class NotificationBlogListView(generics.ListCreateAPIView):
     queryset = models.NotificationBlog.objects.all()
     serializer_class = serializers.NotificationBlogSerializer
@@ -3736,7 +3985,15 @@ class NotificationBlogPKAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-# 
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Report Blogs  ***
 class ReportBlogListView(generics.ListCreateAPIView):
     queryset = models.ReportBlog.objects.all()
     serializer_class = serializers.ReportBlogSerializer

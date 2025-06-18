@@ -222,9 +222,9 @@ class Course(models.Model):
 
     # 
     is_live = models.BooleanField(default=False)
-    start_data = models.DateTimeField(auto_now=True) 
-    end_data = models.DateTimeField(auto_now=True) 
-    time_at = models.CharField(max_length=1_000)
+    start_data = models.DateTimeField(null=True, blank=True) 
+    end_data = models.DateTimeField(null=True, blank=True) 
+    time_at = models.CharField(max_length=1_000, null=True, blank=True)
 
     is_visible = models.BooleanField(default=True)
  
@@ -351,8 +351,8 @@ class LessonInCourse(models.Model):
     )
    
     title = models.CharField(max_length=1_000)
-    duration = models.CharField(max_length=1_000, null=True, blank=True)
     description = models.TextField(max_length=10_000, null=True, blank=True)
+    duration = models.CharField(max_length=1_000, null=True, blank=True)
 
     # For Video Lessons
     video_file = models.FileField(upload_to="course/lesson/videos", null=True, blank=True)
@@ -368,8 +368,8 @@ class LessonInCourse(models.Model):
     uploaded_files  = models.JSONField(default=list)
 
     # Answer form
-    answer_form = models.FileField(upload_to="course/lesson/answer", null=True, blank=True)
-    answer_form_url = models.URLField(max_length=10_000, null=True, blank=True)
+    answer_form_pdf = models.FileField(upload_to="course/lesson/answer/pdf", null=True, blank=True)
+    answer_form_pdf_url = models.URLField(max_length=10_000, null=True, blank=True)
 
 
     is_visible = models.BooleanField(default=True) #
@@ -417,6 +417,7 @@ class StudentAnswerInCourse(models.Model):
     # answer = models.FileField(upload_to="course/lesson/studentanswer", null=True, blank=True)
     # answer_url = models.URLField(max_length=10_000, null=True, blank=True) 
     uploaded_files  = models.JSONField(default=list)
+    degree = models.CharField(max_length=1_000, null=True, blank=True)
 
     is_visible = models.BooleanField(default=True)
  
@@ -427,10 +428,10 @@ class StudentAnswerInCourse(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name_plural = "1-7. Courses"
+        verbose_name_plural = "1-6. Student Answer In Course"
 
     def __str__(self):
-        return f"{self.id}): [{self.student}] - ({self.is_visible})"
+        return f"{self.id}): [{self.student}] - [{self.lesson}]- ({self.is_visible})"
 
     def save(self, *args, **kwargs):
         if self.slug == "" or self.slug is None:
@@ -444,7 +445,7 @@ class FileInCourse(models.Model):
     lesson = models.ForeignKey(
         LessonInCourse,
         on_delete=models.CASCADE,
-        related_name='lesson_file',
+        related_name='file_in_course_lesson',
     )
 
     name = models.CharField(max_length=1_000, null=True, blank=True)
@@ -464,7 +465,7 @@ class FileInCourse(models.Model):
     
     class Meta:
         ordering = ['created_at']
-        verbose_name_plural = "1-6. File In Course"
+        verbose_name_plural = "1-7. File In Course"
 
     def __str__(self):
         return f"{self.id}): ({self.name})"
@@ -510,7 +511,7 @@ class QuestionInCourse(models.Model):
 
     class Meta:
         ordering = ['created_at']
-        verbose_name_plural="1-7. Question In Course"
+        verbose_name_plural="1-8. Question In Course"
 
     def __str__(self):
         return f"{self.id}): ({self.lesson.title}) - ({self.text[:50]})"
@@ -571,15 +572,24 @@ class PackageCourse(models.Model):
         related_name='package_course_user',
     )
 
-
     title = models.CharField(max_length=1_000)
     description = models.TextField(max_length=10_000, null=True, blank=True)
 
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    courses = models.JSONField(default=list)    
+    price_after_discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+    courses = models.JSONField(default=list)    
+    
+    image = models.ImageField(
+        upload_to="packagecourse/images", 
+        null=True,
+        blank=True,
+    )
+    image_url = models.URLField(null=True, blank=True)
+
+    is_admin = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=True)
  
     slug = models.SlugField(unique=True, null=True, blank=True)
@@ -1355,7 +1365,7 @@ class ProofreadingService(models.Model):
     )
 
     number_page = models.PositiveIntegerField(default=0)
-    receipt_period = models.PositiveIntegerField(default=0)
+    receipt_period = models.CharField(max_length=1_000, null=True, blank=True)
 
     # EG 
     # phone_number = models.CharField(
@@ -1394,6 +1404,7 @@ class ProofreadingService(models.Model):
     field_study = models.CharField(max_length=10_000)
  
     
+    quick_reply = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=True)
 
     slug = models.SlugField(unique=True, null=True, blank=True)
@@ -1443,8 +1454,8 @@ class Powerpoint(models.Model):
     students_count = models.PositiveIntegerField(default=0)
 
     # 
-    file = models.FileField(upload_to="powerpoint/files", null=True, blank=True)
-    file_url = models.URLField(max_length=10_000, null=True, blank=True)
+    file_powerpoint = models.FileField(upload_to="powerpoint/files", null=True, blank=True)
+    file_powerpoint_url = models.URLField(max_length=10_000, null=True, blank=True)
 
     is_visible = models.BooleanField(default=True)
 
@@ -1791,7 +1802,7 @@ class Blog(models.Model):
     views = models.PositiveIntegerField(default=0)
     likes = models.ManyToManyField(
         User, 
-        related_name='liked_posts', 
+        related_name='likes_blogs_user', 
         blank=True,
     )
 
@@ -1809,7 +1820,6 @@ class Blog(models.Model):
 
     def total_comment(self):
         return CommentBlog.objects.filter(blog=self).count()
-
 
     class Meta:
         ordering = ['-created_at']

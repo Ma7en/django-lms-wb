@@ -111,15 +111,57 @@ class StudentAnswerInCourseSerializer(serializers.ModelSerializer):
 
 
 class LessonInCourseSerializer(serializers.ModelSerializer):
-    files = FileInCourseSerializer(many=True, read_only=True)
-    studentanswers = StudentAnswerInCourseSerializer(many=True, read_only=True)
+    files = FileInCourseSerializer(
+        many=True, 
+        read_only=True,
+        source='file_in_course_lesson'
+    )
+    studentanswers = StudentAnswerInCourseSerializer(
+        many=True,
+        read_only=True,
+        source='student_answer_in_course_lesson'
+    )
     # questions = QuestionInCourseSerializer(many=True, read_only=True)
 
     slug = serializers.SlugField(read_only=True)
 
     class Meta:
         model = models.LessonInCourse
-        fields = "__all__"
+        # fields = "__all__"
+        fields = [
+            "id",
+
+            "section",
+
+            "type",
+            
+            "title",
+            "description",
+            "duration",
+
+            "video_file",
+            "video_url",
+            
+            "questions",
+
+            "content",
+            "uploaded_files",
+            
+            "answer_form_pdf",
+            "answer_form_pdf_url",
+            
+            "is_visible",
+            "is_free",
+
+            "order", 
+
+            "slug", 
+            "created_at",
+            "updated_at",
+
+            "files",
+            "studentanswers",
+        ]
 
 
 class SectionInCourseSerializer(serializers.ModelSerializer):
@@ -158,7 +200,7 @@ class SectionInCourseSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
-    section = serializers.PrimaryKeyRelatedField(queryset=models.SectionCourse.objects.all())
+    # section = serializers.PrimaryKeyRelatedField(queryset=models.SectionCourse.objects.all())
 
     # section_course = SectionCourseSerializer(read_only=True)
     # section_course = SectionCourseSerializer(read_only=True, context={'request': None})
@@ -201,6 +243,12 @@ class CourseSerializer(serializers.ModelSerializer):
             "is_visible",
 
             # 
+            "is_live",
+            "start_data",
+            "end_data",
+            "time_at",
+
+            # 
             "sections",
 
             "slug",
@@ -218,7 +266,7 @@ class CourseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
-        representation['section'] = SectionCourseSerializer(instance.section).data  # لعرض تفاصيل المستخدم
+        # representation['section'] = SectionCourseSerializer(instance.section).data  # لعرض تفاصيل المستخدم
         return representation
     
 

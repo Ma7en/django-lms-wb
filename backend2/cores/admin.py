@@ -3,6 +3,8 @@ from django.contrib import admin
 
 
 # 
+# from backend2.cores import models
+# from cores import models
 from . import models
 
 
@@ -24,6 +26,7 @@ admin.site.register(models.Course)
 admin.site.register(models.SectionInCourse)
 admin.site.register(models.LessonInCourse)
 admin.site.register(models.FileInCourse)
+admin.site.register(models.StudentAnswerInCourse)
 admin.site.register(models.QuestionInCourse)
 
 
