@@ -993,7 +993,37 @@ class PowerpointSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = models.Powerpoint
-        fields = "__all__"
+        # fields = "__all__"
+        fields = [
+            "id",
+
+            "user",
+
+            "title",
+            "description",
+            "image",
+            "image_url",
+            
+            "price",
+            "discount",
+            
+            "rating",
+            "reviews_count",
+            "students_count",
+
+            "file_powerpoint",
+            "file_powerpoint_url",
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            "total_enrolled_students",
+            "price_after_discount",
+        ]
+
     
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -1021,6 +1051,25 @@ class StudentPowerpointEnrollmentSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Powerpoint Service   *** #
+class PowerpointServiceSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.PowerpointService
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
 
 
 

@@ -190,6 +190,12 @@ urlpatterns = [
         views.CourseListAdmin.as_view(),
         name="course-list",
     ),
+    # (List Is Free App)
+    path(
+        "course-isfree/list-app/",
+        views.CourseIsFreeListApp.as_view(),
+        name="course-isfree-list-app",
+    ),
     # (List Is Live)
     path(
         "course-islive/list/",
@@ -208,11 +214,11 @@ urlpatterns = [
         views.CourseIsLiveListAdmin.as_view(),
         name="course-islive-list-admin",
     ),
-    # (List Is Free App)
+    # (List Ids)
     path(
-        "course-isfree/list-app/",
-        views.CourseIsFreeListApp.as_view(),
-        name="course-isfree-list-app",
+        "course-ids/list/", # ?ids=1,2,5
+        views.CourseIdsList.as_view(),
+        name="course-ids-list",
     ),
     # (List Result)
     path(
@@ -1015,6 +1021,12 @@ urlpatterns = [
         views.FamousSayingsResultList.as_view(), 
         name='famous-saying-result-list',
     ),
+    # (List Random Result)
+    path(
+        'famous-saying/random/result/',  #?result=9
+        views.FamousSayingsRandomResultList.as_view(), 
+        name='famous-saying-random-result-list',
+    ),
     # (PK)
     path(
         'famous-saying/<int:pk>/', 
@@ -1034,7 +1046,7 @@ urlpatterns = [
         views.Space.as_view(),
     ),
     # =================================================================
-    # *** 4) Books *** #
+    # *** 4) Categories Books *** #
     # (List) -book
     path(
         'category-book/list/', 
@@ -1263,6 +1275,49 @@ urlpatterns = [
         name="fetch-recomemded-powerpoints-student_id",
     ),
 
+    
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** 7) Powerpoint Service *** #
+    # (List) 
+    path(
+        'powerpoint-service/list/', 
+        views.PowerpointServiceList.as_view(), 
+        name='powerpoint-service-list',
+    ),
+    # (List App)
+    path(
+        'powerpoint-service/list-app/', 
+        views.PowerpointServiceListApp.as_view(), 
+        name='powerpoint-service-list-app',
+    ),
+    # (List Admin)
+    path(
+        'powerpoint-service/list-admin/', 
+        views.PowerpointServiceListAdmin.as_view(), 
+        name='powerpoint-service-list-admin',
+    ),
+    # (List Result)
+    path(
+        'powerpoint-service/result/',  #?result=9
+        views.PowerpointServiceResultList.as_view(), 
+        name='powerpoint-service-result-list',
+    ),
+    # (PK)
+    path(
+        'powerpoint-service/<int:pk>/', 
+        views.PowerpointServicePK.as_view(), 
+        name='powerpoint-service-pk',
+    ),
+    # (Search)
+    path(
+        'powerpoints-services/search/<str:searchstring>/', 
+        views.PowerpointsServicesSearchList.as_view(),
+        name="powerpoints-services-search-list",
+    ),
 
     path(
         '---------------------------------------------------------------------------------------------------------------/', 

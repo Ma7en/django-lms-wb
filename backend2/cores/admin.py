@@ -150,6 +150,7 @@ admin.site.register(models.ProofreadingService)
 # *** Powerpoint *** #
 admin.site.register(models.Powerpoint)
 admin.site.register(models.StudentPowerpointEnrollment)
+admin.site.register(models.PowerpointService)
 
 
 

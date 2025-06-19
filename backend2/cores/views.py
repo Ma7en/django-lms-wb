@@ -275,7 +275,7 @@ class CourseList(generics.ListCreateAPIView):
 
 
 class CourseListApp(generics.ListCreateAPIView):
-    queryset = models.Course.objects.filter(is_visible=True)
+    queryset = models.Course.objects.filter(is_visible=True, is_live=False)
     serializer_class = serializers.CourseSerializer
     permission_classes = [AllowAny]
     # pagination_class = StandardResultSetPagination
@@ -298,6 +298,14 @@ class CourseListAdmin(generics.ListCreateAPIView):
             return models.Course.objects.filter(user=user, is_live=False)
 
 
+
+
+class CourseIsFreeListApp(generics.ListCreateAPIView):
+    queryset = models.Course.objects.filter(is_visible=True, price=0, is_live=False)
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [AllowAny]
+
+
 class CourseIsLiveList(generics.ListCreateAPIView):
     queryset = models.Course.objects.filter(is_live=True)
     serializer_class = serializers.CourseSerializer
@@ -306,7 +314,7 @@ class CourseIsLiveList(generics.ListCreateAPIView):
 
 
 class CourseIsLiveListApp(generics.ListCreateAPIView):
-    queryset = models.Course.objects.filter(is_live=True)
+    queryset = models.Course.objects.filter(is_visible=True, is_live=True)
     serializer_class = serializers.CourseSerializer
     permission_classes = [AllowAny]
 
@@ -315,13 +323,6 @@ class CourseIsLiveListAdmin(generics.ListCreateAPIView):
     queryset = models.Course.objects.filter(is_live=True)
     serializer_class = serializers.CourseSerializer
     permission_classes = [IsAuthenticated]
-
-
-
-class CourseIsFreeListApp(generics.ListCreateAPIView):
-    queryset = models.Course.objects.filter(price=0)
-    serializer_class = serializers.CourseSerializer
-    permission_classes = [AllowAny]
 
 
 
@@ -339,6 +340,23 @@ class CourseResultList(generics.ListCreateAPIView):
                 # Handle the case where 'result' is not an integer
                 pass
         return qs
+
+
+
+class CourseIdsList(generics.ListCreateAPIView):
+    serializer_class = serializers.CourseSerializer
+
+    def get_queryset(self):
+        ids = self.request.GET.get('ids')
+        if ids:
+            ids = [int(id) for id in ids.split(',')]
+            return models.Course.objects.filter(pk__in=ids, is_live=False)
+        return models.Course.objects.filter(is_live=False)
+
+
+
+
+
 
 
 
@@ -1112,6 +1130,7 @@ def fetch_enroll_status(request,student_id,course_id):
         return JsonResponse({'bool':True})
     else:
         return JsonResponse({'bool':False})
+
 
 # class FetchEnrollStatusView(generics.RetrieveAPIView):
 class FetchEnrollStatusView(APIView):
@@ -2629,6 +2648,20 @@ class FamousSayingsResultList(generics.ListCreateAPIView):
         return qs
 
 
+class FamousSayingsRandomResultList(generics.ListCreateAPIView):
+    queryset = models.FamousSayings.objects.all()
+    serializer_class = serializers.FamousSayingsSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.filter(is_visible=True).order_by('?')[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
 
 class FamousSayingsPk(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.FamousSayings.objects.all()
@@ -3058,6 +3091,84 @@ class EnrolledRecomemdedStuentPowerpointList(generics.ListCreateAPIView):
 
 
 
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Powerpoint Service   ***
+class PowerpointServiceList(generics.ListCreateAPIView):
+    queryset = models.PowerpointService.objects.all()
+    serializer_class = serializers.PowerpointServiceSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_student:
+            return models.PowerpointService.objects.filter(user=self.request.user)
+        return models.PowerpointService.objects.all()
+    
+
+class PowerpointServiceListApp(generics.ListCreateAPIView):
+    queryset = models.PowerpointService.objects.all()
+    serializer_class = serializers.PowerpointServiceSerializer 
+    permission_classes = [AllowAny]
+
+
+class PowerpointServiceListAdmin(generics.ListCreateAPIView):
+    queryset = models.PowerpointService.objects.all()
+    serializer_class = serializers.PowerpointServiceSerializer 
+    permission_classes = [IsAuthenticated]
+
+
+class PowerpointServiceResultList(generics.ListCreateAPIView):
+    queryset = models.PowerpointService.objects.all()
+    serializer_class = serializers.PowerpointServiceSerializer  
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+
+
+class PowerpointServicePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.PowerpointService.objects.all()
+    serializer_class = serializers.PowerpointServiceSerializer
+    permission_classes = [AllowAny]
+ 
+    
+  
+  
+
+class PowerpointsServicesSearchList(generics.ListCreateAPIView):
+    queryset = models.PowerpointService.objects.all()
+    serializer_class = serializers.PowerpointServiceSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(status__icontains=search)
+                |Q(mold_shape__icontains=search) 
+                |Q(description__icontains=search) 
+                |Q(number_page__icontains=search) 
+                |Q(receipt_period__icontains=search) 
+                |Q(phone_number__icontains=search) 
+                )
+        return qs
+
+  
 
 
 

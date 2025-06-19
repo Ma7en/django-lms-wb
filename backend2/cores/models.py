@@ -1463,6 +1463,7 @@ class Powerpoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+
     def total_enrolled_students(self):
         return StudentPowerpointEnrollment.objects.filter(powerpoint=self).count()
 
@@ -1531,6 +1532,65 @@ class StudentPowerpointEnrollment(models.Model):
     def __str__(self) :
         return f"{self.id}): ({self.powerpoint}) - ({self.student})"
 
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Powerpoint Service   *** #
+class PowerpointService(models.Model):
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='powerpoint_service_user',
+    )
+    
+    STATUS_CHOICES = (
+        ("new", "جديد"),
+        ("under-processing", "قيد المعالجة"),
+        ("reply", "تم الرد"),
+    )
+    status = models.CharField(
+        max_length=1_000, 
+        choices=STATUS_CHOICES, 
+        default="new",
+    )
+
+    mold_shape = models.CharField(max_length=1_000)
+    description = models.TextField(max_length=10_000, null=True, blank=True)
+
+
+    number_page = models.PositiveIntegerField(default=0)
+    receipt_period = models.CharField(max_length=1_000, null=True, blank=True)
+
+    phone_number = models.CharField(
+        max_length=100,
+        null=True, 
+        blank=True,
+    ) 
+    
+    quick_reply = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
+
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+ 
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural="8-3. Proofreading Services"
+
+    def __str__(self) :
+        return f"{self.id}): [{self.user}] - ({self.is_visible})"
+    
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug == None:
+            self.slug = slugify(self.mold_shape) + "-" + shortuuid.uuid()[:2]
+        super(PowerpointService, self).save(*args, **kwargs)
+    
 
 
 
