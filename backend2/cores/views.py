@@ -295,7 +295,7 @@ class CourseListAdmin(generics.ListCreateAPIView):
         if user.is_superuser:
             return models.Course.objects.filter(is_live=False)
         else:
-            return models.Course.objects.filter(user=user, is_live=False)
+            return models.Course.objects.filter(is_visible=True, is_live=False)
 
 
 
@@ -916,12 +916,17 @@ class PackageCourseList(generics.ListCreateAPIView):
     queryset = models.PackageCourse.objects.all()
     serializer_class = serializers.PackageCourseSerializer
     pagination_class = StandardResultSetPagination
-    # permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        if self.request.user.is_student:
+            return models.PackageCourse.objects.filter(user=self.request.user)
+        return models.PackageCourse.objects.all()
 
 
 class PackageCourseListApp(generics.ListCreateAPIView):
-    queryset = models.PackageCourse.objects.all()
+    queryset = models.PackageCourse.objects.filter(is_admin=True)
     serializer_class = serializers.PackageCourseSerializer
     permission_classes = [AllowAny]
 

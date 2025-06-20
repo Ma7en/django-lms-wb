@@ -188,7 +188,7 @@ urlpatterns = [
     path(
         "course/list-admin/",
         views.CourseListAdmin.as_view(),
-        name="course-list",
+        name="course-list-admin",
     ),
     # (List Is Free App)
     path(
