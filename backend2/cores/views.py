@@ -335,7 +335,7 @@ class CourseResultList(generics.ListCreateAPIView):
         if 'result' in self.request.GET:
             try:
                 limit = int(self.request.GET['result'])
-                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+                qs = qs.order_by('-id').filter(is_visible=True, is_live=False)[:limit]
             except ValueError:
                 # Handle the case where 'result' is not an integer
                 pass
@@ -980,6 +980,22 @@ class PackageCoursesSearchList(generics.ListCreateAPIView):
                 )
         return qs
 
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Package Course Discount *** #
+class PackageCourseDiscountView(generics.RetrieveUpdateAPIView):
+    queryset = models.PackageCourseDiscount.objects.all()
+    serializer_class = serializers.PackageCourseDiscountSerializer
+
+    def get_object(self):
+        obj, created = models.PackageCourseDiscount.objects.get_or_create(id=1)
+        return obj
 
 
 
@@ -3411,319 +3427,6 @@ class ReviewUserSearchList(generics.ListCreateAPIView):
 
 
 
-# ******************************************************************************
-# ==============================================================================
-# *** App Stats ***
-class AppStatsView(generics.GenericAPIView):
-    def get(self, request):
-        users_count = models.User.objects.count()
-        admins_count = models.User.objects.filter(is_admin=True).count()
-        teachers_count = models.User.objects.filter(is_teacher=True).count()
-        staffs_count = models.User.objects.filter(is_superuser=False, is_staff=True).count()
-        students_count = models.User.objects.filter(is_student=True).count()
-
-        categories_section_count = models.CategorySection.objects.filter(is_visible=True).count()
-        sections_course_count = models.SectionCourse.objects.filter(is_visible=True).count()
-
-        courses_count = models.Course.objects.filter(is_visible=True).count()
-        sections_in_course_count = models.SectionInCourse.objects.filter(is_visible=True).count()
-        lessons_count = models.LessonInCourse.objects.filter(is_visible=True).count()
-
-        coupons_course_count = models.CouponCourse.objects.filter(is_visible=True).count()
-        
-        total_enrolled_students = models.StudentCourseEnrollment.objects.count()
-
-        questionbanks_count = models.QuestionBank.objects.filter(is_visible=True).count()
-
-
-        contacts_count = models.ContactUsUser.objects.count()
-        reviews_count = models.ReviewUser.objects.count()
-
-        return Response({
-            'users_count': users_count,
-            'admins_count': admins_count,
-            'teachers_count': teachers_count,
-            'staffs_count': staffs_count,
-            'students_count': students_count,
-
-            'categories_section_count': categories_section_count,
-            'sections_course_count': sections_course_count,
-
-            'courses_count': courses_count,
-            'sections_in_course_count': sections_in_course_count,
-            'lessons_count': lessons_count,
-            
-            'coupons_course_count': coupons_course_count,
-
-            'total_enrolled_students': total_enrolled_students,
-
-            'questionbanks_count': questionbanks_count,
-
-            'contacts_count': contacts_count,
-            'reviews_count': reviews_count,
-        })
-
-
-
-
-
-
-# ******************************************************************************
-# ==============================================================================
-# *** Admin Dashboard Stats ***
-class AdminDashboardStatsView(generics.GenericAPIView):
-    def get(self, request):
-        # 
-        users_count = models.User.objects.count()
-        superuser_count = models.User.objects.filter(is_superuser=True, is_staff=True).count()
-        admins_count = models.User.objects.filter(is_admin=True).count()
-        teachers_count = models.User.objects.filter(is_teacher=True).count()
-        staffs_count = models.User.objects.filter(is_superuser=False, is_staff=True).count()
-        students_count = models.User.objects.filter(is_student=True).count()
-
-        #   
-        categories_section_count = models.CategorySection.objects.count()
-        sections_course_count = models.SectionCourse.objects.count()
-
-        # 
-        courses_count = models.Course.objects.count()
-        courses_is_live_count = models.Course.objects.filter(is_live=True).count()
-        sections_in_course_count = models.SectionInCourse.objects.count()
-        lessons_count = models.LessonInCourse.objects.count()
-
-        # 
-        packages_course_count = models.PackageCourse.objects.count()
-        
-        # 
-        categories_book_count = models.CategoryBook.objects.count()
-
-        # 
-        books_count = models.Book.objects.count()
-
-        # 
-        powerpoints_count = models.Powerpoint.objects.count()
-
-        # 
-        proofreadingservices_count = models.ProofreadingService.objects.count()
-        proofreadingservices_replay_count = models.ProofreadingService.objects.filter(status="reply").count()
-  
-        # 
-        categories_blogs_count = models.CategoryBlog.objects.count()
-
-        # 
-        blogs_count = models.Blog.objects.count()
-
-        # 
-        famoussayings_count = models.FamousSayings.objects.count()
-
-
-        # 
-        coupons_course_count = models.CouponCourse.objects.count()
-        
-        # 
-        total_enrolled_students = models.StudentCourseEnrollment.objects.count()
-
-        # 
-        questionbanks_count = models.QuestionBank.objects.count()
-
-
-        if 'user_id' in request.GET:
-            user_id = request.GET['user_id']
-            if user_id[-1] == "/":
-                user_id = user_id[:-1]
-            user_id = int(user_id)
-
-            # 
-            admin_categories_section_count = models.CategorySection.objects.filter(user=user_id).count()
-            admin_sections_course_count = models.SectionCourse.objects.filter(user=user_id).count()
-            
-            # 
-            admin_courses_count = models.Course.objects.filter(user=user_id).count()
-            
-            # 
-            admin_packages_course_count = models.PackageCourse.objects.filter(user=user_id).count()
-
-            # 
-            admin_categories_book_count = models.CategoryBook.objects.filter(user=user_id).count()
-            
-            # 
-            admin_books_count = models.Book.objects.filter(user=user_id).count()
-  
-            # 
-            admin_powerpoints_count = models.Powerpoint.objects.filter(user=user_id).count()
-  
-            # 
-            admin_proofreadingservices_count = models.ProofreadingService.objects.filter(user=user_id).count()
-
-            # 
-            admin_categories_blogs_count = models.CategoryBlog.objects.filter(user=user_id).count()
-  
-            # 
-            admin_blogs_count = models.Blog.objects.filter(user=user_id).count()
-  
-            # 
-            admin_famoussayings_count = models.FamousSayings.objects.filter(user=user_id).count()
-
-            # 
-            admin_coupon_course_count = models.CouponCourse.objects.filter(user=user_id).count()
-            
-            # 
-            admin_banks_count = models.QuestionBank.objects.filter(user=user_id).count()
-        else:
-            admin_categories_section_count = 0
-            admin_sections_course_count = 0
-            admin_courses_count = 0
-
-            # 
-            admin_packages_course_count = 0
-            admin_categories_book_count = 0
-            admin_books_count = 0
-            admin_powerpoints_count = 0
-            admin_proofreadingservices_count = 0
-            admin_categories_blogs_count = 0
-            admin_blogs_count = 0
-            admin_famoussayings_count = 0
-            
-            # 
-            admin_coupon_course_count = 0
-            admin_banks_count = 0
-
-        contacts_count = models.ContactUsUser.objects.count()
-        reviews_count = models.ReviewUser.objects.count()
-
-        return Response({
-            # 
-            'users_count': users_count,
-            'superuser_count': superuser_count,
-            'admins_count': admins_count,
-            'teachers_count': teachers_count,
-            'staffs_count': staffs_count,
-            'students_count': students_count,
-
-            # 
-            'categories_section_count': categories_section_count,
-            'sections_course_count': sections_course_count,
-
-            # 
-            'courses_count': courses_count,
-            'courses_is_live_count': courses_is_live_count,
-            'sections_in_course_count': sections_in_course_count,
-            'lessons_count': lessons_count,
-
-            # 
-            'packages_course_count': packages_course_count,
-            'admin_packages_course_count': admin_packages_course_count,
-
-            # 
-            'categories_book_count': categories_book_count,
-            'admin_categories_book_count': admin_categories_book_count,
-
-            # 
-            'books_count': books_count,
-            'admin_books_count': admin_books_count,
-            
-            # 
-            'powerpoints_count': powerpoints_count,
-            'admin_powerpoints_count': admin_powerpoints_count,
-            
-            # 
-            'proofreadingservices_count': proofreadingservices_count,
-            'proofreadingservices_replay_count': proofreadingservices_replay_count,
-            'admin_proofreadingservices_count': admin_proofreadingservices_count,
-            
-            # 
-            'categories_blogs_count': categories_blogs_count,
-            'admin_categories_blogs_count': admin_categories_blogs_count,
-            
-            # 
-            'blogs_count': blogs_count,
-            'admin_blogs_count': admin_blogs_count,
-            
-            # 
-            'famoussayings_count': famoussayings_count,
-            'admin_famoussayings_count': admin_famoussayings_count,
-            
-            # 
-            'coupons_course_count': coupons_course_count,
-
-            # 
-            'total_enrolled_students': total_enrolled_students,
-
-            # 
-            'questionbanks_count': questionbanks_count,
-
-            # 
-            "admin_categories_section_count": admin_categories_section_count,
-            "admin_sections_course_count": admin_sections_course_count,
-            "admin_courses_count": admin_courses_count,
-            "admin_coupon_course_count": admin_coupon_course_count,
-            "admin_banks_count": admin_banks_count,
-            
-            # 
-            'contacts_count': contacts_count,
-            'reviews_count': reviews_count,
-        })
-
-
-
-
-
-# ******************************************************************************
-# ==============================================================================
-# *** Teacher Dashboard Stats ***
-class TeacherDashboardStatsView(generics.GenericAPIView):
-    def get(self, request):
-        if 'user_id' in request.GET:
-            user_id = request.GET['user_id']
-            if user_id[-1] == "/":
-                user_id = user_id[:-1]
-            user_id = int(user_id)
-            teacher_courses_count = models.Course.objects.filter(user=user_id).count()
-            teacher_banks_count = models.QuestionBank.objects.filter(user=user_id).count()
-        else:
-            teacher_courses_count = 0
-            teacher_banks_count = 0
-
-        contacts_count = models.ContactUsUser.objects.count()
-        reviews_count = models.ReviewUser.objects.count()
-
-        return Response({
-            "teacher_courses_count": teacher_courses_count,
-            "teacher_banks_count": teacher_banks_count,
-
-            'contacts_count': contacts_count,
-            'reviews_count': reviews_count,
-        })
-
-
-
-
-
-
-# ******************************************************************************
-# ==============================================================================
-# *** Student Dashboard Stats ***
-class StudentDashboardStatsView(generics.GenericAPIView):
-    def get(self, request):
-        if 'user_id' in request.GET:
-            user_id = request.GET['user_id']
-            if user_id[-1] == "/":
-                user_id = user_id[:-1]
-            user_id = int(user_id)
-            student_courses_enrollment_count = models.StudentCourseEnrollment.objects.filter(student=user_id).count()
-            student_favorite_course_count = models.StudentFavoriteCourse.objects.filter(student=user_id).count()
-        else:
-            student_courses_enrollment_count = 0
-            student_favorite_course_count = 0
-
-        return Response({
-            "student_courses_enrollment_count": student_courses_enrollment_count,
-            "student_favorite_course_count": student_favorite_course_count,
- 
-        })
-
-
-
 
 
 
@@ -4123,6 +3826,77 @@ class ReportBlogPKAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
+
+# ******************************************************************************
+# ==============================================================================
+# ***  YouTube Suggestions Blog ***
+class YouTubeSuggestionsBlogList(generics.ListCreateAPIView):
+    queryset = models.YouTubeSuggestionsBlog.objects.all()
+    serializer_class = serializers.YouTubeSuggestionsBlogSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+
+
+class YouTubeSuggestionsBlogListApp(generics.ListCreateAPIView):
+    queryset = models.YouTubeSuggestionsBlog.objects.all()
+    serializer_class = serializers.YouTubeSuggestionsBlogSerializer
+    permission_classes = [AllowAny]
+
+
+
+class YouTubeSuggestionsBlogListAdmin(generics.ListCreateAPIView):
+    queryset = models.YouTubeSuggestionsBlog.objects.all()
+    serializer_class = serializers.YouTubeSuggestionsBlogSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class YouTubeSuggestionsBlogPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.YouTubeSuggestionsBlog.objects.all()
+    serializer_class = serializers.YouTubeSuggestionsBlogSerializer
+    permission_classes = [AllowAny]
+
+
+
+class YouTubeSuggestionsBlogResultList(generics.ListCreateAPIView):
+    queryset = models.YouTubeSuggestionsBlog.objects.all()
+    serializer_class = serializers.YouTubeSuggestionsBlogSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+
+
+  
+
+class YouTubeSuggestionsBlogSearchList(generics.ListCreateAPIView):
+    queryset = models.YouTubeSuggestionsBlog.objects.all()
+    serializer_class = serializers.YouTubeSuggestionsBlogSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(video_url__icontains=search)  
+                )
+        return qs
+
+
+
+
 # ******************************************************************************
 # ==============================================================================
 # ***  Blogs ***
@@ -4230,6 +4004,404 @@ class ReportBlogPKAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** App Stats ***
+class AppStatsView(generics.GenericAPIView):
+    def get(self, request):
+        # 
+        users_count = models.User.objects.count()
+        admins_count = models.User.objects.filter(is_admin=True).count()
+        teachers_count = models.User.objects.filter(is_teacher=True).count()
+        staffs_count = models.User.objects.filter(is_superuser=False, is_staff=True).count()
+        students_count = models.User.objects.filter(is_student=True).count()
+
+        # 
+        categories_section_count = models.CategorySection.objects.filter(is_visible=True).count()
+        sections_course_count = models.SectionCourse.objects.filter(is_visible=True).count()
+
+        # 
+        courses_count = models.Course.objects.filter(is_visible=True).count()
+        sections_in_course_count = models.SectionInCourse.objects.filter(is_visible=True).count()
+        lessons_count = models.LessonInCourse.objects.filter(is_visible=True).count()
+
+        # 
+        coupons_course_count = models.CouponCourse.objects.filter(is_visible=True).count()
+        
+        # 
+        total_enrolled_students = models.StudentCourseEnrollment.objects.count()
+
+        # 
+        questionbanks_count = models.QuestionBank.objects.filter(is_visible=True).count()
+
+        # 
+        contacts_count = models.ContactUsUser.objects.count()
+        reviews_count = models.ReviewUser.objects.count()
+
+        return Response({
+            # 
+            'users_count': users_count,
+            'admins_count': admins_count,
+            'teachers_count': teachers_count,
+            'staffs_count': staffs_count,
+            'students_count': students_count,
+            
+            # 
+            'categories_section_count': categories_section_count,
+            'sections_course_count': sections_course_count,
+
+            # 
+            'courses_count': courses_count,
+            'sections_in_course_count': sections_in_course_count,
+            'lessons_count': lessons_count,
+
+            # 
+            'coupons_course_count': coupons_course_count,
+
+            # 
+            'total_enrolled_students': total_enrolled_students,
+
+            # 
+            'questionbanks_count': questionbanks_count,
+
+            # 
+            'contacts_count': contacts_count,
+            'reviews_count': reviews_count,
+        })
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Admin Dashboard Stats ***
+class AdminDashboardStatsView(generics.GenericAPIView):
+    def get(self, request):
+        # 
+        users_count = models.User.objects.count()
+        superuser_count = models.User.objects.filter(is_superuser=True, is_staff=True).count()
+        admins_count = models.User.objects.filter(is_admin=True).count()
+        teachers_count = models.User.objects.filter(is_teacher=True).count()
+        staffs_count = models.User.objects.filter(is_superuser=False, is_staff=True).count()
+        students_count = models.User.objects.filter(is_student=True).count()
+
+        #   
+        categories_section_count = models.CategorySection.objects.count()
+        sections_course_count = models.SectionCourse.objects.count()
+
+        # 
+        courses_count = models.Course.objects.count()
+        sections_in_course_count = models.SectionInCourse.objects.count()
+        lessons_count = models.LessonInCourse.objects.count()
+
+        # 
+        courses_is_live_count = models.Course.objects.filter(is_live=True).count()
+
+        # 
+        packages_course_count = models.PackageCourse.objects.count()
+        
+        # 
+        categories_book_count = models.CategoryBook.objects.count()
+
+        # 
+        books_count = models.Book.objects.count()
+
+        # 
+        powerpoints_count = models.Powerpoint.objects.count()
+ 
+        # 
+        powerpointservice_count = models.PowerpointService.objects.count()
+        powerpointservice_replay_count = models.PowerpointService.objects.filter(status="reply").count()
+
+        # 
+        proofreadingservices_count = models.ProofreadingService.objects.count()
+        proofreadingservices_replay_count = models.ProofreadingService.objects.filter(status="reply").count()
+  
+        # 
+        categories_blogs_count = models.CategoryBlog.objects.count()
+
+        # 
+        blogs_count = models.Blog.objects.count()
+
+        # 
+        youTubesuggestions_count = models.YouTubeSuggestionsBlog.objects.count()
+
+        # 
+        famoussayings_count = models.FamousSayings.objects.count()
+
+        # 
+        coupons_course_count = models.CouponCourse.objects.count()
+        
+        # 
+        total_enrolled_students = models.StudentCourseEnrollment.objects.count()
+
+        # 
+        questionbanks_count = models.QuestionBank.objects.count()
+
+
+        if 'user_id' in request.GET:
+            user_id = request.GET['user_id']
+            if user_id[-1] == "/":
+                user_id = user_id[:-1]
+            user_id = int(user_id)
+
+            # 
+            admin_categories_section_count = models.CategorySection.objects.filter(user=user_id).count()
+            admin_sections_course_count = models.SectionCourse.objects.filter(user=user_id).count()
+            
+            # 
+            admin_courses_count = models.Course.objects.filter(user=user_id).count()
+
+            # 
+            admin_courses_is_live_count = models.Course.objects.filter(user=user_id, is_live=True).count()
+            
+            # 
+            admin_packages_course_count = models.PackageCourse.objects.filter(user=user_id).count()
+
+            # 
+            admin_categories_book_count = models.CategoryBook.objects.filter(user=user_id).count()
+            
+            # 
+            admin_books_count = models.Book.objects.filter(user=user_id).count()
+  
+            # 
+            admin_powerpoints_count = models.Powerpoint.objects.filter(user=user_id).count()
+  
+            # 
+            admin_proofreadingservices_count = models.ProofreadingService.objects.filter(user=user_id).count()
+
+            # 
+            admin_categories_blogs_count = models.CategoryBlog.objects.filter(user=user_id).count()
+  
+            # 
+            admin_blogs_count = models.Blog.objects.filter(user=user_id).count()
+  
+            # 
+            admin_youTubesuggestions_count = models.YouTubeSuggestionsBlog.objects.filter(user=user_id).count()
+  
+            # 
+            admin_famoussayings_count = models.FamousSayings.objects.filter(user=user_id).count()
+
+            # 
+            admin_coupon_course_count = models.CouponCourse.objects.filter(user=user_id).count()
+            
+            # 
+            admin_banks_count = models.QuestionBank.objects.filter(user=user_id).count()
+        else:
+            # 
+            admin_categories_section_count = 0
+            admin_sections_course_count = 0
+            admin_courses_count = 0
+
+            # 
+            admin_courses_is_live_count = 0
+
+            # 
+            admin_packages_course_count = 0
+
+            # 
+            admin_categories_book_count = 0
+            admin_books_count = 0
+
+            # 
+            admin_powerpoints_count = 0
+
+            # 
+            admin_proofreadingservices_count = 0
+
+            # 
+            admin_categories_blogs_count = 0
+            admin_blogs_count = 0
+            admin_youTubesuggestions_count = 0
+
+            # 
+            admin_famoussayings_count = 0
+            
+            # 
+            admin_coupon_course_count = 0
+            admin_banks_count = 0
+
+        contacts_count = models.ContactUsUser.objects.count()
+        reviews_count = models.ReviewUser.objects.count()
+
+        return Response({
+            # 
+            'users_count': users_count,
+            'superuser_count': superuser_count,
+            'admins_count': admins_count,
+            'teachers_count': teachers_count,
+            'staffs_count': staffs_count,
+            'students_count': students_count,
+
+            # 
+            'categories_section_count': categories_section_count,
+            'sections_course_count': sections_course_count,
+
+            # 
+            'courses_count': courses_count,
+            'sections_in_course_count': sections_in_course_count,
+            'lessons_count': lessons_count,
+            
+            # 
+            'courses_is_live_count': courses_is_live_count,
+            'admin_courses_is_live_count': admin_courses_is_live_count,
+
+            # 
+            'packages_course_count': packages_course_count,
+            'admin_packages_course_count': admin_packages_course_count,
+
+            # 
+            'categories_book_count': categories_book_count,
+            'admin_categories_book_count': admin_categories_book_count,
+
+            # 
+            'books_count': books_count,
+            'admin_books_count': admin_books_count,
+            
+            # 
+            'powerpoints_count': powerpoints_count,
+            'admin_powerpoints_count': admin_powerpoints_count,
+
+            # 
+            'powerpointservice_count': powerpointservice_count,
+            'powerpointservice_replay_count': powerpointservice_replay_count,
+            
+            # 
+            'proofreadingservices_count': proofreadingservices_count,
+            'proofreadingservices_replay_count': proofreadingservices_replay_count,
+            'admin_proofreadingservices_count': admin_proofreadingservices_count,
+            
+            # 
+            'categories_blogs_count': categories_blogs_count,
+            'admin_categories_blogs_count': admin_categories_blogs_count,
+            
+            # 
+            'blogs_count': blogs_count,
+            'admin_blogs_count': admin_blogs_count,
+            
+            # 
+            'youTubesuggestions_count': youTubesuggestions_count,
+            'admin_youTubesuggestions_count': admin_youTubesuggestions_count,
+            
+            # 
+            'famoussayings_count': famoussayings_count,
+            'admin_famoussayings_count': admin_famoussayings_count,
+            
+            # 
+            'coupons_course_count': coupons_course_count,
+
+            # 
+            'total_enrolled_students': total_enrolled_students,
+
+            # 
+            'questionbanks_count': questionbanks_count,
+
+            # 
+            "admin_categories_section_count": admin_categories_section_count,
+            "admin_sections_course_count": admin_sections_course_count,
+            "admin_courses_count": admin_courses_count,
+            "admin_coupon_course_count": admin_coupon_course_count,
+            "admin_banks_count": admin_banks_count,
+            
+            # 
+            'contacts_count': contacts_count,
+            'reviews_count': reviews_count,
+        })
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Teacher Dashboard Stats ***
+class TeacherDashboardStatsView(generics.GenericAPIView):
+    def get(self, request):
+        if 'user_id' in request.GET:
+            user_id = request.GET['user_id']
+            if user_id[-1] == "/":
+                user_id = user_id[:-1]
+            user_id = int(user_id)
+
+            # 
+            teacher_courses_count = models.Course.objects.filter(user=user_id).count()
+            teacher_banks_count = models.QuestionBank.objects.filter(user=user_id).count()
+        else:
+            # 
+            teacher_courses_count = 0
+            teacher_banks_count = 0
+
+        contacts_count = models.ContactUsUser.objects.count()
+        reviews_count = models.ReviewUser.objects.count()
+
+        return Response({
+            # 
+            "teacher_courses_count": teacher_courses_count,
+            "teacher_banks_count": teacher_banks_count,
+
+            # 
+            'contacts_count': contacts_count,
+            'reviews_count': reviews_count,
+        })
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Student Dashboard Stats ***
+class StudentDashboardStatsView(generics.GenericAPIView):
+    def get(self, request):
+        if 'user_id' in request.GET:
+            user_id = request.GET['user_id']
+            if user_id[-1] == "/":
+                user_id = user_id[:-1]
+            user_id = int(user_id)
+
+            # 
+            student_courses_enrollment_count = models.StudentCourseEnrollment.objects.filter(student=user_id).count()
+            student_favorite_course_count = models.StudentFavoriteCourse.objects.filter(student=user_id).count()
+
+            # 
+            student_packages_course_count = models.PackageCourse.objects.filter(user=user_id).count()
+
+            # 
+            student_proofreadingservices_count = models.ProofreadingService.objects.filter(user=user_id).count()
+            student_proofreadingservices_replay_count = models.ProofreadingService.objects.filter(user=user_id, status="reply").count()
+
+        else:
+            # 
+            student_courses_enrollment_count = 0
+            student_favorite_course_count = 0
+
+            # 
+            student_packages_course_count = 0
+
+            # 
+            student_proofreadingservices_count = 0
+            student_proofreadingservices_replay_count = 0
+             
+
+        return Response({
+            # 
+            "student_courses_enrollment_count": student_courses_enrollment_count,
+            "student_favorite_course_count": student_favorite_course_count,
+
+            # 
+            "student_packages_course_count": student_packages_course_count,
+
+            # 
+            "student_proofreadingservices_count": student_proofreadingservices_count,
+            "student_proofreadingservices_replay_count": student_proofreadingservices_replay_count,
+
+        })
 
 
 

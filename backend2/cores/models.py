@@ -216,6 +216,9 @@ class Course(models.Model):
     techs = models.TextField(max_length=10_000, null=True, blank=True)
 
     # 
+    table_contents  = models.JSONField(default=list)
+
+    # 
     features = models.JSONField(default=list, null=True, blank=True)
     requirements = models.JSONField(default=list, null=True, blank=True)
     target_audience = models.JSONField(default=list, null=True, blank=True)
@@ -353,6 +356,11 @@ class LessonInCourse(models.Model):
     title = models.CharField(max_length=1_000)
     description = models.TextField(max_length=10_000, null=True, blank=True)
     duration = models.CharField(max_length=1_000, null=True, blank=True)
+
+    # 
+    warning_message_user =  models.CharField(max_length=1_000, null=True, blank=True)
+    rush_watch_lessons =  models.CharField(max_length=1_000, null=True, blank=True)
+
 
     # For Video Lessons
     video_file = models.FileField(upload_to="course/lesson/videos", null=True, blank=True)
@@ -599,7 +607,7 @@ class PackageCourse(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name_plural = "1-9. Courses"
+        verbose_name_plural = "1-9. Package Course"
 
     def __str__(self):
         return f"{self.id}): ({self.title})  - [{self.user}] - ({self.is_visible})"
@@ -608,6 +616,24 @@ class PackageCourse(models.Model):
         if self.slug == "" or self.slug is None:
             self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
         super(PackageCourse, self).save(*args, **kwargs)
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** PackageCourseDiscount *** #
+class PackageCourseDiscount(models.Model):
+    # number = models.IntegerField(default=0)
+    number = models.PositiveIntegerField(default=0)
+
+    class Meta: 
+        verbose_name_plural = "1-10. Package Course Discount"
+
+    def __str__(self):
+        return f"{self.id}): ({self.number})"
+
+
 
 
 # ******************************************************************************
@@ -2085,6 +2111,40 @@ class ReportBlog(models.Model):
         if not self.slug:
             self.slug = shortuuid.uuid()[:8]
         super().save(*args, **kwargs)
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  YouTube Suggestions Blog *** #
+class YouTubeSuggestionsBlog(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='youTube_suggestions_user',
+    )
+
+    title = models.CharField(max_length=1_000)
+    video_url = models.URLField(max_length=10_000, null=True, blank=True)
+    
+    is_visible = models.BooleanField(default=True)
+ 
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = "4-7: YouTube Suggestions"
+
+    def __str__(self):
+        return f"{self.id}): ({self.title}) - ({self.is_visible})"
+
+
 
 
 

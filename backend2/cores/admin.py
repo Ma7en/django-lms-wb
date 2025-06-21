@@ -25,8 +25,8 @@ admin.site.register(models.SectionCourse)
 admin.site.register(models.Course)
 admin.site.register(models.SectionInCourse)
 admin.site.register(models.LessonInCourse)
-admin.site.register(models.FileInCourse)
 admin.site.register(models.StudentAnswerInCourse)
+admin.site.register(models.FileInCourse)
 admin.site.register(models.QuestionInCourse)
 
 
@@ -35,6 +35,14 @@ admin.site.register(models.QuestionInCourse)
 # ==============================================================================
 # *** Coupon Course *** #
 admin.site.register(models.CouponCourse)
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Package Course *** #
+admin.site.register(models.PackageCourse)
+admin.site.register(models.PackageCourseDiscount)
 
 
 

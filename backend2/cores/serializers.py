@@ -139,6 +139,9 @@ class LessonInCourseSerializer(serializers.ModelSerializer):
             "description",
             "duration",
 
+            "warning_message_user",
+            "rush_watch_lessons",
+
             "video_file",
             "video_url",
             
@@ -241,6 +244,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "requirements",
             "target_audience",
             "is_visible",
+            "table_contents",
 
             # 
             "is_live",
@@ -309,6 +313,21 @@ class PackageCourseSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
         return representation
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Package Course DiscountSerializer *** #
+class PackageCourseDiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PackageCourseDiscount
+        fields = ['id', 'number']
+
+
+
 
 
 
@@ -1119,6 +1138,12 @@ class ReviewUserSerializer(serializers.ModelSerializer):
 # ******************************************************************************
 # ==============================================================================
 # ***  Blogs  *** #
+
+
+class YouTubeSuggestionsBlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.YouTubeSuggestionsBlog
+        fields = "__all__"
 
 
 class ReportBlogSerializer(serializers.ModelSerializer):

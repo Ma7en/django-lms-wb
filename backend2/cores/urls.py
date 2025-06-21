@@ -389,18 +389,19 @@ urlpatterns = [
         views.FetchStudentAnswerInCourseStatus.as_view(),
         name="fetch-student-answer-in-course-status-student_id-lesson_id",
     ),
-    
+    # 
     # path(
     #     'courses/sections/<int:section_id>/lessons/', 
     #     views.LessonInCourseListCreate.as_view(), 
     #     name='lesson-list',
     # ),
-
+    # 
     # path(
     #     'courses/sections/<int:section_id>/lessons/<int:pk>/', 
     #     views.LessonInCourseRetrieveUpdateDestroy.as_view(), 
     #     name='lesson-detail',
     # ),
+    # 
     # path(
     #     'courses/sections/list/<int:section_id>/lessons/', 
     #     views.LessonInCourseCreateView.as_view(), 
@@ -529,6 +530,18 @@ urlpatterns = [
         name="package-courses-search-list",
     ),
 
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** Package Course Discount *** #
+    path(
+        'package-course-discount/', 
+        views.PackageCourseDiscountView.as_view(),
+        name="package-course-discount",
+    ),
 
 
     path(
@@ -1515,6 +1528,48 @@ urlpatterns = [
     ),
 
 
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # (YouTube Suggestions Blog)
+    # (List)
+    path(
+        'youTube-suggestions-blog/list/', 
+        views.YouTubeSuggestionsBlogList.as_view(), 
+        name='youTube-suggestions-blog-list',
+    ),
+    # (List Appp)
+    path(
+        'youTube-suggestions-blog/list-app/', 
+        views.YouTubeSuggestionsBlogListApp.as_view(), 
+        name='youTube-suggestions-blog-list-app',
+    ),
+    # (List Admin)
+    path(
+        'youTube-suggestions-blog/list-admin/', 
+        views.YouTubeSuggestionsBlogListAdmin.as_view(), 
+        name='youTube-suggestions-blog-list-admin',
+    ),
+    # (PK)
+    path(
+        'youTube-suggestions-blog/<int:pk>/', 
+        views.YouTubeSuggestionsBlogPK.as_view(), 
+        name='youTube-suggestions-blog-pk',
+    ),
+    # (List Result)
+    path(
+        'youTube-suggestions-blog/result/',  #?result=9
+        views.YouTubeSuggestionsBlogResultList.as_view(), 
+        name='blog-result-list',
+    ),
+    # (Search)
+    path(
+        'youTube-suggestions-blog/search/<str:searchstring>/', 
+        views.YouTubeSuggestionsBlogSearchList.as_view(),
+        name="blogs-search-list",
+    ), 
 
     
 
