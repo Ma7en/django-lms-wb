@@ -538,4 +538,54 @@ urlpatterns = [
         views.Space.as_view(),
     ),
     # =================================================================
+    # REST Auth URLs
+    # 
+    # path(
+    #     'accounts/', 
+    #     include('allauth.urls'),
+    #     name='all-auth',
+    # ),
+    # 
+    # path(
+    #     'all-auth/', 
+    #     include('rest_auth.urls'),
+    #     name='all-auth',
+    # ),
+    # # 
+    # path(
+    #     'registration/', 
+    #     include('rest_auth.registration.urls'),
+    #     name='registration',
+    # ),
+    # # 
+    # path(
+    #     'social/', 
+    #     include('rest_auth.social.urls'),
+    #     name='social',
+    # ),  # للتسجيل عبر Google/Facebook
+    # 
+    # path(
+    #     'google/', 
+    #     views.GoogleLogin.as_view(), 
+    #     name='google_login',
+    # ),
+    # # 
+    # path(
+    #     'facebook/', 
+    #     views.FacebookLogin.as_view(), 
+    #     name='facebook_login',
+    # ),
+
+    # 
+    path(
+        'google/login/', 
+        views.GoogleLogin.as_view(), 
+        name='google_login',
+    ),
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
 ]

@@ -14,6 +14,8 @@ from rest_framework.exceptions import ValidationError
 
 
 # 
+from dj_rest_auth.registration.serializers import RegisterSerializer
+from allauth.account import app_settings as allauth_settings
 
 
 
@@ -820,6 +822,129 @@ class PublicConfirmResetPasswordSerializer(serializers.Serializer):
         if data["password"] != data["password2"]:
             raise serializers.ValidationError("Passwords do not match.")
         return data
+
+
+
+# *****************************************************************
+# =================================================================
+# *** 6) Social *** #
+
+
+# ******************************************************************************
+# ==============================================================================
+# 
+
+class JWTSerializer(serializers.Serializer):
+    access = serializers.CharField()
+    refresh = serializers.CharField()
+
+
+
+# class CustomRegisterGoogleSerializer(serializers.Serializer):
+#     email = serializers.EmailField(required=True)
+#     password1 = serializers.CharField(write_only=True)
+#     password2 = serializers.CharField(write_only=True)
+#     first_name = serializers.CharField(required=True)
+#     last_name = serializers.CharField(required=True)
+
+#     def validate(self, data):
+#         if data['password1'] != data['password2']:
+#             raise serializers.ValidationError("كلمة المرور غير متطابقة")
+#         return data
+
+#     def get_cleaned_data(self):
+#         return {
+#             'email': self.validated_data.get('email', ''),
+#             'password1': self.validated_data.get('password1', ''),
+#             'first_name': self.validated_data.get('first_name', ''),
+#             'last_name': self.validated_data.get('last_name', ''),
+#         }
+
+#     def save(self, request):
+#         user = models.User.objects.create_user(
+#             email=self.validated_data['email'],
+#             password=self.validated_data['password1'],
+#             first_name=self.validated_data['first_name'],
+#             last_name=self.validated_data['last_name'],
+#             is_student=True,  # تعيين المستخدم كـ Student
+#             is_active=True,
+#             is_verified=True,
+#         )
+#         return user
+   
+
+
+# class CustomRegisterGoogleSerializer(serializers.Serializer):
+#     email = serializers.EmailField(required=True)
+#     password1 = serializers.CharField(write_only=True)
+#     password2 = serializers.CharField(write_only=True)
+#     first_name = serializers.CharField(required=True)
+#     last_name = serializers.CharField(required=True)
+
+#     def validate(self, data):
+#         if data['password1'] != data['password2']:
+#             raise serializers.ValidationError("كلمة المرور غير متطابقة")
+#         return data
+
+#     def get_cleaned_data(self):
+#         return {
+#             'email': self.validated_data.get('email', ''),
+#             'password1': self.validated_data.get('password1', ''),
+#             'first_name': self.validated_data.get('first_name', ''),
+#             'last_name': self.validated_data.get('last_name', ''),
+#         }
+
+#     def save(self, request):
+#         user = models.User.objects.create_user(
+#             email=self.validated_data['email'],
+#             password=self.validated_data['password1'],
+#             first_name=self.validated_data['first_name'],
+#             last_name=self.validated_data['last_name'],
+#             is_student=True,  # تعيين المستخدم كـ Student
+#             is_active=True,
+#             is_verified=True,
+#         )
+#         return user
+
+
+
+# class CustomRegisterGoogleSerializer(RegisterSerializer):
+#     def get_cleaned_data(self):
+#         data = super().get_cleaned_data()
+#         # إضافة الحقول الإضافية
+#         data.update({
+#             'is_student': True,
+#             'is_active': True,
+#             'is_verified': True,
+#         })
+#         return data
+
+#     def save(self, request):
+#         user = super().save(request)
+        
+#         # تحديث خصائص المستخدم
+#         user.is_student = True
+#         user.is_active = True
+#         user.is_verified = True
+
+#         # إنشاء الملف الشخصي للطالب (مع معالجة الأخطاء)
+#         # try:
+#         #     if not hasattr(user, 'student_profile'):
+#         #         student_profile = models.StudentProfile.objects.create(user=user)
+#         #         student_profile.save()
+#         # except Exception as e:
+#         #     print(f"Error creating student profile: {e}")
+        
+#         student_profile = models.StudentProfile.objects.create(user=user)
+#         student_profile.save()
+#         print("\n\n\n\n\n\n\n\n")
+#         print("student_profile", student_profile)
+#         print("\n\n\n\n\n\n\n\n")
+        
+#         user.save()
+
+#         return user
+    
 
 
 

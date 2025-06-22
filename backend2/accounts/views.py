@@ -1,5 +1,6 @@
 #
 import jwt
+import os
 
 
 
@@ -34,6 +35,16 @@ from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
+
+
+
+#    
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+# from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+# from rest_auth.registration.views import SocialLoginView
+from dj_rest_auth.registration.views import SocialLoginView
+
 
 
 
@@ -2645,6 +2656,146 @@ class PublicUserSearchList(generics.ListCreateAPIView):
                 )
         return qs
 
+
+
+
+# *****************************************************************
+# =================================================================
+# *** 6) Social *** #
+# class GoogleLogin(SocialLoginView):
+#     adapter_class = GoogleOAuth2Adapter
+
+
+# class FacebookLogin(SocialLoginView):
+#     adapter_class = FacebookOAuth2Adapter
+
+
+
+
+# 1
+# class GoogleLogin(SocialLoginView):
+#     adapter_class = GoogleOAuth2Adapter
+#     callback_url = os.getenv("GOOGLE_REDIRECT_URL") 
+#     client_class = OAuth2Client
+
+
+# 2
+# class GoogleLogin(SocialLoginView):
+#     adapter_class = GoogleOAuth2Adapter
+#     callback_url = os.getenv("GOOGLE_REDIRECT_URL") 
+#     client_class = OAuth2Client
+
+#     def post(self, request, *args, **kwargs):
+#         response = super().post(request, *args, **kwargs)
+        
+#         if response.status_code == status.HTTP_200_OK:
+#             user = request.user
+#             if not user.is_student:
+#                 user.is_student = True
+#                 user.is_active = True
+#                 user.is_verified = True
+#                 student_profile = models.StudentProfile.objects.create(user=user)
+#                 student_profile.save()
+#                 user.save()     
+#         return response
+
+
+
+# # 3
+# class GoogleLogin(SocialLoginView):
+#     adapter_class = GoogleOAuth2Adapter
+#     callback_url = os.getenv("GOOGLE_REDIRECT_URL") 
+#     client_class = OAuth2Client
+
+#     def post(self, request, *args, **kwargs):
+#         response = super().post(request, *args, **kwargs)
+        
+#         if response.status_code == status.HTTP_200_OK:
+#             user = request.user
+#             if not user.is_student:
+#                 user.is_student = True
+#                 user.is_active = True
+#                 user.is_verified = True
+                
+#                 try:
+#                     if not hasattr(user, 'student_profile'):
+#                         student_profile = models.StudentProfile.objects.create(user=user)
+#                         student_profile.save()
+#                 except Exception as e:
+#                     print(f"Error creating student profile: {e}")
+
+#                 user.save()
+        
+#             user_data = serializers.UserSerializer(user).data
+#             user_profile = serializers.StudentProfileSerializer(student_profile).data
+
+#             refresh = RefreshToken.for_user(user)
+#             refresh["user_id"] = user.id
+#             access_token = refresh.access_token
+
+#             response = {
+#                 "success": True,
+#                 "code": 0,
+#                 "message": "User Login Successfully.",
+#                 "status_code": status.HTTP_200_OK,
+#                 "data": user_data,
+#                 "profile": user_profile,
+#                 "access_token": str(access_token),
+#                 "refresh_token": str(refresh),
+#             }
+#             return Response(response, status=status.HTTP_200_OK)
+
+
+# 4
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = os.getenv("GOOGLE_REDIRECT_URL") 
+    client_class = OAuth2Client
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        
+        if response.status_code == status.HTTP_200_OK:
+            user = request.user
+            if not user.is_student:
+                user.is_student = True
+                user.is_active = True
+                user.is_verified = True
+                user.save()
+
+            # إنشاء أو جلب البروفايل الموجود
+            student_profile, created = models.StudentProfile.objects.get_or_create(
+                user=user,
+                defaults={
+                    # يمكنك إضافة قيم افتراضية هنا إذا لزم الأمر
+                }
+            )
+
+            # تحديث البيانات إذا كان البروفايل موجوداً بالفعل
+            if not created:
+                # أي تحديثات إضافية للبروفايل الموجود
+                pass
+
+            user_data = serializers.UserSerializer(user).data
+            user_profile = serializers.StudentProfileSerializer(student_profile).data
+
+            refresh = RefreshToken.for_user(user)
+            refresh["user_id"] = user.id
+            access_token = refresh.access_token
+
+            response_data = {
+                "success": True,
+                "code": 0,
+                "message": "User Login Successfully.",
+                "status_code": status.HTTP_200_OK,
+                "data": user_data,
+                "profile": user_profile,
+                "access_token": str(access_token),
+                "refresh_token": str(refresh),
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        
+        return response
 
 
 

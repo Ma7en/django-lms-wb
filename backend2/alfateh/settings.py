@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
+load_dotenv()
 
 #
 import os
@@ -44,12 +46,33 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     'rest_framework.authtoken',
+
+    # 
+    'rest_framework_simplejwt',
+    
     # 
     'djoser',
     'django_filters',
+    
     #
     'django.contrib.sites',
     'django.contrib.flatpages',
+
+    # 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    
+    # DJ REST Auth
+    'dj_rest_auth',
+    'dj_rest_auth.registration', 
+
+    #  
+
+    # Providers المطلوبة:
+    'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.facebook',
+    
     #
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,7 +80,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-        # my application
+
+    # my application
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
     "cores.apps.CoresConfig",
@@ -66,6 +90,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     #
     "corsheaders.middleware.CorsMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
     # 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -153,12 +178,37 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     )
+}
+
+# 
+REST_AUTH = {
+    # "JWT_SERIALIZER": 'socialauth.serializers.JWTSerializer',
+    # "JWT_SERIALIZER": 'accounts.serializers.JWTSerializer',
+    "USE_JWT": True,
+    "JWT_AUTH_HTTPONLY": False,
 }
 
 
 # 
 SITE_ID = 1
+
+# 
+# إعدادات allauth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# لتحديد أن المستخدم الجديد سيكون طالبًا تلقائيًا
+# ACCOUNT_ADAPTER = 'accounts.adapter.CustomAccountAdapter'
+
+# 
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterGoogleSerializer',
+# }
+
 
 # 
 STATIC_URL = 'static/'

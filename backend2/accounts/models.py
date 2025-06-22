@@ -178,6 +178,8 @@ class SuperuserProfile(models.Model):
         return f"{self.id}): ({self.user.email})"
 
 
+
+
 # ******************************************************************************
 # ==============================================================================
 # *** Admin Profile  *** #
@@ -664,7 +666,7 @@ class StudentProfile(models.Model):
         verbose_name_plural="1-5) Student Profile"
 
     def __str__(self):
-        return f"{self.id}): ({self.phone_number})"
+        return f"{self.id}): [{self.user}]"
 
 
 
