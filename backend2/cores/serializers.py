@@ -101,7 +101,22 @@ class StudentAnswerInCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.StudentAnswerInCourse
-        fields = "__all__"
+        # fields = "__all__"
+        fields = [
+            "id",
+
+            "student",
+            "lesson",
+
+            "status",
+            "uploaded_files",
+            "degree",
+            "is_visible", 
+
+            "slug", 
+            "created_at",
+            "updated_at",
+        ]
     
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -146,6 +161,8 @@ class LessonInCourseSerializer(serializers.ModelSerializer):
             "video_url",
             
             "questions",
+            "questions_google_iframe",
+            "questions_google_url",
 
             "content",
             "uploaded_files",
@@ -232,8 +249,6 @@ class CourseSerializer(serializers.ModelSerializer):
             "image",
             "image_url",
             "duration",
-            "price",
-            "discount",
             "rating",
             "reviews_count",
             "students_count",
@@ -244,7 +259,23 @@ class CourseSerializer(serializers.ModelSerializer):
             "requirements",
             "target_audience",
             "is_visible",
+
+            # 
             "table_contents",
+
+            # 
+            "price",
+            "discount",
+
+            # 
+            "price_like_egypt",
+            "discount_like_egypt",
+
+            "price_like_saudi",
+            "discount_like_saudi",
+            
+            "price_like_america",
+            "discount_like_america",
 
             # 
             "is_live",
@@ -264,7 +295,12 @@ class CourseSerializer(serializers.ModelSerializer):
             "total_lesson",
             "total_enrolled_students",
             "course_rating",
+
+            # 
             "price_after_discount",
+            "price_after_discount_egypt",
+            "price_after_discount_saudi",
+            "price_after_discount_america",
         ]
     
     def to_representation(self, instance):

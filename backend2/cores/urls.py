@@ -384,11 +384,18 @@ urlpatterns = [
     ),
     # ()
     path(
+        'fetch-student-answer-in-lesson/<int:student_id>/<int:lesson_id>/', 
+        views.FetchStudentAnswerInLesson.as_view(),
+        name="fetch-student-answer-in-lesson-student_id-lesson_id",
+    ),
+    # ()
+    path(
         'fetch-student-answer-in-course-status/<int:student_id>/<int:lesson_id>/', 
         # views.fetch_enroll_status,
         views.FetchStudentAnswerInCourseStatus.as_view(),
         name="fetch-student-answer-in-course-status-student_id-lesson_id",
     ),
+
     # 
     # path(
     #     'courses/sections/<int:section_id>/lessons/', 

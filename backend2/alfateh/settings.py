@@ -203,6 +203,9 @@ AUTHENTICATION_BACKENDS = [
 
 # لتحديد أن المستخدم الجديد سيكون طالبًا تلقائيًا
 # ACCOUNT_ADAPTER = 'accounts.adapter.CustomAccountAdapter'
+ 
+ 
+ 
 
 # 
 # REST_AUTH_REGISTER_SERIALIZERS = {

@@ -195,9 +195,22 @@ class Course(models.Model):
     image_url = models.URLField(null=True, blank=True)
     duration = models.CharField(max_length=100, null=True, blank=True)
 
+    # 
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+    # 
+    price_like_egypt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_egypt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    price_like_saudi = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_saudi = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    price_like_america = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_america = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+
+    # 
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=0)
     reviews_count = models.PositiveIntegerField(default=0)
     students_count = models.PositiveIntegerField(default=0)
@@ -285,8 +298,18 @@ class Course(models.Model):
     #         return original
     #     return self.price
     # @property
+
     def price_after_discount(self):
         return self.price - self.discount
+
+    def price_after_discount_egypt(self):
+        return self.price_like_egypt - self.discount_like_egypt
+
+    def price_after_discount_saudi(self):
+        return self.price_like_saudi - self.discount_like_saudi
+
+    def price_after_discount_america(self):
+        return self.price_like_america - self.discount_like_america
     
 
     class Meta:
@@ -369,6 +392,10 @@ class LessonInCourse(models.Model):
     # For Question Lessons
     questions = models.JSONField(default=list)
 
+    # For Question Google Form
+    questions_google_iframe = models.TextField(max_length=10_000, null=True, blank=True)
+    questions_google_url = models.URLField(max_length=10_000, null=True, blank=True)
+
     # For Document Lessons
     content = models.TextField(max_length=10_000, null=True, blank=True)
 
@@ -378,7 +405,6 @@ class LessonInCourse(models.Model):
     # Answer form
     answer_form_pdf = models.FileField(upload_to="course/lesson/answer/pdf", null=True, blank=True)
     answer_form_pdf_url = models.URLField(max_length=10_000, null=True, blank=True)
-
 
     is_visible = models.BooleanField(default=True) #
     is_free = models.BooleanField(default=False)
@@ -424,6 +450,7 @@ class StudentAnswerInCourse(models.Model):
     # Answer form
     # answer = models.FileField(upload_to="course/lesson/studentanswer", null=True, blank=True)
     # answer_url = models.URLField(max_length=10_000, null=True, blank=True) 
+
     uploaded_files  = models.JSONField(default=list)
     degree = models.CharField(max_length=1_000, null=True, blank=True)
 
@@ -431,7 +458,7 @@ class StudentAnswerInCourse(models.Model):
  
     slug = models.SlugField(unique=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True) 
 
 
     class Meta:

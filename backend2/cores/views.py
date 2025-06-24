@@ -733,8 +733,21 @@ class StudentAnswerInCoursePK(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-class FetchStudentAnswerInCourseStatus(APIView): 
 
+class FetchStudentAnswerInLesson(generics.RetrieveAPIView):
+    serializer_class = serializers.StudentAnswerInCourseSerializer
+
+    def get_object(self):
+        student_id = self.kwargs['student_id']
+        lesson_id = self.kwargs['lesson_id']
+        student = models.User.objects.filter(id=student_id).first()
+        lesson = models.LessonInCourse.objects.filter(id=lesson_id).first()
+        return models.StudentAnswerInCourse.objects.filter(lesson=lesson, student=student).first()
+
+
+
+
+class FetchStudentAnswerInCourseStatus(APIView): 
     def get(self, request, student_id, lesson_id):
         student = models.User.objects.filter(id=student_id).first()
         lesson = models.LessonInCourse.objects.filter(id=lesson_id).first()
