@@ -4390,8 +4390,11 @@ class StudentDashboardStatsView(generics.GenericAPIView):
             student_proofreadingservices_replay_count = models.ProofreadingService.objects.filter(user=user_id, status="reply").count()
 
             # 
-            student_Powerpointservices_count = models.PowerpointService.objects.filter(user=user_id).count()
-            student_Powerpointservices_replay_count = models.PowerpointService.objects.filter(user=user_id, status="reply").count()
+            student_powerpoints_enrollment_count = models.StudentPowerpointEnrollment.objects.filter(student=user_id).count()
+
+            # 
+            student_powerpointservices_count = models.PowerpointService.objects.filter(user=user_id).count()
+            student_powerpointservices_replay_count = models.PowerpointService.objects.filter(user=user_id, status="reply").count()
 
         else:
             # 
@@ -4406,8 +4409,11 @@ class StudentDashboardStatsView(generics.GenericAPIView):
             student_proofreadingservices_replay_count = 0
 
             # 
-            student_Powerpointservices_count = 0
-            student_Powerpointservices_replay_count = 0
+            student_powerpoints_enrollment_count = 0
+
+            # 
+            student_powerpointservices_count = 0
+            student_powerpointservices_replay_count = 0
              
 
         return Response({
@@ -4423,8 +4429,11 @@ class StudentDashboardStatsView(generics.GenericAPIView):
             "student_proofreadingservices_replay_count": student_proofreadingservices_replay_count,
       
             # 
-            "student_Powerpointservices_count": student_Powerpointservices_count,
-            "student_Powerpointservices_replay_count": student_Powerpointservices_replay_count,
+            "student_powerpoints_enrollment_count": student_powerpoints_enrollment_count,
+
+            # 
+            "student_powerpointservices_count": student_powerpointservices_count,
+            "student_powerpointservices_replay_count": student_powerpointservices_replay_count,
 
         })
 

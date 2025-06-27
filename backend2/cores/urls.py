@@ -1264,10 +1264,10 @@ urlpatterns = [
     ),
     
     path(
-        'fetch-enroll-status/<int:student_id>/<int:powerpoint_id>/', 
+        'fetch-enroll-status-powerpoint/<int:student_id>/<int:powerpoint_id>/', 
         # views.fetch_enroll_status,
         views.FetchEnrollStatusPowerpointView.as_view(),
-        name="fetch-enroll-status-student_id-powerpoint_id",
+        name="fetch-enroll-status-powerpoint-student_id-powerpoint_id",
     ),
 
     #- 

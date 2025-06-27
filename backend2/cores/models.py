@@ -180,6 +180,7 @@ class Course(models.Model):
         ('beginner', 'مبتدئ'),
         ('intermediate', 'متوسط'),
         ('advanced', 'متقدم'),
+        ('comprehensive', 'شامل'),
     ]
     level = models.CharField(
         max_length=1_000,
@@ -196,8 +197,8 @@ class Course(models.Model):
     duration = models.CharField(max_length=100, null=True, blank=True)
 
     # 
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
 
     # 
     price_like_egypt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -506,6 +507,8 @@ class FileInCourse(models.Model):
         return f"{self.id}): ({self.name})"
 
 
+
+
 class QuestionInCourse(models.Model):
     lesson = models.ForeignKey(
         LessonInCourse,
@@ -610,10 +613,19 @@ class PackageCourse(models.Model):
     title = models.CharField(max_length=1_000)
     description = models.TextField(max_length=10_000, null=True, blank=True)
 
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    # 
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
 
-    price_after_discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    # 
+    price_like_egypt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_egypt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    price_like_saudi = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_saudi = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    price_like_america = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_america = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     courses = models.JSONField(default=list)    
     
@@ -631,6 +643,21 @@ class PackageCourse(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    def price_after_discount(self):
+        return self.price - self.discount
+    
+    # egyptPrice - (egyptPrice * (discountValues.egypt / 100));
+
+    def price_after_discount_egypt(self):
+        return  self.price_like_egypt - (self.price_like_egypt * (self.discount_like_egypt / 100))
+
+    def price_after_discount_saudi(self):
+        return self.price_like_saudi - (self.price_like_saudi * (self.discount_like_saudi / 100))
+
+    def price_after_discount_america(self): 
+        return self.price_like_america - (self.price_like_america * (self.discount_like_america / 100)) 
+    
 
     class Meta:
         ordering = ['-created_at']
@@ -1498,8 +1525,18 @@ class Powerpoint(models.Model):
     image_url = models.URLField(null=True, blank=True)
 
     # 
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
+
+    # 
+    price_like_egypt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_egypt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    price_like_saudi = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_saudi = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    price_like_america = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_like_america = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     # 
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=0)
@@ -1528,6 +1565,16 @@ class Powerpoint(models.Model):
     
     def price_after_discount(self):
         return self.price - self.discount
+
+    def price_after_discount_egypt(self):
+        return self.price_like_egypt - self.discount_like_egypt
+
+    def price_after_discount_saudi(self):
+        return self.price_like_saudi - self.discount_like_saudi
+
+    def price_after_discount_america(self):
+        return self.price_like_america - self.discount_like_america
+    
     
 
     class Meta:
@@ -1544,6 +1591,11 @@ class Powerpoint(models.Model):
 
 
 
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Student Powerpoint Enrollment *** #
 class StudentPowerpointEnrollment(models.Model):
     student = models.ForeignKey(
         User,

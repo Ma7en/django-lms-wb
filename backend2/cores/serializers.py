@@ -343,7 +343,47 @@ class PackageCourseSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.PackageCourse
-        fields = "__all__"
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+
+            "title",
+            "description",
+
+            # 
+            "price",
+            "discount",
+
+            # 
+            "price_like_egypt",
+            "discount_like_egypt",
+
+            "price_like_saudi",
+            "discount_like_saudi",
+            
+            "price_like_america",
+            "discount_like_america",
+
+
+            "courses",
+            "image",
+            "image_url",
+
+            "is_admin",
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            # 
+            "price_after_discount",
+            
+            "price_after_discount_egypt",
+            "price_after_discount_saudi",
+            "price_after_discount_america",
+        ]
     
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -1059,8 +1099,19 @@ class PowerpointSerializer(serializers.ModelSerializer):
             "image",
             "image_url",
             
+            # 
             "price",
             "discount",
+
+            # 
+            "price_like_egypt",
+            "discount_like_egypt",
+
+            "price_like_saudi",
+            "discount_like_saudi",
+            
+            "price_like_america",
+            "discount_like_america",
             
             "rating",
             "reviews_count",
@@ -1076,7 +1127,12 @@ class PowerpointSerializer(serializers.ModelSerializer):
             "updated_at",
 
             "total_enrolled_students",
+
+            # 
             "price_after_discount",
+            "price_after_discount_egypt",
+            "price_after_discount_saudi",
+            "price_after_discount_america",
         ]
 
     
