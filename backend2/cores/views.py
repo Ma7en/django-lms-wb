@@ -1379,6 +1379,18 @@ class StudentFavoriteCourseListAPI(generics.ListCreateAPIView):
             return models.StudentFavoriteCourse.objects.filter(student=student).distinct()
 
 
+class FetchFavoriteCourseStatusView(APIView):
+    # pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, student_id, course_id):
+        student = models.User.objects.filter(id=student_id).first()
+        course = models.Course.objects.filter(id=course_id).first()
+        enroll_status = models.StudentFavoriteCourse.objects.filter(course=course, student=student).exists()
+        return Response({'bool': enroll_status})
+
+
+
 def remove_favorite_course(request,course_id,student_id):
     student = models.User.objects.filter(id=student_id).first()
     course = models.Course.objects.filter(id=course_id).first()
@@ -3067,7 +3079,7 @@ class EnrolledStuentPowerpointList(generics.ListCreateAPIView):
         if 'powerpoint_id' in self.kwargs:
             powerpoint_id = self.kwargs['powerpoint_id']
             # course = models.Course.objects.get(pk=powerpoint_id)
-            return models.StudentCourseEnrollment.objects.filter(powerpoint=powerpoint_id)
+            return models.StudentPowerpointEnrollment.objects.filter(powerpoint=powerpoint_id)
         
 
 class EnrolledAllStuentPowerpointList(generics.ListCreateAPIView):
@@ -4013,6 +4025,1322 @@ class YouTubeSuggestionsBlogSearchList(generics.ListCreateAPIView):
 # class ReportBlogPKAPIView(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = models.ReportBlog.objects.all()
 #     serializer_class = serializers.ReportBlogSerializer
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Quran School ***
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Interview Date *** #
+class InterviewDateList(generics.ListCreateAPIView):
+    queryset = models.InterviewDate.objects.all()
+    serializer_class = serializers.InterviewDateSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class InterviewDateListApp(generics.ListAPIView):
+    queryset = models.InterviewDate.objects.filter(is_visible=True)
+    serializer_class = serializers.InterviewDateSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class InterviewDateListAdmin(generics.ListAPIView):
+    queryset = models.InterviewDate.objects.all()
+    serializer_class = serializers.InterviewDateSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class InterviewDatePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.InterviewDate.objects.all()
+    serializer_class = serializers.InterviewDateSerializer
+    permission_classes = [AllowAny]
+
+
+
+class InterviewDateResultList(generics.ListCreateAPIView):
+    queryset = models.InterviewDate.objects.all()
+    serializer_class = serializers.InterviewDateSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class InterviewDateSearchList(generics.ListCreateAPIView):
+    queryset = models.InterviewDate.objects.all()
+    serializer_class = serializers.InterviewDateSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(schedule_time__icontains=search)
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Quran Path *** #
+class QuranPathList(generics.ListCreateAPIView):
+    queryset = models.QuranPath.objects.all()
+    serializer_class = serializers.QuranPathSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class QuranPathListApp(generics.ListAPIView):
+    queryset = models.QuranPath.objects.filter(is_visible=True)
+    serializer_class = serializers.QuranPathSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class QuranPathListAdmin(generics.ListAPIView):
+    queryset = models.QuranPath.objects.all()
+    serializer_class = serializers.QuranPathSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class QuranPathPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.QuranPath.objects.all()
+    serializer_class = serializers.QuranPathSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+# class InterviewDateResultList(generics.ListCreateAPIView):
+#     queryset = models.InterviewDate.objects.all()
+#     serializer_class = serializers.InterviewDateSerializer
+
+#     def get_queryset(self):
+#         qs = super().get_queryset()
+#         if 'result' in self.request.GET:
+#             try:
+#                 limit = int(self.request.GET['result'])
+#                 qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+#             except ValueError:
+#                 # Handle the case where 'result' is not an integer
+#                 pass
+#         return qs
+    
+
+    
+# class InterviewDateSearchList(generics.ListCreateAPIView):
+#     queryset = models.InterviewDate.objects.all()
+#     serializer_class = serializers.InterviewDateSerializer
+#     pagination_class = StandardResultSetPagination
+#     # permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         qs = super().get_queryset()
+
+#         if 'searchstring' in self.kwargs:
+#             search = self.kwargs['searchstring'] 
+#             qs = qs.filter(
+#                 Q(schedule_time__icontains=search)
+#                 |Q(is_visible__icontains=search) 
+#                 )
+#         return qs
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Class Room *** #
+class ClassRoomList(generics.ListCreateAPIView):
+    queryset = models.ClassRoom.objects.all()
+    serializer_class = serializers.ClassRoomSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class ClassRoomListApp(generics.ListAPIView):
+    queryset = models.ClassRoom.objects.filter(is_visible=True)
+    serializer_class = serializers.ClassRoomSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class ClassRoomListAdmin(generics.ListAPIView):
+    queryset = models.ClassRoom.objects.all()
+    serializer_class = serializers.ClassRoomSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class ClassRoomPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.ClassRoom.objects.all()
+    serializer_class = serializers.ClassRoomSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+# class InterviewDateResultList(generics.ListCreateAPIView):
+#     queryset = models.InterviewDate.objects.all()
+#     serializer_class = serializers.InterviewDateSerializer
+
+#     def get_queryset(self):
+#         qs = super().get_queryset()
+#         if 'result' in self.request.GET:
+#             try:
+#                 limit = int(self.request.GET['result'])
+#                 qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+#             except ValueError:
+#                 # Handle the case where 'result' is not an integer
+#                 pass
+#         return qs
+    
+
+    
+# class InterviewDateSearchList(generics.ListCreateAPIView):
+#     queryset = models.InterviewDate.objects.all()
+#     serializer_class = serializers.InterviewDateSerializer
+#     pagination_class = StandardResultSetPagination
+#     # permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         qs = super().get_queryset()
+
+#         if 'searchstring' in self.kwargs:
+#             search = self.kwargs['searchstring'] 
+#             qs = qs.filter(
+#                 Q(schedule_time__icontains=search)
+#                 |Q(is_visible__icontains=search) 
+#                 )
+#         return qs
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Review Level *** #
+class ReviewLevelList(generics.ListCreateAPIView):
+    queryset = models.ReviewLevel.objects.all()
+    serializer_class = serializers.ReviewLevelSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class ReviewLevelListApp(generics.ListAPIView):
+    queryset = models.ReviewLevel.objects.filter(is_visible=True)
+    serializer_class = serializers.ReviewLevelSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class ReviewLevelListAdmin(generics.ListAPIView):
+    queryset = models.ReviewLevel.objects.all()
+    serializer_class = serializers.ReviewLevelSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class ReviewLevelPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.ReviewLevel.objects.all()
+    serializer_class = serializers.ReviewLevelSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+class ReviewLevelResultList(generics.ListCreateAPIView):
+    queryset = models.ReviewLevel.objects.all()
+    serializer_class = serializers.ReviewLevelSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class ReviewLevelSearchList(generics.ListCreateAPIView):
+    queryset = models.ReviewLevel.objects.all()
+    serializer_class = serializers.ReviewLevelSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                |Q(duration__icontains=search) 
+                |Q(stamp_number__icontains=search) 
+                |Q(daily_auscultation__icontains=search) 
+                |Q(days_per_week__icontains=search) 
+                |Q(duration_seal__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Chapter In Quran *** #
+class ChapterInQuranList(generics.ListCreateAPIView):
+    queryset = models.ChapterInQuran.objects.all()
+    serializer_class = serializers.ChapterInQuranSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class ChapterInQuranListApp(generics.ListAPIView):
+    queryset = models.ChapterInQuran.objects.filter(is_visible=True)
+    serializer_class = serializers.ChapterInQuranSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class ChapterInQuranListAdmin(generics.ListAPIView):
+    queryset = models.ChapterInQuran.objects.all()
+    serializer_class = serializers.ChapterInQuranSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class ChapterInQuranPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.ChapterInQuran.objects.all()
+    serializer_class = serializers.ChapterInQuranSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+class ChapterInQuranResultList(generics.ListCreateAPIView):
+    queryset = models.ChapterInQuran.objects.all()
+    serializer_class = serializers.ChapterInQuranSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class ChapterInQuranSearchList(generics.ListCreateAPIView):
+    queryset = models.ChapterInQuran.objects.all()
+    serializer_class = serializers.ChapterInQuranSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(class_type__icontains=search)
+                |Q(title__icontains=search) 
+                |Q(description__icontains=search) 
+                |Q(maximum_students__icontains=search) 
+                |Q(image__icontains=search) 
+                |Q(image_url__icontains=search) 
+                |Q(date_quran_sessions__icontains=search) 
+                |Q(quranic_sciences_lecture_schedule__icontains=search) 
+                |Q(approach_quran__icontains=search) 
+                |Q(quran_sciences__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Quran Circle *** #
+class QuranCircleList(generics.ListCreateAPIView):
+    queryset = models.QuranCircle.objects.all()
+    serializer_class = serializers.QuranCircleSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class QuranCircleListApp(generics.ListAPIView):
+    queryset = models.QuranCircle.objects.filter(is_visible=True)
+    serializer_class = serializers.QuranCircleSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class QuranCircleListAdmin(generics.ListAPIView):
+    queryset = models.QuranCircle.objects.all()
+    serializer_class = serializers.QuranCircleSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class QuranCirclePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.QuranCircle.objects.all()
+    serializer_class = serializers.QuranCircleSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+class QuranCircleResultList(generics.ListCreateAPIView):
+    queryset = models.QuranCircle.objects.all()
+    serializer_class = serializers.QuranCircleSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class QuranCircleSearchList(generics.ListCreateAPIView):
+    queryset = models.QuranCircle.objects.all()
+    serializer_class = serializers.QuranCircleSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(date__icontains=search)
+                |Q(present_roses__icontains=search) 
+                |Q(past_roses__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Degree Quran Circle *** #
+class DegreeQuranCircleList(generics.ListCreateAPIView):
+    queryset = models.DegreeQuranCircle.objects.all()
+    serializer_class = serializers.DegreeQuranCircleSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class DegreeQuranCircleListApp(generics.ListAPIView):
+    queryset = models.DegreeQuranCircle.objects.filter(is_visible=True)
+    serializer_class = serializers.DegreeQuranCircleSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class DegreeQuranCircleListAdmin(generics.ListAPIView):
+    queryset = models.DegreeQuranCircle.objects.all()
+    serializer_class = serializers.DegreeQuranCircleSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class DegreeQuranCirclePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.DegreeQuranCircle.objects.all()
+    serializer_class = serializers.DegreeQuranCircleSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+class DegreeQuranCircleResultList(generics.ListCreateAPIView):
+    queryset = models.DegreeQuranCircle.objects.all()
+    serializer_class = serializers.DegreeQuranCircleSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class DegreeQuranCircleSearchList(generics.ListCreateAPIView):
+    queryset = models.DegreeQuranCircle.objects.all()
+    serializer_class = serializers.DegreeQuranCircleSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(degree_present_roses__icontains=search)
+                |Q(degree_past_roses__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Live Quran Circle *** #
+class LiveQuranCircleList(generics.ListCreateAPIView):
+    queryset = models.LiveQuranCircle.objects.all()
+    serializer_class = serializers.LiveQuranCircleSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class LiveQuranCircleListApp(generics.ListAPIView):
+    queryset = models.LiveQuranCircle.objects.filter(is_visible=True)
+    serializer_class = serializers.LiveQuranCircleSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class LiveQuranCircleListAdmin(generics.ListAPIView):
+    queryset = models.LiveQuranCircle.objects.all()
+    serializer_class = serializers.LiveQuranCircleSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class LiveQuranCirclePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.LiveQuranCircle.objects.all()
+    serializer_class = serializers.LiveQuranCircleSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+class LiveQuranCircleResultList(generics.ListCreateAPIView):
+    queryset = models.LiveQuranCircle.objects.all()
+    serializer_class = serializers.LiveQuranCircleSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class LiveQuranCircleSearchList(generics.ListCreateAPIView):
+    queryset = models.LiveQuranCircle.objects.all()
+    serializer_class = serializers.LiveQuranCircleSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                |Q(zoom_url__icontains=search) 
+                |Q(date_time__icontains=search)  
+                )
+        return qs
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Quran Exam   *** #
+class QuranExamList(generics.ListCreateAPIView):
+    queryset = models.QuranExam.objects.all()
+    serializer_class = serializers.QuranExamSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class QuranExamListApp(generics.ListAPIView):
+    queryset = models.QuranExam.objects.filter(is_visible=True)
+    serializer_class = serializers.QuranExamSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class QuranExamListAdmin(generics.ListAPIView):
+    queryset = models.QuranExam.objects.all()
+    serializer_class = serializers.QuranExamSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class QuranExamPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.QuranExam.objects.all()
+    serializer_class = serializers.QuranExamSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+class QuranExamResultList(generics.ListCreateAPIView):
+    queryset = models.QuranExam.objects.all()
+    serializer_class = serializers.QuranExamSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class QuranExamSearchList(generics.ListCreateAPIView):
+    queryset = models.QuranExam.objects.all()
+    serializer_class = serializers.QuranExamSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(exam_status__icontains=search)
+                |Q(exam_type__icontains=search) 
+                |Q(title__icontains=search) 
+                |Q(date__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Degree Quran Exam   *** #
+class DegreeQuranExamList(generics.ListCreateAPIView):
+    queryset = models.DegreeQuranExam.objects.all()
+    serializer_class = serializers.DegreeQuranExamSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class DegreeQuranExamListApp(generics.ListAPIView):
+    queryset = models.DegreeQuranExam.objects.filter(is_visible=True)
+    serializer_class = serializers.DegreeQuranExamSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class DegreeQuranExamListAdmin(generics.ListAPIView):
+    queryset = models.DegreeQuranExam.objects.all()
+    serializer_class = serializers.DegreeQuranExamSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class DegreeQuranExamPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.DegreeQuranExam.objects.all()
+    serializer_class = serializers.DegreeQuranExamSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+
+class DegreeQuranExamResultList(generics.ListCreateAPIView):
+    queryset = models.DegreeQuranExam.objects.all()
+    serializer_class = serializers.DegreeQuranExamSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class DegreeQuranExamSearchList(generics.ListCreateAPIView):
+    queryset = models.DegreeQuranExam.objects.all()
+    serializer_class = serializers.DegreeQuranExamSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(degree_exam__icontains=search)
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***    Presence And Absence    *** #
+class PresenceAndAbsenceList(generics.ListCreateAPIView):
+    queryset = models.PresenceAndAbsence.objects.all()
+    serializer_class = serializers.PresenceAndAbsenceSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class PresenceAndAbsenceListApp(generics.ListAPIView):
+    queryset = models.PresenceAndAbsence.objects.filter(is_visible=True)
+    serializer_class = serializers.PresenceAndAbsenceSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class PresenceAndAbsenceListAdmin(generics.ListAPIView):
+    queryset = models.PresenceAndAbsence.objects.all()
+    serializer_class = serializers.PresenceAndAbsenceSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class PresenceAndAbsencePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.PresenceAndAbsence.objects.all()
+    serializer_class = serializers.PresenceAndAbsenceSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+
+class PresenceAndAbsenceResultList(generics.ListCreateAPIView):
+    queryset = models.PresenceAndAbsence.objects.all()
+    serializer_class = serializers.PresenceAndAbsenceSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class PresenceAndAbsenceSearchList(generics.ListCreateAPIView):
+    queryset = models.PresenceAndAbsence.objects.all()
+    serializer_class = serializers.PresenceAndAbsenceSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(session_type__icontains=search)
+                |Q(date__icontains=search) 
+                )
+        return qs
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Degree Presence And Absence *** #
+class DegreePresenceAndAbsenceList(generics.ListCreateAPIView):
+    queryset = models.DegreePresenceAndAbsence.objects.all()
+    serializer_class = serializers.DegreePresenceAndAbsenceSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class DegreePresenceAndAbsenceListApp(generics.ListAPIView):
+    queryset = models.DegreePresenceAndAbsence.objects.filter(is_visible=True)
+    serializer_class = serializers.DegreePresenceAndAbsenceSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class DegreePresenceAndAbsenceListAdmin(generics.ListAPIView):
+    queryset = models.DegreePresenceAndAbsence.objects.all()
+    serializer_class = serializers.DegreePresenceAndAbsenceSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class DegreePresenceAndAbsencePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.DegreePresenceAndAbsence.objects.all()
+    serializer_class = serializers.DegreePresenceAndAbsenceSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+
+class DegreePresenceAndAbsenceResultList(generics.ListCreateAPIView):
+    queryset = models.DegreePresenceAndAbsence.objects.all()
+    serializer_class = serializers.DegreePresenceAndAbsenceSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class DegreePresenceAndAbsenceSearchList(generics.ListCreateAPIView):
+    queryset = models.DegreePresenceAndAbsence.objects.all()
+    serializer_class = serializers.DegreePresenceAndAbsenceSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(status_icontains=search)
+                |Q(date__icontains=search) 
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** File And Library *** #
+class FileAndLibraryList(generics.ListCreateAPIView):
+    queryset = models.FileAndLibrary.objects.all()
+    serializer_class = serializers.FileAndLibrarySerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class FileAndLibraryListApp(generics.ListAPIView):
+    queryset = models.FileAndLibrary.objects.filter(is_visible=True)
+    serializer_class = serializers.FileAndLibrarySerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class FileAndLibraryListAdmin(generics.ListAPIView):
+    queryset = models.FileAndLibrary.objects.all()
+    serializer_class = serializers.FileAndLibrarySerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class FileAndLibraryPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.FileAndLibrary.objects.all()
+    serializer_class = serializers.FileAndLibrarySerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+class FileAndLibraryResultList(generics.ListCreateAPIView):
+    queryset = models.FileAndLibrary.objects.all()
+    serializer_class = serializers.FileAndLibrarySerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class FileAndLibrarySearchList(generics.ListCreateAPIView):
+    queryset = models.FileAndLibrary.objects.all()
+    serializer_class = serializers.FileAndLibrarySerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                |Q(file__icontains=search) 
+                |Q(file_url__icontains=search) 
+                )
+        return qs
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Teacher Note   *** #
+class TeacherNoteList(generics.ListCreateAPIView):
+    queryset = models.TeacherNote.objects.all()
+    serializer_class = serializers.TeacherNoteSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class TeacherNoteListApp(generics.ListAPIView):
+    queryset = models.TeacherNote.objects.filter(is_visible=True)
+    serializer_class = serializers.TeacherNoteSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class TeacherNoteListAdmin(generics.ListAPIView):
+    queryset = models.TeacherNote.objects.all()
+    serializer_class = serializers.TeacherNoteSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class TeacherNotePK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.TeacherNote.objects.all()
+    serializer_class = serializers.TeacherNoteSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+
+class TeacherNoteResultList(generics.ListCreateAPIView):
+    queryset = models.TeacherNote.objects.all()
+    serializer_class = serializers.TeacherNoteSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class TeacherNoteSearchList(generics.ListCreateAPIView):
+    queryset = models.TeacherNote.objects.all()
+    serializer_class = serializers.TeacherNoteSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(description__icontains=search)
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Certificate Quran *** #
+class CertificateQuranList(generics.ListCreateAPIView):
+    queryset = models.CertificateQuran.objects.all()
+    serializer_class = serializers.CertificateQuranSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class CertificateQuranListApp(generics.ListAPIView):
+    queryset = models.CertificateQuran.objects.filter(is_visible=True)
+    serializer_class = serializers.CertificateQuranSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class CertificateQuranListAdmin(generics.ListAPIView):
+    queryset = models.CertificateQuran.objects.all()
+    serializer_class = serializers.CertificateQuranSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class CertificateQuranPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.CertificateQuran.objects.all()
+    serializer_class = serializers.CertificateQuranSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+
+class CertificateQuranResultList(generics.ListCreateAPIView):
+    queryset = models.CertificateQuran.objects.all()
+    serializer_class = serializers.CertificateQuranSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class CertificateQuranSearchList(generics.ListCreateAPIView):
+    queryset = models.CertificateQuran.objects.all()
+    serializer_class = serializers.CertificateQuranSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description__icontains=search) 
+                |Q(file__icontains=search) 
+                |Q(file_url__icontains=search) 
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Student Quran School Enrollment *** #
+class StudentQuranSchoolEnrollmentList(generics.ListCreateAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [IsAuthenticated]
+
+
+class StudentQuranSchoolEnrollmentListApp(generics.ListAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.filter(is_visible=True)
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    permission_classes = [AllowAny]
+    # pagination_class = StandardResultSetPagination
+
+
+class StudentQuranSchoolEnrollmentListAdmin(generics.ListAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    permission_classes = [IsAuthenticated]
+
+
+
+class StudentQuranSchoolEnrollmentPK(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    permission_classes = [AllowAny]
+
+
+
+
+
+class StudentQuranSchoolEnrollmentResultList(generics.ListCreateAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
+    
+
+    
+class StudentQuranSchoolEnrollmentSearchList(generics.ListCreateAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(full_name__icontains=search)
+                |Q(age__icontains=search) 
+                |Q(phone_number__icontains=search) 
+                |Q(whatsapp_number__icontains=search) 
+                |Q(email__icontains=search) 
+                |Q(description__icontains=search) 
+                |Q(country__icontains=search) 
+                |Q(price__icontains=search) 
+                |Q(payment_id__icontains=search) 
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
+
+# 
+# class EnrolledStuentPK(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.StudentCourseEnrollment.objects.all()
+#     serializer_class = serializers.StudentCourseEnrollSerializer
+
+
+# def fetch_enroll_status(request,student_id,course_id):
+#     student = models.User.objects.filter(id=student_id).first()
+#     course = models.Course.objects.filter(id=course_id).first()
+#     enroll_status = models.StudentCourseEnrollment.objects.filter(course=course,student=student).count()
+
+#     if enroll_status:
+#         return JsonResponse({'bool':True})
+#     else:
+#         return JsonResponse({'bool':False})
+
+
+# # class FetchEnrollStatusView(generics.RetrieveAPIView):
+# class FetchEnrollStatusView(APIView):
+#     # pagination_class = StandardResultSetPagination
+#     # permission_classes = [IsAuthenticated]
+
+#     def get(self, request, student_id, course_id):
+#         student = models.User.objects.filter(id=student_id).first()
+#         course = models.Course.objects.filter(id=course_id).first()
+#         enroll_status = models.StudentCourseEnrollment.objects.filter(course=course, student=student).exists()
+#         return Response({'bool': enroll_status})
+
+
+ 
+
+
+# #-
+# class EnrolledStuentCourseList(generics.ListCreateAPIView):
+#     queryset = models.StudentCourseEnrollment.objects.all()
+#     serializer_class = serializers.StudentCourseEnrollSerializer
+#     pagination_class = StandardResultSetPagination
+#     permission_classes = [AllowAny]
+#     # permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         qs = ""
+#         if 'course_id' in self.kwargs:
+#             course_id = self.kwargs['course_id']
+#             # course = models.Course.objects.get(pk=course_id)
+#             return models.StudentCourseEnrollment.objects.filter(course=course_id)
+        
+
+# class EnrolledAllStuentList(generics.ListCreateAPIView):
+#     queryset = models.StudentCourseEnrollment.objects.all()
+#     serializer_class = serializers.StudentCourseEnrollSerializer
+#     pagination_class = StandardResultSetPagination
+#     permission_classes = [AllowAny]
+#     # permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         qs = ""   
+#         if 'teacher_id' in self.kwargs:
+#             teacher_id = self.kwargs['teacher_id']
+#             teacher = models.User.objects.get(pk=teacher_id)
+#             return models.StudentCourseEnrollment.objects.filter(course__teacher=teacher).distinct()
+       
+
+# class EnrolledStuentPkList(generics.ListCreateAPIView):
+#     queryset = models.StudentCourseEnrollment.objects.all()
+#     serializer_class = serializers.StudentCourseEnrollSerializer
+#     pagination_class = StandardResultSetPagination
+#     permission_classes = [AllowAny]
+#     # permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         qs = ""
+#         if 'student_id' in self.kwargs:
+#             student_id = self.kwargs['student_id']
+#             student = models.User.objects.get(pk=student_id)
+#             return models.StudentCourseEnrollment.objects.filter(student=student).distinct()
+        
+
+# class EnrolledRecomemdedStuentList(generics.ListCreateAPIView):
+#     queryset = models.StudentCourseEnrollment.objects.all()
+#     serializer_class = serializers.StudentCourseEnrollSerializer
+#     pagination_class = StandardResultSetPagination
+#     permission_classes = [AllowAny]
+#     # permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         qs = ""
+
+#         if 'studentId' in self.kwargs:
+#             student_id = self.kwargs['student_id']
+#             student = models.User.objects.get(pk=student_id)
+#             print(student.interseted_categories)
+#             queries = [Q(techs__iendwith=value) for value in student.interseted_categories]
+#             query = queries.pop()
+#             for item in queries:
+#                 query |= item
+#             qs = models.Course.objects.filter(query)
+
+#         return qs
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Interview Date *** #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

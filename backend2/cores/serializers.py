@@ -258,6 +258,9 @@ class CourseSerializer(serializers.ModelSerializer):
             "features",
             "requirements",
             "target_audience",
+
+            "number_old_enrolled",
+
             "is_visible",
 
             # 
@@ -1181,6 +1184,688 @@ class PowerpointServiceSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
         return representation
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Quran School *** #
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***   Interview Date   *** #
+class InterviewDateSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.InterviewDate
+        fields = "__all__"
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Quran School *** #
+
+# *** Certificate Quran *** #
+class CertificateQuranSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.CertificateQuran
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+# *** Teacher Note *** #
+class TeacherNoteSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.TeacherNote
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+# *** File And Library *** #
+class FileAndLibrarySerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.FileAndLibrary
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Degree Presence And Absence *** #
+class DegreePresenceAndAbsenceSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.DegreePresenceAndAbsence
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+# ***  Presence And Absence  *** #
+class PresenceAndAbsenceSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    degrees_presence_and_absence = DegreePresenceAndAbsenceSerializer(
+        many=True, 
+        read_only=True, 
+        source='presence_and_absence_degree_presence_and_absence'  # يستخدم related_name الموجود في الموديل
+    )
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.PresenceAndAbsence
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+            "chapter_in_quran",
+
+            "session_type",
+            "date",
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            "degrees_presence_and_absence",
+            "total_degree_presence_and_absence",
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# *** Degree Quran Exam *** #
+class DegreeQuranExamSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.DegreeQuranExam
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+# ***  Quran Exam  *** #
+class QuranExamSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    degrees_quran_exam = DegreeQuranExamSerializer(
+        many=True, 
+        read_only=True, 
+        source='quran_exam_degree_quran_exam'  # يستخدم related_name الموجود في الموديل
+    )
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.QuranExam
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+            "chapter_in_quran",
+
+            "exam_status",
+            "exam_type",
+            "title",
+            "date",
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            "degrees_quran_exam",
+            "total_degree_quran_exam",
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Live Quran Circle  *** #
+class LiveQuranCircleSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.LiveQuranCircle
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Degree Quran Circle  *** #
+class DegreeQuranCircleSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.DegreeQuranCircle
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+# ***  Quran Circle  *** #
+class QuranCircleSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    degrees_quran_circle = DegreeQuranCircleSerializer(
+        many=True, 
+        read_only=True, 
+        source='quran_circle_degree_quran_circle'  # يستخدم related_name الموجود في الموديل
+    )
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.QuranCircle
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+            "chapter_in_quran",
+
+            "date",
+            "present_roses",
+            "past_roses", 
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            "degrees_quran_circle",
+            "total_degree_quran_circle",
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Quran Circle  *** #
+class ChapterInQuranSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    # 
+    quran_circles = QuranCircleSerializer(
+        many=True, 
+        read_only=True, 
+        source='chapter_in_quran_quran_circle'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    live_quran_circles = LiveQuranCircleSerializer(
+        many=True, 
+        read_only=True, 
+        source='chapter_in_quran_live_quran_circle'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    quran_exams = QuranExamSerializer(
+        many=True, 
+        read_only=True, 
+        source='chapter_in_quran_quran_exam'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    presence_and_absences = PresenceAndAbsenceSerializer(
+        many=True, 
+        read_only=True, 
+        source='chapter_in_quran_presence_and_absence'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    file_and_librarys = FileAndLibrarySerializer(
+        many=True, 
+        read_only=True, 
+        source='chapter_in_quran_file_and_library'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    teacher_notes = TeacherNoteSerializer(
+        many=True, 
+        read_only=True, 
+        source='chapter_in_quran_teacher_note'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    certificate_qurans = CertificateQuranSerializer(
+        many=True, 
+        read_only=True, 
+        source='chapter_in_quran_certificate_quran'  # يستخدم related_name الموجود في الموديل
+    )
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.ChapterInQuran
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+
+            "quran_path",
+            "classroom",
+            "review_level",
+
+            "class_type",
+
+            "title",
+            "description",
+
+
+            "student_enrollment", 
+            "maximum_students", 
+
+            "image", 
+            "image_url", 
+
+            "date_quran_sessions", 
+            "quranic_sciences_lecture_schedule", 
+
+            "approach_quran", 
+            "quran_sciences", 
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            # 
+            "total_quran_circle",
+            "total_degree_quran_circle",
+
+            "total_live_quran_circle",
+            
+            "total_quran_exam",
+            "total_degree_quran_exam",
+            
+            "total_presence_and_absence",
+            "total_degree_presence_and_absence",
+            
+            "total_file_and_library",
+
+            "total_teacher_note",
+            
+            "total_certificate_quran",
+
+            # 
+            "quran_circles",
+            "live_quran_circles",
+            "quran_exams",
+            "presence_and_absences",
+            "file_and_librarys",
+            "teacher_notes",
+            "certificate_qurans",
+
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Review Level  *** #
+class ReviewLevelSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    chapter_in_qurans = ChapterInQuranSerializer(
+        many=True, 
+        read_only=True, 
+        source='review_level_chapter'  # يستخدم related_name الموجود في الموديل
+    )
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.ReviewLevel
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+            "quran_path",
+
+            "title",
+            "description",
+            "duration", 
+
+            "stamp_number", 
+            "daily_auscultation", 
+            "days_per_week", 
+            "duration_seal", 
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            # 
+            "total_chapter_in_quran",
+
+            # 
+            "chapter_in_qurans",
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Class Room  *** #
+class ClassRoomSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    chapter_in_qurans = ChapterInQuranSerializer(
+        many=True, 
+        read_only=True, 
+        source='class_room_chapter'  # يستخدم related_name الموجود في الموديل
+    )
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.ClassRoom
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+            "quran_path",
+
+            "title",
+            "description",
+
+            "preservation_decision", 
+            "associated_sciences", 
+            "condition_acceptance",  
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            # 
+            "total_chapter_in_quran",
+
+            # 
+            "chapter_in_qurans",
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Quran Path  *** #
+class QuranPathSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    # 
+    class_rooms = ClassRoomSerializer(
+        many=True, 
+        read_only=True, 
+        source='quran_path_class_room'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    review_levels = ReviewLevelSerializer(
+        many=True, 
+        read_only=True, 
+        source='quran_path_review_level'  # يستخدم related_name الموجود في الموديل
+    )
+    # 
+    chapter_in_qurans = ChapterInQuranSerializer(
+        many=True, 
+        read_only=True, 
+        source='class_room_chapter'  # يستخدم related_name الموجود في الموديل
+    )
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.QuranPath
+        # fields = "__all__"
+        fields = [
+            "id",
+            "user",
+
+            "name",
+
+            "title",
+            "description",
+
+            "is_visible",
+
+            "slug",
+            "created_at",
+            "updated_at",
+
+            # 
+            "total_class_room",
+            "total_review_level",
+            "total_chapter_in_quran",
+            "total_enrolled_students",
+
+            # 
+            "class_rooms",
+            "review_levels",
+            "chapter_in_qurans",
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
+# ***  Student Quran School Enrollment  *** #
+class StudentQuranSchoolEnrollmentSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    
+    # 
+    quran_path = QuranPathSerializer()
+    classroom = ClassRoomSerializer()
+    review_level = ReviewLevelSerializer()
+    chapter_in_quran = ChapterInQuranSerializer()
+
+
+    slug = serializers.SlugField(read_only=True)
+ 
+    class Meta:
+        model = models.StudentQuranSchoolEnrollment
+        fields = "__all__"
+        # fields = [
+        #     "id",
+        #     "student",
+
+        #     "quran_path",
+        #     "classroom",
+        #     "review_level",
+        #     "chapter_in_quran",
+        #     "interview_date",
+
+        #     "full_name",
+        #     "age",
+        #     "phone_number",
+        #     "whatsapp_number",
+        #     "email",
+        #     "description",
+        #     "country",
+
+        #     "price",
+
+        #     "enrolled_time",
+        #     "payment_id",
+        #     "completed",
+        #     "completion_date",
+        #     "certificate_id",
+
+        #     "is_visible",
+
+        #     "slug",
+        #     "created_at",
+        #     "updated_at",
+
+        #     # 
+        # ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        return representation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

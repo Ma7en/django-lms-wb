@@ -738,16 +738,24 @@ urlpatterns = [
         name="student-add-favorte-course-list",
     ),
     path(
-        'fetch-favorite-coourses/<int:student_id>/', 
+        'fetch-favorite-courses-student/<int:student_id>/', 
         views.StudentFavoriteCourseListAPI.as_view(),
-        name="fetch-favorite-coourses-student_id",
+        name="fetch-favorite-courses-student-student_id",
     ),
 
+
     path(
-        'student-remove-favorite-course/<int:course_id>/<int:student_id>/', 
+        'student-remove-favorite-course/<int:student_id>/<int:course_id>/', 
         # views.remove_favorite_course,
         views.RemoveFavoriteCourseView.as_view(),
         name="student-remove-favorite-course-course_id-student_id",
+    ),
+
+    path(
+        'fetch-favorite-course-status/<int:student_id>/<int:course_id>/', 
+        # views.fetch_enroll_status,
+        views.FetchFavoriteCourseStatusView.as_view(),
+        name="fetch-favorite-course-status-student_id-course_id",
     ),
 
     
@@ -1644,6 +1652,52 @@ urlpatterns = [
         views.ReviewUserSearchList.as_view(),
         name="review-user-search-list",
     ),
+
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # =================================================================
+    # *** Section Course *** #
+    # # (List)
+    # path(
+    #     "section-course/list/",
+    #     views.SectionCourseList.as_view(),
+    #     name="section-course-list",
+    # ),
+    # # (List App)
+    # path(
+    #     "section-course/list-app/",
+    #     views.SectionCourseListApp.as_view(),
+    #     name="section-course-list",
+    # ),
+    # # (List Admin)
+    # path(
+    #     "section-course/list-admin/",
+    #     views.SectionCourseListAdmin.as_view(),
+    #     name="section-course-list",
+    # ),
+    # # (List Result)
+    # path(
+    #     "section-course/result/", #?result=9
+    #     views.SectionCourseResultList.as_view(),
+    #     name="course-result-list",
+    # ),
+    # # (PK)
+    # path(
+    #     "section-course/<int:pk>/",
+    #     views.SectionCoursePK.as_view(),
+    #     name="section-course-pk",
+    # ),
+    # # (Search)
+    # path(
+    #     'section-course/search/<str:searchstring>/', 
+    #     views.SectionCourseSearchList.as_view(),
+    #     name="section-course-search-list",
+    # ),
+
 
 
 

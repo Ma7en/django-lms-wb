@@ -178,6 +178,41 @@ admin.site.register(models.ReportBlog)
 
 # ******************************************************************************
 # ==============================================================================
+# *** Quran School *** #
+admin.site.register(models.InterviewDate)
+
+admin.site.register(models.QuranPath)
+
+admin.site.register(models.ClassRoom)
+admin.site.register(models.ReviewLevel)
+
+admin.site.register(models.ChapterInQuran)
+
+admin.site.register(models.QuranCircle)
+admin.site.register(models.DegreeQuranCircle)
+
+admin.site.register(models.LiveQuranCircle)
+
+admin.site.register(models.QuranExam)
+admin.site.register(models.DegreeQuranExam)
+
+admin.site.register(models.PresenceAndAbsence)
+admin.site.register(models.DegreePresenceAndAbsence)
+
+admin.site.register(models.FileAndLibrary)
+admin.site.register(models.TeacherNote)
+admin.site.register(models.CertificateQuran)
+
+admin.site.register(models.StudentQuranSchoolEnrollment)
+
+
+
+
+
+
+
+# ******************************************************************************
+# ==============================================================================
 # *** Contact & Review *** #
 admin.site.register(models.ContactUsUser)
 admin.site.register(models.ReviewUser)

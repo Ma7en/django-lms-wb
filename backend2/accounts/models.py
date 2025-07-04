@@ -10,13 +10,16 @@ from datetime import timedelta
 
 #
 from django.utils import timezone
-from django.db import models
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import RegexValidator
+
+from django.db import models
 from django.db.models.signals import post_save
+
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.dispatch import receiver
 
+from django.core.validators import RegexValidator
+from django.core.files.storage import default_storage
 
 
 #
@@ -177,6 +180,13 @@ class SuperuserProfile(models.Model):
     def __str__(self):
         return f"{self.id}): ({self.user.email})"
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = SuperuserProfile.objects.get(pk=self.pk)
+            if old_instance.image and old_instance.image != self.image:
+                default_storage.delete(old_instance.image.path)
+
+        super(SuperuserProfile, self).save(*args, **kwargs)
 
 
 
@@ -312,6 +322,13 @@ class AdminProfile(models.Model):
     def __str__(self):
         return f"{self.id}): ({self.user.email})"
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = AdminProfile.objects.get(pk=self.pk)
+            if old_instance.image and old_instance.image != self.image:
+                default_storage.delete(old_instance.image.path)
+
+        super(AdminProfile, self).save(*args, **kwargs)
 
 
 
@@ -433,6 +450,14 @@ class TeacherProfile(models.Model):
     def __str__(self):
         return f"{self.id}): ({self.user.email})"
 
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = TeacherProfile.objects.get(pk=self.pk)
+            if old_instance.image and old_instance.image != self.image:
+                default_storage.delete(old_instance.image.path)
+
+        super(TeacherProfile, self).save(*args, **kwargs)
 
 
 
@@ -576,6 +601,13 @@ class StaffProfile(models.Model):
     def __str__(self):
         return f"{self.id}): ({self.phone_number})"
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = StaffProfile.objects.get(pk=self.pk)
+            if old_instance.image and old_instance.image != self.image:
+                default_storage.delete(old_instance.image.path)
+
+        super(StaffProfile, self).save(*args, **kwargs)
 
 
 
@@ -668,6 +700,13 @@ class StudentProfile(models.Model):
     def __str__(self):
         return f"{self.id}): [{self.user}]"
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = StudentProfile.objects.get(pk=self.pk)
+            if old_instance.image and old_instance.image != self.image:
+                default_storage.delete(old_instance.image.path)
+                
+        super(StudentProfile, self).save(*args, **kwargs)
 
 
 
