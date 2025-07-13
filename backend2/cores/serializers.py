@@ -265,6 +265,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
             # 
             "table_contents",
+            "table_contents_url",
 
             # 
             "price",
@@ -1279,6 +1280,7 @@ class FileAndLibrarySerializer(serializers.ModelSerializer):
 class DegreePresenceAndAbsenceSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    presence_and_absence = serializers.PrimaryKeyRelatedField(queryset=models.PresenceAndAbsence.objects.all()) 
 
     slug = serializers.SlugField(read_only=True)
  
@@ -1290,6 +1292,7 @@ class DegreePresenceAndAbsenceSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
         representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        representation['presence_and_absence'] = PresenceAndAbsenceSerializer(instance.presence_and_absence).data  # لعرض تفاصيل المستخدم
         return representation
 
 
@@ -1298,11 +1301,11 @@ class DegreePresenceAndAbsenceSerializer(serializers.ModelSerializer):
 class PresenceAndAbsenceSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     
-    degrees_presence_and_absence = DegreePresenceAndAbsenceSerializer(
-        many=True, 
-        read_only=True, 
-        source='presence_and_absence_degree_presence_and_absence'  # يستخدم related_name الموجود في الموديل
-    )
+    # degrees_presence_and_absence = DegreePresenceAndAbsenceSerializer(
+    #     many=True, 
+    #     read_only=True, 
+    #     source='presence_and_absence_degree_presence_and_absence'  # يستخدم related_name الموجود في الموديل
+    # )
 
     slug = serializers.SlugField(read_only=True)
  
@@ -1315,7 +1318,7 @@ class PresenceAndAbsenceSerializer(serializers.ModelSerializer):
             "chapter_in_quran",
 
             "session_type",
-            "date",
+            "date_time",
 
             "is_visible",
 
@@ -1323,8 +1326,11 @@ class PresenceAndAbsenceSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
 
-            "degrees_presence_and_absence",
+            # 
             "total_degree_presence_and_absence",
+
+            # 
+            # "degrees_presence_and_absence",
         ]
 
     def to_representation(self, instance):
@@ -1342,6 +1348,7 @@ class PresenceAndAbsenceSerializer(serializers.ModelSerializer):
 class DegreeQuranExamSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    quran_exam = serializers.PrimaryKeyRelatedField(queryset=models.QuranExam.objects.all()) 
 
     slug = serializers.SlugField(read_only=True)
  
@@ -1353,6 +1360,7 @@ class DegreeQuranExamSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
         representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        representation['quran_exam'] = QuranExamSerializer(instance.quran_exam).data  # لعرض تفاصيل المستخدم
         return representation
 
 
@@ -1361,11 +1369,11 @@ class DegreeQuranExamSerializer(serializers.ModelSerializer):
 class QuranExamSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     
-    degrees_quran_exam = DegreeQuranExamSerializer(
-        many=True, 
-        read_only=True, 
-        source='quran_exam_degree_quran_exam'  # يستخدم related_name الموجود في الموديل
-    )
+    # degrees_quran_exam = DegreeQuranExamSerializer(
+    #     many=True, 
+    #     read_only=True, 
+    #     source='quran_exam_degree_quran_exam'  # يستخدم related_name الموجود في الموديل
+    # )
 
     slug = serializers.SlugField(read_only=True)
  
@@ -1379,8 +1387,9 @@ class QuranExamSerializer(serializers.ModelSerializer):
 
             "exam_status",
             "exam_type",
+
             "title",
-            "date",
+            "date_time",
 
             "is_visible",
 
@@ -1388,8 +1397,11 @@ class QuranExamSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
 
-            "degrees_quran_exam",
+            # 
             "total_degree_quran_exam",
+
+            # 
+            # "degrees_quran_exam",
         ]
 
     def to_representation(self, instance):
@@ -1432,6 +1444,7 @@ class LiveQuranCircleSerializer(serializers.ModelSerializer):
 class DegreeQuranCircleSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    quran_circle = serializers.PrimaryKeyRelatedField(queryset=models.QuranCircle.objects.all()) 
 
     slug = serializers.SlugField(read_only=True)
  
@@ -1443,6 +1456,7 @@ class DegreeQuranCircleSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
         representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
+        representation['quran_circle'] = QuranCircleSerializer(instance.quran_circle).data  # لعرض تفاصيل المستخدم
         return representation
 
 
@@ -1451,11 +1465,11 @@ class DegreeQuranCircleSerializer(serializers.ModelSerializer):
 class QuranCircleSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     
-    degrees_quran_circle = DegreeQuranCircleSerializer(
-        many=True, 
-        read_only=True, 
-        source='quran_circle_degree_quran_circle'  # يستخدم related_name الموجود في الموديل
-    )
+    # degrees_quran_circle = DegreeQuranCircleSerializer(
+    #     many=True, 
+    #     read_only=True, 
+    #     source='quran_circle_degree_quran_circle'  # يستخدم related_name الموجود في الموديل
+    # )
 
     slug = serializers.SlugField(read_only=True)
  
@@ -1467,7 +1481,7 @@ class QuranCircleSerializer(serializers.ModelSerializer):
             "user",
             "chapter_in_quran",
 
-            "date",
+            "date_time",
             "present_roses",
             "past_roses", 
 
@@ -1477,9 +1491,14 @@ class QuranCircleSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
 
-            "degrees_quran_circle",
+            # 
             "total_degree_quran_circle",
+
+            # 
+            # "degrees_quran_circle",
         ]
+        # read_only_fields = ('id',)  # تأكد من أن id للقراءة فقط
+
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -1574,6 +1593,8 @@ class ChapterInQuranSerializer(serializers.ModelSerializer):
             "approach_quran", 
             "quran_sciences", 
 
+            "duration",
+
             "is_visible",
 
             "slug",
@@ -1597,6 +1618,8 @@ class ChapterInQuranSerializer(serializers.ModelSerializer):
             "total_teacher_note",
             
             "total_certificate_quran",
+
+            "total_enrolled_students",
 
             # 
             "quran_circles",
@@ -1742,7 +1765,7 @@ class QuranPathSerializer(serializers.ModelSerializer):
     chapter_in_qurans = ChapterInQuranSerializer(
         many=True, 
         read_only=True, 
-        source='class_room_chapter'  # يستخدم related_name الموجود في الموديل
+        source='quran_path_chapter'  # يستخدم related_name الموجود في الموديل
     )
 
     slug = serializers.SlugField(read_only=True)
@@ -1789,58 +1812,146 @@ class QuranPathSerializer(serializers.ModelSerializer):
 # ==============================================================================
 # ***  Student Quran School Enrollment  *** #
 class StudentQuranSchoolEnrollmentSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
+    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.all()) 
     
     # 
-    quran_path = QuranPathSerializer()
-    classroom = ClassRoomSerializer()
-    review_level = ReviewLevelSerializer()
-    chapter_in_quran = ChapterInQuranSerializer()
+    quran_paths = QuranPathSerializer(
+        # many=True, 
+        # read_only=True, 
+        source='quran_path',  # يستخدم related_name الموجود في الموديل
+    )
+    classrooms = ClassRoomSerializer(
+        # many=True, 
+        # read_only=True, 
+        source='classroom',
+    )
+    review_levels = ReviewLevelSerializer(
+        # many=True, 
+        # read_only=True, 
+        source='review_level',
+    )
+    chapter_in_qurans = ChapterInQuranSerializer(
+        # many=True, 
+        # read_only=True, 
+        source='chapter_in_quran',
+    )
+    interview_dates = InterviewDateSerializer(
+        # many=True, 
+        # read_only=True, 
+        source='interview_date',
+    )
+
+    # 
+    # degree_quran_circle = DegreeQuranCircleSerializer()
+    # degree_quran_exam = DegreeQuranExamSerializer()
+    # degree_presence_and_absence = DegreePresenceAndAbsenceSerializer()
+    # teacher_note = TeacherNoteSerializer()
+    # certificate_quran = CertificateQuranSerializer()
+
+    # 
+    degree_quran_circle = serializers.SerializerMethodField()
+    degree_quran_exam = serializers.SerializerMethodField()
+    degree_presence_and_absence = serializers.SerializerMethodField()
+    teacher_note = serializers.SerializerMethodField()
+    certificate_quran = serializers.SerializerMethodField()
 
 
     slug = serializers.SlugField(read_only=True)
  
     class Meta:
         model = models.StudentQuranSchoolEnrollment
-        fields = "__all__"
-        # fields = [
-        #     "id",
-        #     "student",
+        # fields = "__all__"
+        fields = [
+            "id",
+            "student",
 
-        #     "quran_path",
-        #     "classroom",
-        #     "review_level",
-        #     "chapter_in_quran",
-        #     "interview_date",
+            # 
+            "quran_path",
+            "classroom",
+            "review_level",
+            "chapter_in_quran",
+            "interview_date",
 
-        #     "full_name",
-        #     "age",
-        #     "phone_number",
-        #     "whatsapp_number",
-        #     "email",
-        #     "description",
-        #     "country",
+            # 
+            "full_name",
+            "age",
+            "phone_number",
+            "whatsapp_number",
+            "email",
+            "description",
+            "country",
+            "about_level",
 
-        #     "price",
+            # 
+            "price",
+            "total_amount",
+            "remaining_amount",
+            "paid_amount",
 
-        #     "enrolled_time",
-        #     "payment_id",
-        #     "completed",
-        #     "completion_date",
-        #     "certificate_id",
+            # 
+            "enrolled_time",
+            "payment_id",
 
-        #     "is_visible",
+            # 
+            "completed",
+            "completion_date",
+            "certificate_id",
+            
+            # 
+            "is_visible",
 
-        #     "slug",
-        #     "created_at",
-        #     "updated_at",
+            "slug",
+            "created_at",
+            "updated_at",
 
-        #     # 
-        # ]
+            # 
+            "quran_paths",
+            "classrooms",
+            "review_levels",
+            "chapter_in_qurans",
+            "interview_dates",
+
+            # 
+            "degree_quran_circle",
+            "degree_quran_exam",
+            "degree_presence_and_absence",
+            "teacher_note",
+            "certificate_quran",
+        ]
+
+    # 1
+    def get_degree_quran_circle(self, obj):
+        # استرجاع شهادات الطالب المحدد فقط
+        degreeQuranCircles = obj.student.degree_quran_circle_student.all()
+        return DegreeQuranCircleSerializer(degreeQuranCircles , many=True).data
+
+    # 2
+    def get_degree_quran_exam(self, obj):
+        # استرجاع شهادات الطالب المحدد فقط
+        degreeQuranExams = obj.student.degree_quran_exam_student.all()
+        return DegreeQuranExamSerializer(degreeQuranExams , many=True).data
+
+    # 3
+    def get_degree_presence_and_absence(self, obj):
+        # استرجاع شهادات الطالب المحدد فقط
+        degreePresenceAndAbsences = obj.student.degree_presence_and_absence_student.all()
+        return DegreePresenceAndAbsenceSerializer(degreePresenceAndAbsences, many=True).data
+
+    # 4
+    def get_teacher_note(self, obj):
+        # استرجاع شهادات الطالب المحدد فقط
+        teacherNotes = obj.student.teacher_note_student.all()
+        return TeacherNoteSerializer(teacherNotes, many=True).data
+
+    # 5
+    def get_certificate_quran(self, obj):
+        # استرجاع شهادات الطالب المحدد فقط
+        certificates = obj.student.certificate_quran_student.all()
+        return CertificateQuranSerializer(certificates, many=True).data
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['user'] = UserSerializer(instance.user).data  # لعرض تفاصيل المستخدم
+        representation['student'] = UserSerializer(instance.student).data  # لعرض تفاصيل المستخدم
         return representation
 
 

@@ -1,0 +1,86 @@
+
+إليك كيفية القيام بذلك:
+
+1. قم بإنشاء ملف ترحيل جديد باستخدام الأمر التالي:
+
+python manage.py makemigrations --empty cores
+
+
+
+
+
+2. افتح الملف الذي تم إنشاؤه وأضف الدالة التالية:
+
+
+
+from django.db import migrations
+from accounts.models import User
+from cores.models import ReviewLevel, QuranPath
+
+
+def add_default_data(apps, schema_editor):
+    user = User.objects.get(id=1)  # افتراضيًا، يجب أن يكون هناك مستخدم برقم 1
+    quran_path = QuranPath.objects.get(id=2)  # افتراضيًا، يجب أن يكون هناك مسار قرآن برقم 1
+
+    data = [
+        {
+            "title": "المستوي الاول",
+            "duration": "عَامَيْنِ",
+            "stamp_number": ["1", "2", "3", "4"],
+            "daily_auscultation": ["6 صفحات", "12 صفحة", "16 صفحة", "جزء كامل"],
+            "days_per_week": ["2", "2", "3", "5"],
+            "duration_seal": ["12 شهرًا", "6 أشهر", "3 أشهر", "شهر واحد"],
+        },
+        {
+            "title": "المستوي الثاني",
+            "duration": "عَامٍ",
+            "stamp_number": ["1", "2", "3"],
+            "daily_auscultation": ["12 صفحة", "16 صفحة", "جزء كامل"],
+            "days_per_week": ["2", "3", "5"],
+            "duration_seal": ["6 أشهر", "3 أشهر", "شهر واحد"],
+        },
+        {
+            "title": "المستوي الثالث",
+            "duration": "6 أَشْهُرٍ",
+            "stamp_number": ["1", "2"],
+            "daily_auscultation": ["16 صفحة", "جزء كامل"],
+            "days_per_week": ["3", "5"],
+            "duration_seal": ["3 أشهر", "شهر واحد"],
+        },
+    ]
+
+    for item in data:
+        ReviewLevel.objects.create(
+            user=user,
+            quran_path=quran_path,
+
+            title=item["title"],
+            duration=item["duration"],
+            stamp_number=item["stamp_number"],
+            daily_auscultation=item["daily_auscultation"],
+            days_per_week=item["days_per_week"],
+            duration_seal=item["duration_seal"],
+        )
+
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ('cores', '0008_chapterinquran_certificatequran_classroom_and_more'), # اسم الملف السابق
+    ]
+    operations = [
+        migrations.RunPython(add_default_data),
+    ]
+
+
+
+
+
+
+
+
+بعد ذلك، قم بتطبيق الترحيل باستخدام الأمر التالي:
+
+python manage.py migrate
+
+
+

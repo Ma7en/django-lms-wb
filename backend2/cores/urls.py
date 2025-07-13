@@ -1616,6 +1616,7 @@ urlpatterns = [
 
 
 
+
     path(
         '---------------------------------------------------------------------------------------------------------------/', 
         views.Space.as_view(),
@@ -1655,50 +1656,752 @@ urlpatterns = [
 
 
 
+    # *** 11) Quran School *** #
     path(
         '---------------------------------------------------------------------------------------------------------------/', 
         views.Space.as_view(),
     ),
-    # =================================================================
-    # *** Section Course *** #
-    # # (List)
-    # path(
-    #     "section-course/list/",
-    #     views.SectionCourseList.as_view(),
-    #     name="section-course-list",
-    # ),
-    # # (List App)
-    # path(
-    #     "section-course/list-app/",
-    #     views.SectionCourseListApp.as_view(),
-    #     name="section-course-list",
-    # ),
-    # # (List Admin)
-    # path(
-    #     "section-course/list-admin/",
-    #     views.SectionCourseListAdmin.as_view(),
-    #     name="section-course-list",
-    # ),
-    # # (List Result)
-    # path(
-    #     "section-course/result/", #?result=9
-    #     views.SectionCourseResultList.as_view(),
-    #     name="course-result-list",
-    # ),
-    # # (PK)
-    # path(
-    #     "section-course/<int:pk>/",
-    #     views.SectionCoursePK.as_view(),
-    #     name="section-course-pk",
-    # ),
-    # # (Search)
-    # path(
-    #     'section-course/search/<str:searchstring>/', 
-    #     views.SectionCourseSearchList.as_view(),
-    #     name="section-course-search-list",
-    # ),
+    # ================================================================
+    # *** 11-1) Interview Date *** #
+    # (List)
+    path(
+        "interview-date/list/",
+        views.InterviewDateList.as_view(),
+        name="interview-date-list",
+    ),
+    # (List App)
+    path(
+        "interview-date/list-app/",
+        views.InterviewDateListApp.as_view(),
+        name="interview-date-list",
+    ),
+    # (List Admin)
+    path(
+        "interview-date/list-admin/",
+        views.InterviewDateListAdmin.as_view(),
+        name="interview-date-list",
+    ),
+    # (List Result)
+    path(
+        "interview-date/result/", #?result=5
+        views.InterviewDateResultList.as_view(),
+        name="interview-date-list",
+    ),
+    # (PK)
+    path(
+        "interview-date/<int:pk>/",
+        views.InterviewDatePK.as_view(),
+        name="interview-date-details-pk",
+    ),
+    # (Search)
+    path(
+        'interview-date/search/<str:searchstring>/', 
+        views.InterviewDateSearchList.as_view(),
+        name="interview-date-search-list",
+    ),
 
 
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-2) Quran Path *** #
+    # (List)
+    path(
+        "quran-path/list/",
+        views.QuranPathList.as_view(),
+        name="quran-path-list",
+    ),
+    # (List App)
+    path(
+        "quran-path/list-app/",
+        views.QuranPathListApp.as_view(),
+        name="quran-path-list",
+    ),
+    # (List Admin)
+    path(
+        "quran-path/list-admin/",
+        views.QuranPathListAdmin.as_view(),
+        name="quran-path-list",
+    ),
+    # (List Result)
+    path(
+        "quran-path/result/", #?result=5
+        views.QuranPathResultList.as_view(),
+        name="quran-path-list",
+    ),
+    # (PK)
+    path(
+        "quran-path/<int:pk>/",
+        views.QuranPathPK.as_view(),
+        name="quran-path-details-pk",
+    ),
+    # (Search)
+    path(
+        'quran-path/search/<str:searchstring>/', 
+        views.QuranPathSearchList.as_view(),
+        name="quran-path-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-3) Class Room *** #
+    # (List)
+    path(
+        "class-room/list/",
+        views.ClassRoomList.as_view(),
+        name="class-room-list",
+    ),
+    # (List App)
+    path(
+        "class-room/list-app/",
+        views.ClassRoomListApp.as_view(),
+        name="class-room-list",
+    ),
+    # (List Admin)
+    path(
+        "class-room/list-admin/",
+        views.ClassRoomListAdmin.as_view(),
+        name="class-room-list",
+    ),
+    # (List Result)
+    path(
+        "class-room/result/", #?result=5
+        views.ClassRoomResultList.as_view(),
+        name="class-room-list",
+    ),
+    # (PK)
+    path(
+        "class-room/<int:pk>/",
+        views.ClassRoomPK.as_view(),
+        name="class-room-details-pk",
+    ),
+    # (Search)
+    path(
+        'class-room/search/<str:searchstring>/', 
+        views.ClassRoomSearchList.as_view(),
+        name="class-room-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-4) Review Level *** #
+    # (List)
+    path(
+        "review-level/list/",
+        views.ReviewLevelList.as_view(),
+        name="review-level-list",
+    ),
+    # (List App)
+    path(
+        "review-level/list-app/",
+        views.ReviewLevelListApp.as_view(),
+        name="review-level-list",
+    ),
+    # (List Admin)
+    path(
+        "review-level/list-admin/",
+        views.ReviewLevelListAdmin.as_view(),
+        name="review-level-list",
+    ),
+    # (List Result)
+    path(
+        "review-level/result/", #?result=5
+        views.ReviewLevelResultList.as_view(),
+        name="review-level-list",
+    ),
+    # (PK)
+    path(
+        "review-level/<int:pk>/",
+        views.ReviewLevelPK.as_view(),
+        name="review-level-details-pk",
+    ),
+    # (Search)
+    path(
+        'review-level/search/<str:searchstring>/', 
+        views.ReviewLevelSearchList.as_view(),
+        name="review-level-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-5) Chapter In Quran *** #
+    # (List)
+    path(
+        "chapter-in-quran/list/",
+        views.ChapterInQuranList.as_view(),
+        name="chapter-in-quran-list",
+    ),
+    # (List App)
+    path(
+        "chapter-in-quran/list-app/",
+        views.ChapterInQuranListApp.as_view(),
+        name="chapter-in-quran-list",
+    ),
+    # (List Admin)
+    path(
+        "chapter-in-quran/list-admin/",
+        views.ChapterInQuranListAdmin.as_view(),
+        name="chapter-in-quran-list",
+    ),
+    # (List Result)
+    path(
+        "chapter-in-quran/result/", #?result=5
+        views.ChapterInQuranResultList.as_view(),
+        name="chapter-in-quran-list",
+    ),
+    # (PK)
+    path(
+        "chapter-in-quran/<int:pk>/",
+        views.ChapterInQuranPK.as_view(),
+        name="chapter-in-quran-details-pk",
+    ),
+    # (Search)
+    path(
+        'chapter-in-quran/search/<str:searchstring>/', 
+        views.ChapterInQuranSearchList.as_view(),
+        name="chapter-in-quran-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-6) Quran Circle *** #
+    # (List)
+    path(
+        "quran-circle/list/",
+        views.QuranCircleList.as_view(),
+        name="quran-circle-list",
+    ),
+    # (List App)
+    path(
+        "quran-circle/list-app/",
+        views.QuranCircleListApp.as_view(),
+        name="quran-circle-list",
+    ),
+    # (List Admin)
+    path(
+        "quran-circle/list-admin/",
+        views.QuranCircleListAdmin.as_view(),
+        name="quran-circle-list",
+    ),
+    # (List Result)
+    path(
+        "quran-circle/result/", #?result=5
+        views.QuranCircleResultList.as_view(),
+        name="quran-circle-list",
+    ),
+    # (PK)
+    path(
+        "quran-circle/<int:pk>/",
+        views.QuranCirclePK.as_view(),
+        name="quran-circle-details-pk",
+    ),
+    # (Search)
+    path(
+        'quran-circle/search/<str:searchstring>/', 
+        views.QuranCircleSearchList.as_view(),
+        name="quran-circle-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-7) Degree Quran Circle *** #
+    # (List)
+    path(
+        "degree-quran-circle/list/",
+        views.DegreeQuranCircleList.as_view(),
+        name="degree-quran-circle-list",
+    ),
+    # (List App)
+    path(
+        "degree-quran-circle/list-app/",
+        views.DegreeQuranCircleListApp.as_view(),
+        name="degree-quran-circle-list",
+    ),
+    # (List Admin)
+    path(
+        "degree-quran-circle/list-admin/",
+        views.DegreeQuranCircleListAdmin.as_view(),
+        name="degree-quran-circle-list",
+    ),
+    # (List Result)
+    path(
+        "degree-quran-circle/result/", #?result=5
+        views.DegreeQuranCircleResultList.as_view(),
+        name="degree-quran-circle-list",
+    ),
+    # (PK)
+    path(
+        "degree-quran-circle/<int:pk>/",
+        views.DegreeQuranCirclePK.as_view(),
+        name="degree-quran-circle-details-pk",
+    ),
+    # (Search)
+    path(
+        'degree-quran-circle/search/<str:searchstring>/', 
+        views.DegreeQuranCircleSearchList.as_view(),
+        name="degree-quran-circle-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-8) Live Quran Circle *** #
+    # (List)
+    path(
+        "live-quran-circle/list/",
+        views.LiveQuranCircleList.as_view(),
+        name="live-quran-circle-list",
+    ),
+    # (List App)
+    path(
+        "live-quran-circle/list-app/",
+        views.LiveQuranCircleListApp.as_view(),
+        name="live-quran-circle-list",
+    ),
+    # (List Admin)
+    path(
+        "live-quran-circle/list-admin/",
+        views.LiveQuranCircleListAdmin.as_view(),
+        name="live-quran-circle-list",
+    ),
+    # (List Result)
+    path(
+        "live-quran-circle/result/", #?result=5
+        views.LiveQuranCircleResultList.as_view(),
+        name="live-quran-circle-list",
+    ),
+    # (PK)
+    path(
+        "live-quran-circle/<int:pk>/",
+        views.LiveQuranCirclePK.as_view(),
+        name="live-quran-circle-details-pk",
+    ),
+    # (Search)
+    path(
+        'live-quran-circle/search/<str:searchstring>/', 
+        views.LiveQuranCircleSearchList.as_view(),
+        name="live-quran-circle-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-9) Quran Exam *** #
+    # (List)
+    path(
+        "quran-exam/list/",
+        views.QuranExamList.as_view(),
+        name="quran-exam-list",
+    ),
+    # (List App)
+    path(
+        "quran-exam/list-app/",
+        views.QuranExamListApp.as_view(),
+        name="quran-exam-list",
+    ),
+    # (List Admin)
+    path(
+        "quran-exam/list-admin/",
+        views.QuranExamListAdmin.as_view(),
+        name="quran-exam-list",
+    ),
+    # (List Result)
+    path(
+        "quran-exam/result/", #?result=5
+        views.QuranExamResultList.as_view(),
+        name="quran-exam-list",
+    ),
+    # (PK)
+    path(
+        "quran-exam/<int:pk>/",
+        views.QuranExamPK.as_view(),
+        name="quran-exam-details-pk",
+    ),
+    # (Search)
+    path(
+        'quran-exam/search/<str:searchstring>/', 
+        views.QuranExamSearchList.as_view(),
+        name="quran-exam-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-10) Degree Quran Exam *** #
+    # (List)
+    path(
+        "degree-quran-exam/list/",
+        views.DegreeQuranExamList.as_view(),
+        name="degree-quran-exam-list",
+    ),
+    # (List App)
+    path(
+        "degree-quran-exam/list-app/",
+        views.DegreeQuranExamListApp.as_view(),
+        name="degree-quran-exam-list",
+    ),
+    # (List Admin)
+    path(
+        "degree-quran-exam/list-admin/",
+        views.DegreeQuranExamListAdmin.as_view(),
+        name="degree-quran-exam-list",
+    ),
+    # (List Result)
+    path(
+        "degree-quran-exam/result/", #?result=5
+        views.DegreeQuranExamResultList.as_view(),
+        name="degree-quran-exam-list",
+    ),
+    # (PK)
+    path(
+        "degree-quran-exam/<int:pk>/",
+        views.DegreeQuranExamPK.as_view(),
+        name="degree-quran-exam-details-pk",
+    ),
+    # (Search)
+    path(
+        'degree-quran-exam/search/<str:searchstring>/', 
+        views.DegreeQuranExamSearchList.as_view(),
+        name="degree-quran-exam-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-11) Presence And Absence *** #
+    # (List)
+    path(
+        "presence-and-absence/list/",
+        views.PresenceAndAbsenceList.as_view(),
+        name="presence-and-absence-list",
+    ),
+    # (List App)
+    path(
+        "presence-and-absence/list-app/",
+        views.PresenceAndAbsenceListApp.as_view(),
+        name="presence-and-absence-list",
+    ),
+    # (List Admin)
+    path(
+        "presence-and-absence/list-admin/",
+        views.PresenceAndAbsenceListAdmin.as_view(),
+        name="presence-and-absence-list",
+    ),
+    # (List Result)
+    path(
+        "presence-and-absence/result/", #?result=5
+        views.PresenceAndAbsenceResultList.as_view(),
+        name="presence-and-absence-list",
+    ),
+    # (PK)
+    path(
+        "presence-and-absence/<int:pk>/",
+        views.PresenceAndAbsencePK.as_view(),
+        name="presence-and-absence-details-pk",
+    ),
+    # (Search)
+    path(
+        'presence-and-absence/search/<str:searchstring>/', 
+        views.PresenceAndAbsenceSearchList.as_view(),
+        name="presence-and-absence-search-list",
+    ),
+
+
+
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-12) DegreePresenceAndAbsence *** #
+    # (List)
+    path(
+        "degree-presence-and-absence/list/",
+        views.DegreePresenceAndAbsenceList.as_view(),
+        name="degree-presence-and-absence-list",
+    ),
+    # (List App)
+    path(
+        "degree-presence-and-absence/list-app/",
+        views.DegreePresenceAndAbsenceListApp.as_view(),
+        name="degree-presence-and-absence-list",
+    ),
+    # (List Admin)
+    path(
+        "degree-presence-and-absence/list-admin/",
+        views.DegreePresenceAndAbsenceListAdmin.as_view(),
+        name="degree-presence-and-absence-list",
+    ),
+    # (List Result)
+    path(
+        "degree-presence-and-absence/result/", #?result=5
+        views.DegreePresenceAndAbsenceResultList.as_view(),
+        name="degree-presence-and-absence-list",
+    ),
+    # (PK)
+    path(
+        "degree-presence-and-absence/<int:pk>/",
+        views.DegreePresenceAndAbsencePK.as_view(),
+        name="degree-presence-and-absence-details-pk",
+    ),
+    # (Search)
+    path(
+        'degree-presence-and-absence/search/<str:searchstring>/', 
+        views.DegreePresenceAndAbsenceSearchList.as_view(),
+        name="degree-presence-and-absence-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-13) File And Library *** #
+    # (List)
+    path(
+        "file-and-library/list/",
+        views.FileAndLibraryList.as_view(),
+        name="file-and-library-list",
+    ),
+    # (List App)
+    path(
+        "file-and-library/list-app/",
+        views.FileAndLibraryListApp.as_view(),
+        name="file-and-library-list",
+    ),
+    # (List Admin)
+    path(
+        "file-and-library/list-admin/",
+        views.FileAndLibraryListAdmin.as_view(),
+        name="file-and-library-list",
+    ),
+    # (List Result)
+    path(
+        "file-and-library/result/", #?result=5
+        views.FileAndLibraryResultList.as_view(),
+        name="file-and-library-list",
+    ),
+    # (PK)
+    path(
+        "file-and-library/<int:pk>/",
+        views.FileAndLibraryPK.as_view(),
+        name="file-and-library-details-pk",
+    ),
+    # (Search)
+    path(
+        'file-and-library/search/<str:searchstring>/', 
+        views.FileAndLibrarySearchList.as_view(),
+        name="file-and-library-search-list",
+    ),
+
+
+
+
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-14) Teacher Note *** #
+    # (List)
+    path(
+        "teacher-note/list/",
+        views.TeacherNoteList.as_view(),
+        name="teacher-note-list",
+    ),
+    # (List App)
+    path(
+        "teacher-note/list-app/",
+        views.TeacherNoteListApp.as_view(),
+        name="teacher-note-list",
+    ),
+    # (List Admin)
+    path(
+        "teacher-note/list-admin/",
+        views.TeacherNoteListAdmin.as_view(),
+        name="teacher-note-list",
+    ),
+    # (List Result)
+    path(
+        "teacher-note/result/", #?result=5
+        views.TeacherNoteResultList.as_view(),
+        name="teacher-note-list",
+    ),
+    # (PK)
+    path(
+        "teacher-note/<int:pk>/",
+        views.TeacherNotePK.as_view(),
+        name="teacher-note-details-pk",
+    ),
+    # (Search)
+    path(
+        'teacher-note/search/<str:searchstring>/', 
+        views.TeacherNoteSearchList.as_view(),
+        name="teacher-note-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-15) Certificate Quran *** #
+    # (List)
+    path(
+        "certificate-quran/list/",
+        views.CertificateQuranList.as_view(),
+        name="certificate-quran-list",
+    ),
+    # (List App)
+    path(
+        "certificate-quran/list-app/",
+        views.CertificateQuranListApp.as_view(),
+        name="certificate-quran-list",
+    ),
+    # (List Admin)
+    path(
+        "certificate-quran/list-admin/",
+        views.CertificateQuranListAdmin.as_view(),
+        name="certificate-quran-list",
+    ),
+    # (List Result)
+    path(
+        "certificate-quran/result/", #?result=5
+        views.CertificateQuranResultList.as_view(),
+        name="certificate-quran-list",
+    ),
+    # (PK)
+    path(
+        "certificate-quran/<int:pk>/",
+        views.CertificateQuranPK.as_view(),
+        name="certificate-quran-details-pk",
+    ),
+    # (Search)
+    path(
+        'certificate-quran/search/<str:searchstring>/', 
+        views.CertificateQuranSearchList.as_view(),
+        name="certificate-quran-search-list",
+    ),
+
+
+    path(
+        '---------------------------------------------------------------------------------------------------------------/', 
+        views.Space.as_view(),
+    ),
+    # ================================================================
+    # *** 11-16) Student Quran School Enrollment *** #
+    # (List)
+    path(
+        "student-quran-school-enrollment/list/",
+        views.StudentQuranSchoolEnrollmentList.as_view(),
+        name="student-quran-school-enrollment-list",
+    ),
+    # (List App)
+    path(
+        "student-quran-school-enrollment/list-app/",
+        views.StudentQuranSchoolEnrollmentListApp.as_view(),
+        name="student-quran-school-enrollment-list",
+    ),
+    # (List Admin)
+    path(
+        "student-quran-school-enrollment/list-admin/",
+        views.StudentQuranSchoolEnrollmentListAdmin.as_view(),
+        name="student-quran-school-enrollment-list",
+    ),
+    # (List Result)
+    path(
+        "student-quran-school-enrollment/result/", #?result=5
+        views.StudentQuranSchoolEnrollmentResultList.as_view(),
+        name="student-quran-school-enrollment-list",
+    ),
+    # (PK)
+    path(
+        "student-quran-school-enrollment/<int:pk>/",
+        views.StudentQuranSchoolEnrollmentPK.as_view(),
+        name="student-quran-school-enrollment-details-pk",
+    ),
+    # (Search)
+    path(
+        'student-quran-school-enrollment/search/<str:searchstring>/', 
+        views.StudentQuranSchoolEnrollmentSearchList.as_view(),
+        name="student-quran-school-enrollment-search-list",
+    ),
+
+    # (QuranPath PK)
+    path(
+        "enrollment-stuent-quran-path-list/<int:quranpath_id>/",
+        views.EnrollmentStuentQuranPathList.as_view(),
+        name="enrollment-stuent-quran-path-list-quranpath_id",
+    ),
+    # (ChapterInQuran PK)
+    path(
+        "enrollment-stuent-chapter-in-quran-list/<int:chapterinquran_id>/",
+        views.EnrollmentStuentChapterInQuranList.as_view(),
+        name="enrollment-stuent-chapter-in-quran-list-chapterinquran_id",
+    ),
+    # (Student Pk)
+    path(
+        'enrollment-quran-school-stuent-pk-list/<int:student_id>/', 
+        views.EnrollmentQuranSchoolStuentPkList.as_view(),
+        name="enrollment-quran-school-stuent-pk-list-student_id",
+    ),
+
+
+    # 
+    path(
+        'fetch-enrollment-chapter-in-quran-status/<int:enrollment_id>/<int:chapter_in_quran_id>/', 
+        # views.fetch_enroll_status,
+        views.FetchEnrollmentChapterInQuranStatusView.as_view(),
+        name="fetch-enrollment-chapter-in-quran-status-enrollment_id-chapter_in_quran_id",
+    ),
+
+    # 
+    path(
+        'fetch-enroll-chapter-in-quran-status/<int:chapter_in_quran_id>/', 
+        # views.fetch_enroll_status,
+        views.FetchEnrollChapterInQuranStatusView.as_view(),
+        name="fetch-enroll-chapter-in-quran-status-chapter_in_quran_id",
+    ),
 
 
 

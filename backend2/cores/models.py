@@ -208,7 +208,7 @@ class Course(models.Model):
     description = models.TextField(max_length=10_000, null=True, blank=True)
     image = models.ImageField(upload_to="course/images", null=True, blank=True)
     image_url = models.URLField(null=True, blank=True)
-    duration = models.CharField(max_length=100, null=True, blank=True)
+    duration = models.CharField(max_length=1_000, null=True, blank=True)
 
     # 
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
@@ -245,6 +245,7 @@ class Course(models.Model):
 
     # 
     table_contents  = models.JSONField(default=list)
+    table_contents_url = models.URLField(null=True, blank=True)
 
     # 
     features = models.JSONField(default=list, null=True, blank=True)
@@ -1879,9 +1880,9 @@ class QuranPath(models.Model):
     )
 
     PATH_CHOICES = [
-        ('save', 'حفظ'),
-        ('review', 'مراجعة'),
-        ('vacation', 'اجازة'),
+        ('save', 'مسار الحفظ'),
+        ('review', 'مسار المراجعة والتثبيت'),
+        ('vacation', 'مسار الإجازة'),
     ]
     name = models.CharField(
         max_length=255, 
@@ -2537,7 +2538,7 @@ class ChapterInQuran(models.Model):
         null=True,
         blank=True,
     )
-    # الفصول الدراسية
+    # السنوات الدراسية
     classroom = models.ForeignKey(
         ClassRoom, 
         on_delete=models.CASCADE, 
@@ -2600,12 +2601,15 @@ class ChapterInQuran(models.Model):
         null=True,
         blank=True,
     )
-    # منهج علوم القرآن
+    #  علوم القرآن
     quran_sciences =  models.CharField(
         max_length=1_000, 
         null=True,
         blank=True,
     )
+
+    # وقت الفصل
+    duration = models.CharField(max_length=1_000, null=True, blank=True)
 
     is_visible = models.BooleanField(default=True)
 
@@ -2632,7 +2636,7 @@ class ChapterInQuran(models.Model):
         return QuranExam.objects.filter(chapter_in_quran=self).count()
 
     def total_degree_quran_exam(self):
-        return DegreeQuranCircle.objects.filter(quran_exam__chapter_in_quran=self).count()
+        return DegreeQuranExam.objects.filter(quran_exam__chapter_in_quran=self).count()
 
 
     # 
@@ -2640,7 +2644,7 @@ class ChapterInQuran(models.Model):
         return PresenceAndAbsence.objects.filter(chapter_in_quran=self).count()
 
     def total_degree_presence_and_absence(self):
-        return DegreeQuranCircle.objects.filter(presence_and_absence__chapter_in_quran=self).count()
+        return DegreePresenceAndAbsence.objects.filter(presence_and_absence__chapter_in_quran=self).count()
 
 
     # 
@@ -2657,13 +2661,18 @@ class ChapterInQuran(models.Model):
     def total_certificate_quran(self):
         return CertificateQuran.objects.filter(chapter_in_quran=self).count()
 
+    
+    # 
+    def total_enrolled_students(self):
+        return StudentQuranSchoolEnrollment.objects.filter(chapter_in_quran=self).count()
+
 
     # def total_lesson(self):
     #     return LessonInCourse.objects.filter(section__course=self).count()
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name_plural="11-7. Chapter In Level"
+        verbose_name_plural="11-7. Chapter In Quran"
 
     def __str__(self) :
         return f"{self.id}): ({self.title}) - [{self.user}] - ({self.is_visible})"
@@ -2700,7 +2709,7 @@ class QuranCircle(models.Model):
         # limit_choices_to={'name': 'حفظ'},
     )
 
-    date = models.DateTimeField(null=True, blank=True) 
+    date_time = models.DateTimeField(null=True, blank=True) 
 
     # الورد الحاضر
     present_roses =  models.CharField(
@@ -2735,12 +2744,81 @@ class QuranCircle(models.Model):
     def __str__(self) :
         return f"{self.id}): ({self.present_roses}) - [{self.user}] - ({self.is_visible})"
     
-    def save(self, *args, **kwargs):
-        if self.slug == "" or self.slug == None:
-            self.slug = slugify(self.present_roses) + "-" + shortuuid.uuid()[:2]
- 
-        super(QuranCircle, self).save(*args, **kwargs)
 
+    # 1
+    # def save(self, *args, **kwargs):
+    #     # 
+    #     if self.slug == "" or self.slug == None:
+    #         self.slug = slugify(self.present_roses) + "-" + shortuuid.uuid()[:2]
+
+    #     super(QuranCircle, self).save(*args, **kwargs)
+
+
+    # 2
+    # def save(self, *args, **kwargs):
+    #     # 
+    #     if self.slug == "" or self.slug == None:
+    #         self.slug = slugify(self.present_roses) + "-" + shortuuid.uuid()[:2]
+
+
+    #     # لا تمرير force_insert إذا كان للكائن id بالفعل
+    #     # if self.id:
+    #     #     kwargs.pop('force_insert', None)
+
+
+    #     # حفظ QuranCircle أولاً
+    #     # super().save(*args, **kwargs)
+    #     super(QuranCircle, self).save(*args, **kwargs)
+
+    #     # 
+    #     # إذا كان QuranCircle جديدًا وله chapter_in_quran
+    #     if self._state.adding and self.chapter_in_quran:
+    #         enrollments = StudentQuranSchoolEnrollment.objects.filter(
+    #             chapter_in_quran=self.chapter_in_quran,
+    #             is_visible=True
+    #         )
+    #         print("\n\n\n\n\n\n\n\n")
+    #         print("enrollments",enrollments)
+    #         print("\n\n\n\n\n\n\n\n")
+            
+    #         for enrollment in enrollments:
+    #             print("\n\n\n\n\n\n\n\n")
+    #             print("self", self)
+    #             print("\n\n\n\n\n\n\n\n")
+
+    #             DegreeQuranCircle.objects.get_or_create(
+    #                 user=self.user,
+    #                 quran_circle=self,
+    #                 student=enrollment.student,
+    #                 # defaults={
+    #                 #     'degree_present_roses': 0,
+    #                 #     'degree_past_roses': 0,
+    #                 #     'is_visible': True
+    #                 # }
+    #             )
+
+    #     # super(QuranCircle, self).save(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        created = not self.pk  # هل هذا إنشاء جديد أم تحديث؟
+        super().save(*args, **kwargs)  # حفظ الكائن أولاً
+        
+        if created:
+            self.create_degrees_for_students()
+    
+
+    def create_degrees_for_students(self):
+
+        enrollments = StudentQuranSchoolEnrollment.objects.filter(
+            chapter_in_quran=self.chapter_in_quran
+        )
+        
+        for enrollment in enrollments:
+            DegreeQuranCircle.objects.get_or_create(
+                user=self.user,
+                quran_circle=self,
+                student=enrollment.student,
+            )
 
 
 class DegreeQuranCircle(models.Model):
@@ -2793,8 +2871,9 @@ class DegreeQuranCircle(models.Model):
         verbose_name_plural="11-9. Degree Quran Circle"
 
     def __str__(self) :
-        return f"{self.id}): ({self.degree_present_roses}) - [{self.user}] - ({self.is_visible})"
+        return f"{self.id}): ({self.degree_present_roses}) - ({self.degree_past_roses}) - [{self.user}] - ({self.is_visible}) - [{self.student}]"
     
+
     def save(self, *args, **kwargs):
         if self.slug == "" or self.slug == None:
             self.slug = slugify(self.degree_present_roses) + "-" + shortuuid.uuid()[:2]
@@ -2821,7 +2900,11 @@ class LiveQuranCircle(models.Model):
         # limit_choices_to={'name': 'حفظ'},
     )
 
-    title = models.CharField(max_length=1_000)
+    title = models.CharField(
+        max_length=1_000,
+        null=True, 
+        blank=True,
+    )
     description = models.TextField(
         max_length=10_000, 
         null=True, 
@@ -2850,8 +2933,9 @@ class LiveQuranCircle(models.Model):
         verbose_name_plural="11-10. Live Quran Circle"
 
     def __str__(self) :
-        return f"{self.id}): ({self.title}) - [{self.user}] - ({self.is_visible})"
+        return f"{self.id}): ({self.title}) - [{self.user}] - ({self.is_visible}) - ({self.date_time})"
     
+
     def save(self, *args, **kwargs):
         if self.slug == "" or self.slug == None:
             self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
@@ -2908,7 +2992,7 @@ class QuranExam(models.Model):
     # منهج الاختبار
     title = models.CharField(max_length=1_000)
 
-    date = models.DateTimeField(null=True, blank=True) 
+    date_time = models.DateTimeField(null=True, blank=True) 
 
 
     is_visible = models.BooleanField(default=True)
@@ -2933,11 +3017,38 @@ class QuranExam(models.Model):
     def __str__(self) :
         return f"{self.id}): ({self.title}) - [{self.user}] - ({self.is_visible})"
     
+    # def save(self, *args, **kwargs):
+    #     if self.slug == "" or self.slug == None:
+    #         self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
+ 
+    #     super(QuranExam, self).save(*args, **kwargs)
+
+
     def save(self, *args, **kwargs):
+        # 
         if self.slug == "" or self.slug == None:
             self.slug = slugify(self.title) + "-" + shortuuid.uuid()[:2]
- 
-        super(QuranExam, self).save(*args, **kwargs)
+
+        # 
+        created = not self.pk  # هل هذا إنشاء جديد أم تحديث؟
+        super().save(*args, **kwargs)  # حفظ الكائن أولاً
+        
+        if created:
+            self.create_degrees_for_students()
+    
+
+    def create_degrees_for_students(self):
+
+        enrollments = StudentQuranSchoolEnrollment.objects.filter(
+            chapter_in_quran=self.chapter_in_quran
+        )
+        
+        for enrollment in enrollments:
+            DegreeQuranExam.objects.get_or_create(
+                user=self.user,
+                quran_exam=self,
+                student=enrollment.student,
+            )
 
 
 
@@ -3030,7 +3141,7 @@ class PresenceAndAbsence(models.Model):
         blank=True,
     )
 
-    date = models.DateTimeField(null=True, blank=True) 
+    date_time = models.DateTimeField(null=True, blank=True) 
 
 
     is_visible = models.BooleanField(default=True)
@@ -3053,11 +3164,39 @@ class PresenceAndAbsence(models.Model):
     def __str__(self) :
         return f"{self.id}): ({self.session_type}) - [{self.user}] - ({self.is_visible})"
     
+    # def save(self, *args, **kwargs):
+    #     if self.slug == "" or self.slug == None:
+    #         self.slug = slugify(self.session_type) + "-" + shortuuid.uuid()[:2]
+ 
+    #     super(PresenceAndAbsence, self).save(*args, **kwargs)
+
+
+ 
     def save(self, *args, **kwargs):
+        # 
         if self.slug == "" or self.slug == None:
             self.slug = slugify(self.session_type) + "-" + shortuuid.uuid()[:2]
- 
-        super(PresenceAndAbsence, self).save(*args, **kwargs)
+
+        # 
+        created = not self.pk  # هل هذا إنشاء جديد أم تحديث؟
+        super().save(*args, **kwargs)  # حفظ الكائن أولاً
+        
+        if created:
+            self.create_degrees_for_students()
+    
+
+    def create_degrees_for_students(self):
+
+        enrollments = StudentQuranSchoolEnrollment.objects.filter(
+            chapter_in_quran=self.chapter_in_quran
+        )
+        
+        for enrollment in enrollments:
+            DegreePresenceAndAbsence.objects.get_or_create(
+                user=self.user,
+                presence_and_absence=self,
+                student=enrollment.student,
+            )
 
 
 
@@ -3096,7 +3235,7 @@ class DegreePresenceAndAbsence(models.Model):
         blank=True,
     )
 
-    date = models.DateTimeField(null=True, blank=True) 
+    date_time = models.DateTimeField(null=True, blank=True) 
     
 
     is_visible = models.BooleanField(default=True)
@@ -3181,7 +3320,7 @@ class FileAndLibrary(models.Model):
 
         if self.pk:
             
-            # file pdf
+            # file
             old_instance_file = FileAndLibrary.objects.get(pk=self.pk)
             if old_instance_file.file and old_instance_file.file != self.file:
                 default_storage.delete(old_instance_file.file.path)
@@ -3374,7 +3513,7 @@ class StudentQuranSchoolEnrollment(models.Model):
     
     # موعد المقابلة 
     interview_date = models.ForeignKey(
-        ChapterInQuran,
+        InterviewDate,
         on_delete=models.CASCADE,
         related_name='student_quran_school_enrollment_interview_date',
         null=True,
@@ -3418,9 +3557,41 @@ class StudentQuranSchoolEnrollment(models.Model):
         blank=True,
     )
 
+    # 
+    about_level = models.TextField(
+        max_length=10_000, 
+        null=True, 
+        blank=True,
+    )
+    
 
     # 
     price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        null=True,
+        blank=True,
+    )
+
+    # المبلغ الكلي
+    total_amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        null=True,
+        blank=True,
+    )
+    # المبلغ المتبقي 
+    remaining_amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        null=True,
+        blank=True,
+    )
+    # المبلغ المدفوع
+    paid_amount = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 
         default=0,
@@ -3447,7 +3618,7 @@ class StudentQuranSchoolEnrollment(models.Model):
         verbose_name_plural="11-19. Student Quran School Enrollment"
 
     def __str__(self) :
-        return f"{self.id}): [{self.student}]"
+        return f"{self.id}): [{self.student}] - [{self.quran_path}] - [{self.chapter_in_quran}]"
 
     def save(self, *args, **kwargs):
 

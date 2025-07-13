@@ -1,0 +1,97 @@
+
+إليك كيفية القيام بذلك:
+
+
+1. قم بإنشاء ملف ترحيل جديد باستخدام الأمر التالي:
+
+python manage.py makemigrations --empty cores
+
+
+
+2. افتح الملف الذي تم إنشاؤه وأضف الدالة التالية:
+
+
+
+from django.db import migrations
+from accounts.models import User
+from cores.models import ClassRoom, QuranPath
+
+def add_default_data(apps, schema_editor):
+    user = User.objects.get(id=1)  # افتراضيًا، يجب أن يكون هناك مستخدم برقم 1
+    quran_path = QuranPath.objects.get(id=1)  # افتراضيًا، يجب أن يكون هناك مسار قرآن برقم 1
+
+    data = [
+        {
+            "title": "السَّنَةُ التَّمْهِيدِيَّةُ",
+            "preservation_decision": "جُزْءَانِ (مِنْ سُورَةِ النَّاسِ إِلَى تَبَارَكَ)",
+            "associated_sciences": "التَّجْوِيدُ المُيَسَّرُ، آدَابُ حَمَلَةِ القُرْآنِ، تفسير القرآن الكريم، أَسْبَابُ النُّزُولِ",
+            "condition_acceptance": "",
+        },
+        {
+            "title": "الصَّفُّ الأَوَّلُ",
+            "preservation_decision": "3 أَجْزَاءٍ (مِنَ التَّحْرِيمِ إِلَى الأَحْقَافِ)",
+            "associated_sciences": "تُحْفَةُ الأَطْفَالِ، آدَابُ حَمَلَةِ القُرْآنِ، تفسير القرآن الكريم، أَسْبَابُ النُّزُولِ",
+            "condition_acceptance": "من سورة الناس إلى سورة تبارك",
+        },
+        {
+            "title": "الصَّفُّ الثَّانِي",
+            "preservation_decision": "3.5 أَجْزَاءٍ (مِنَ الجَاثِيَةِ إِلَى سَبَأٍ)",
+            "associated_sciences": "شرح متن الجزرية، تفسير القرآن الكريم، أَسْبَابُ النُّزُولِ",
+            "condition_acceptance": "من سورة الناس إلى سورة الأحقاف",
+        },
+        {
+            "title": "الصَّفُّ الثَّالِثُ",
+            "preservation_decision": "4 أَجْزَاءٍ (مِنَ الأَحْزَابِ إِلَى المُؤْمِنُونَ)",
+            "associated_sciences": "شرح متن الجزرية، تفسير القرآن الكريم، أَسْبَابُ النُّزُولِ",
+            "condition_acceptance": "من سورة الناس إلى سورة سبأ",
+        },
+        {
+            "title": "الصَّفُّ الرَّابِعُ",
+            "preservation_decision": "5.5 أَجْزَاءٍ (مِنَ الحَجِّ إِلَى يُوسُفَ)",
+            "associated_sciences": "مُحَاضَرَاتٌ فِي عُلُومِ القُرْآنِ، تفسير القرآن الكريم، أَسْبَابُ النُّزُولِ",
+            "condition_acceptance": "من سورة الناس إلى سورة المؤمنون",
+        },
+        {
+            "title": "الصَّفُّ الخَامِسُ",
+            "preservation_decision": "5.5 أَجْزَاءٍ (مِنْ هُودٍ إِلَى الأَنْعَامِ)",
+            "associated_sciences": "القَوَاعِدُ الحِسَانُ، شَرْحُ أُصُولِ التَّفْسِيرِ، تفسير القرآن الكريم، أَسْبَابُ النُّزُولِ",
+            "condition_acceptance": "من سورة الناس إلى سورة يوسف",
+        },
+        {
+            "title": "الصَّفُّ السَّادِسُ",
+            "preservation_decision": "6.5 أَجْزَاءٍ (مِنَ المَائِدَةِ إِلَى البَقَرَةِ)",
+            "associated_sciences": "مُتَشَابِهَاتُ القُرْآنِ، تفسير القرآن الكريم، أَسْبَابُ النُّزُولِ",
+            "condition_acceptance": "من سورة الناس إلى سورة الأنعام",
+        },
+    ]
+
+    for item in data:
+        ClassRoom.objects.create(
+            user=user,
+            quran_path=quran_path,
+
+            title=item["title"],
+            preservation_decision=item["preservation_decision"],
+            associated_sciences=item["associated_sciences"],
+            condition_acceptance=item["condition_acceptance"],
+        )
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ('cores', '0008_chapterinquran_certificatequran_classroom_and_more'), # اسم الملف السابق
+    ]
+    operations = [
+        migrations.RunPython(add_default_data),
+    ]
+
+
+
+
+
+بعد إكمال الكود، قم بتطبيق الترحيل باستخدام الأمر التالي:
+
+python manage.py migrate
+
+
+
+

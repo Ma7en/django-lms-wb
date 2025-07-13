@@ -16,6 +16,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import F
+
 
 
 # 
@@ -101,7 +103,8 @@ class CategorySectionListAdmin(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
 
 
-class CategorySectionListApp(generics.ListCreateAPIView):
+
+class CategorySectionListApp(generics.ListAPIView):
     queryset = models.CategorySection.objects.filter(is_visible=True)
     serializer_class = serializers.CategorySectionSerializer
     # pagination_class = StandardResultSetPagination
@@ -163,7 +166,7 @@ class SectionCourseList(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class SectionCourseListApp(generics.ListCreateAPIView):
+class SectionCourseListApp(generics.ListAPIView):
     queryset = models.SectionCourse.objects.filter(is_visible=True)
     serializer_class = serializers.SectionCourseSerializer
     permission_classes = [AllowAny]
@@ -274,7 +277,7 @@ class CourseList(generics.ListCreateAPIView):
 
 
 
-class CourseListApp(generics.ListCreateAPIView):
+class CourseListApp(generics.ListAPIView):
     queryset = models.Course.objects.filter(is_visible=True, is_live=False)
     serializer_class = serializers.CourseSerializer
     permission_classes = [AllowAny]
@@ -300,7 +303,7 @@ class CourseListAdmin(generics.ListCreateAPIView):
 
 
 
-class CourseIsFreeListApp(generics.ListCreateAPIView):
+class CourseIsFreeListApp(generics.ListAPIView):
     queryset = models.Course.objects.filter(is_visible=True, price=0, is_live=False)
     serializer_class = serializers.CourseSerializer
     permission_classes = [AllowAny]
@@ -313,7 +316,7 @@ class CourseIsLiveList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class CourseIsLiveListApp(generics.ListCreateAPIView):
+class CourseIsLiveListApp(generics.ListAPIView):
     queryset = models.Course.objects.filter(is_visible=True, is_live=True)
     serializer_class = serializers.CourseSerializer
     permission_classes = [AllowAny]
@@ -938,7 +941,7 @@ class PackageCourseList(generics.ListCreateAPIView):
         return models.PackageCourse.objects.all()
 
 
-class PackageCourseListApp(generics.ListCreateAPIView):
+class PackageCourseListApp(generics.ListAPIView):
     queryset = models.PackageCourse.objects.filter(is_admin=True)
     serializer_class = serializers.PackageCourseSerializer
     permission_classes = [AllowAny]
@@ -1025,10 +1028,12 @@ class CouponCourseList(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class CouponCourseListApp(generics.ListCreateAPIView):
+
+class CouponCourseListApp(generics.ListAPIView):
     queryset = models.CouponCourse.objects.filter(is_visible=True)
     serializer_class = serializers.CouponCourseSerializer
     permission_classes = [AllowAny]
+
 
 
 class CouponCoursePK(generics.RetrieveUpdateDestroyAPIView):
@@ -1054,6 +1059,7 @@ class CouponCourseSearch(generics.ListCreateAPIView):
                 |Q(discount__icontains=search)
                 )
         return qs
+
 
 
 class CouponCourseSearchApp(generics.ListCreateAPIView):
@@ -1099,6 +1105,7 @@ class CourseCreateCheckoutView(APIView):
         }
         response = requests.post(url, data=data, headers=headers)
         return Response(response.json())
+
 
 
 class CoursePaymentResultView(APIView):
@@ -1955,7 +1962,7 @@ class QuestionBankListAdmin(generics.ListCreateAPIView):
             return models.QuestionBank.objects.filter(user=user)
 
 
-class QuestionBankListApp(generics.ListCreateAPIView):
+class QuestionBankListApp(generics.ListAPIView):
     queryset = models.QuestionBank.objects.filter(is_visible=True)
     serializer_class = serializers.QuestionBankSerializer
     permission_classes = [AllowAny]
@@ -2666,7 +2673,7 @@ class FamousSayingsList(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class FamousSayingsListApp(generics.ListCreateAPIView):
+class FamousSayingsListApp(generics.ListAPIView):
     queryset = models.FamousSayings.objects.all()
     serializer_class = serializers.FamousSayingsSerializer 
     permission_classes = [AllowAny]
@@ -2753,7 +2760,7 @@ class CategoryBookList(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class CategoryBookListApp(generics.ListCreateAPIView):
+class CategoryBookListApp(generics.ListAPIView):
     queryset = models.CategoryBook.objects.all()
     serializer_class = serializers.CategoryBookSerializer 
     permission_classes = [AllowAny]
@@ -2819,7 +2826,7 @@ class BookList(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class BookListApp(generics.ListCreateAPIView):
+class BookListApp(generics.ListAPIView):
     queryset = models.Book.objects.all()
     serializer_class = serializers.BookSerializer
     permission_classes = [AllowAny]
@@ -2891,7 +2898,7 @@ class ProofreadingServiceList(generics.ListCreateAPIView):
         return models.ProofreadingService.objects.all()
     
 
-class ProofreadingServiceListApp(generics.ListCreateAPIView):
+class ProofreadingServiceListApp(generics.ListAPIView):
     queryset = models.ProofreadingService.objects.all()
     serializer_class = serializers.ProofreadingServiceSerializer 
     permission_classes = [AllowAny]
@@ -2968,7 +2975,7 @@ class PowerpointList(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class PowerpointListApp(generics.ListCreateAPIView):
+class PowerpointListApp(generics.ListAPIView):
     queryset = models.Powerpoint.objects.all()
     serializer_class = serializers.PowerpointSerializer 
     permission_classes = [AllowAny]
@@ -3156,7 +3163,7 @@ class PowerpointServiceList(generics.ListCreateAPIView):
         return models.PowerpointService.objects.all()
     
 
-class PowerpointServiceListApp(generics.ListCreateAPIView):
+class PowerpointServiceListApp(generics.ListAPIView):
     queryset = models.PowerpointService.objects.all()
     serializer_class = serializers.PowerpointServiceSerializer 
     permission_classes = [AllowAny]
@@ -3374,7 +3381,7 @@ class ReviewUserListAPIView(generics.ListCreateAPIView):
     #         return models.ReviewUser.objects.none()
 
 
-class ReviewUserListApp(generics.ListCreateAPIView):
+class ReviewUserListApp(generics.ListAPIView):
     queryset = models.ReviewUser.objects.all()
     serializer_class = serializers.ReviewUserSerializer
     permission_classes = [AllowAny]
@@ -3465,7 +3472,7 @@ class CategoryBlogListView(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class CategoryBlogListApp(generics.ListCreateAPIView):
+class CategoryBlogListApp(generics.ListAPIView):
     queryset = models.CategoryBlog.objects.all()
     serializer_class = serializers.CategoryBlogSerializer 
     permission_classes = [AllowAny]
@@ -3571,7 +3578,7 @@ class BlogListView(generics.ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
 
-class BlogListApp(generics.ListCreateAPIView):
+class BlogListApp(generics.ListAPIView):
     queryset = models.Blog.objects.all()
     serializer_class = serializers.BlogSerializer
     permission_classes = [AllowAny]
@@ -3863,7 +3870,7 @@ class YouTubeSuggestionsBlogList(generics.ListCreateAPIView):
 
 
 
-class YouTubeSuggestionsBlogListApp(generics.ListCreateAPIView):
+class YouTubeSuggestionsBlogListApp(generics.ListAPIView):
     queryset = models.YouTubeSuggestionsBlog.objects.all()
     serializer_class = serializers.YouTubeSuggestionsBlogSerializer
     permission_classes = [AllowAny]
@@ -4139,39 +4146,41 @@ class QuranPathPK(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-# class InterviewDateResultList(generics.ListCreateAPIView):
-#     queryset = models.InterviewDate.objects.all()
-#     serializer_class = serializers.InterviewDateSerializer
+class QuranPathResultList(generics.ListCreateAPIView):
+    queryset = models.QuranPath.objects.all()
+    serializer_class = serializers.QuranPathSerializer
 
-#     def get_queryset(self):
-#         qs = super().get_queryset()
-#         if 'result' in self.request.GET:
-#             try:
-#                 limit = int(self.request.GET['result'])
-#                 qs = qs.order_by('-id').filter(is_visible=True)[:limit]
-#             except ValueError:
-#                 # Handle the case where 'result' is not an integer
-#                 pass
-#         return qs
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
     
 
     
-# class InterviewDateSearchList(generics.ListCreateAPIView):
-#     queryset = models.InterviewDate.objects.all()
-#     serializer_class = serializers.InterviewDateSerializer
-#     pagination_class = StandardResultSetPagination
-#     # permission_classes = [IsAuthenticated]
+class QuranPathSearchList(generics.ListCreateAPIView):
+    queryset = models.QuranPath.objects.all()
+    serializer_class = serializers.QuranPathSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = super().get_queryset()
+    def get_queryset(self):
+        qs = super().get_queryset()
 
-#         if 'searchstring' in self.kwargs:
-#             search = self.kwargs['searchstring'] 
-#             qs = qs.filter(
-#                 Q(schedule_time__icontains=search)
-#                 |Q(is_visible__icontains=search) 
-#                 )
-#         return qs
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(name__icontains=search)
+                |Q(title__icontains=search) 
+                |Q(description__icontains=search) 
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
 
 
 
@@ -4209,39 +4218,43 @@ class ClassRoomPK(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-# class InterviewDateResultList(generics.ListCreateAPIView):
-#     queryset = models.InterviewDate.objects.all()
-#     serializer_class = serializers.InterviewDateSerializer
+class ClassRoomResultList(generics.ListCreateAPIView):
+    queryset = models.ClassRoom.objects.all()
+    serializer_class = serializers.ClassRoomSerializer
 
-#     def get_queryset(self):
-#         qs = super().get_queryset()
-#         if 'result' in self.request.GET:
-#             try:
-#                 limit = int(self.request.GET['result'])
-#                 qs = qs.order_by('-id').filter(is_visible=True)[:limit]
-#             except ValueError:
-#                 # Handle the case where 'result' is not an integer
-#                 pass
-#         return qs
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'result' in self.request.GET:
+            try:
+                limit = int(self.request.GET['result'])
+                qs = qs.order_by('-id').filter(is_visible=True)[:limit]
+            except ValueError:
+                # Handle the case where 'result' is not an integer
+                pass
+        return qs
     
 
     
-# class InterviewDateSearchList(generics.ListCreateAPIView):
-#     queryset = models.InterviewDate.objects.all()
-#     serializer_class = serializers.InterviewDateSerializer
-#     pagination_class = StandardResultSetPagination
-#     # permission_classes = [IsAuthenticated]
+class ClassRoomSearchList(generics.ListCreateAPIView):
+    queryset = models.ClassRoom.objects.all()
+    serializer_class = serializers.ClassRoomSerializer
+    pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = super().get_queryset()
+    def get_queryset(self):
+        qs = super().get_queryset()
 
-#         if 'searchstring' in self.kwargs:
-#             search = self.kwargs['searchstring'] 
-#             qs = qs.filter(
-#                 Q(schedule_time__icontains=search)
-#                 |Q(is_visible__icontains=search) 
-#                 )
-#         return qs
+        if 'searchstring' in self.kwargs:
+            search = self.kwargs['searchstring'] 
+            qs = qs.filter(
+                Q(title__icontains=search)
+                |Q(description_icontains=search) 
+                |Q(preservation_decision__icontains=search) 
+                |Q(associated_sciences__icontains=search) 
+                |Q(condition_acceptance__icontains=search) 
+                |Q(is_visible__icontains=search) 
+                )
+        return qs
 
 
 
@@ -4336,9 +4349,20 @@ class ChapterInQuranList(generics.ListCreateAPIView):
 
 class ChapterInQuranListApp(generics.ListAPIView):
     queryset = models.ChapterInQuran.objects.filter(is_visible=True)
+    # queryset = models.ChapterInQuran.objects.filter(is_visible=True, maximum_students__gt=student_enrollment)
+    # queryset = models.ChapterInQuran.objects.filter(is_visible=True).filter(maximum_students__gt=F('student_enrollment'))
+    # queryset = models.ChapterInQuran.objects.filter(is_visible=True).exclude(maximum_students__lte=F('student_enrollment'))
     serializer_class = serializers.ChapterInQuranSerializer
     permission_classes = [AllowAny]
     # pagination_class = StandardResultSetPagination
+    
+    def get_queryset(self):
+        # ترجع فقط الفصول التي فيها maximum_students > student_enrollment
+        return models.ChapterInQuran.objects.filter(
+            is_visible=True,
+            maximum_students__gt=models.F('student_enrollment')
+        )
+
 
 
 class ChapterInQuranListAdmin(generics.ListAPIView):
@@ -5134,11 +5158,13 @@ class StudentQuranSchoolEnrollmentList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
+
 class StudentQuranSchoolEnrollmentListApp(generics.ListAPIView):
     queryset = models.StudentQuranSchoolEnrollment.objects.filter(is_visible=True)
     serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
     permission_classes = [AllowAny]
     # pagination_class = StandardResultSetPagination
+
 
 
 class StudentQuranSchoolEnrollmentListAdmin(generics.ListAPIView):
@@ -5216,35 +5242,92 @@ class StudentQuranSchoolEnrollmentSearchList(generics.ListCreateAPIView):
 #         return JsonResponse({'bool':False})
 
 
-# # class FetchEnrollStatusView(generics.RetrieveAPIView):
-# class FetchEnrollStatusView(APIView):
+
+
+# 1 x
+# # # class FetchEnrollStatusView(generics.RetrieveAPIView):
+# class FetchEnrollmentQuranSchoolStatusView(APIView):
 #     # pagination_class = StandardResultSetPagination
 #     # permission_classes = [IsAuthenticated]
 
-#     def get(self, request, student_id, course_id):
-#         student = models.User.objects.filter(id=student_id).first()
-#         course = models.Course.objects.filter(id=course_id).first()
-#         enroll_status = models.StudentCourseEnrollment.objects.filter(course=course, student=student).exists()
+#     def get(self, request, student_id, chapter_in_quran_id):
+#         # student = models.User.objects.filter(id=student_id).first()
+#         # quran_school = models.StudentQuranSchoolEnrollment.objects.filter(id=course_id).first()
+#         # enroll_status = models.StudentCourseEnrollment.objects.filter(course=quran_school, student=student).exists()
+#         enroll_status = models.StudentCourseEnrollment.objects.filter(chapter_in_quran=chapter_in_quran_id, student=student_id).exists()
 #         return Response({'bool': enroll_status})
+    
+
+# 2 - 
+# # # class FetchEnrollStatusView(generics.RetrieveAPIView):
+# class FetchEnrollmentChapterInQuranStatusView(APIView):
+#     # pagination_class = StandardResultSetPagination
+#     # permission_classes = [IsAuthenticated]
+
+#     def get(self, request, student_id, chapter_in_quran_id):
+#         # student = models.User.objects.filter(id=student_id).first()
+#         # chapter_in_quran = models.ChapterInQuran.objects.filter(id=chapter_in_quran_id).first()
+#         # enroll_status = models.StudentQuranSchoolEnrollment.objects.filter(chapter_in_quran=chapter_in_quran, student=student).exists()
+#         enroll_status = models.StudentQuranSchoolEnrollment.objects.filter(chapter_in_quran=chapter_in_quran_id, student=student_id).exists()
+#         return Response({'bool': enroll_status})
+    
+# 3 - 
+# # class FetchEnrollStatusView(generics.RetrieveAPIView):
+class FetchEnrollmentChapterInQuranStatusView(APIView):
+    # pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, enrollment_id, chapter_in_quran_id): 
+        enroll_status = models.StudentQuranSchoolEnrollment.objects.filter(id=enrollment_id, chapter_in_quran=chapter_in_quran_id).exists()
+        return Response({'bool': enroll_status})
+    
+
+# # class FetchEnrollStatusView(generics.RetrieveAPIView):
+class FetchEnrollChapterInQuranStatusView(APIView):
+    # pagination_class = StandardResultSetPagination
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, chapter_in_quran_id):
+        enroll_status = models.StudentQuranSchoolEnrollment.objects.filter(chapter_in_quran=chapter_in_quran_id).exists()
+        return Response({'bool': enroll_status})
 
 
  
 
 
 # #-
-# class EnrolledStuentCourseList(generics.ListCreateAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     pagination_class = StandardResultSetPagination
-#     permission_classes = [AllowAny]
-#     # permission_classes = [IsAuthenticated]
+class EnrollmentStuentQuranPathList(generics.ListAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    # pagination_class = StandardResultSetPagination
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = ""
-#         if 'course_id' in self.kwargs:
-#             course_id = self.kwargs['course_id']
-#             # course = models.Course.objects.get(pk=course_id)
-#             return models.StudentCourseEnrollment.objects.filter(course=course_id)
+    def get_queryset(self):
+        qs = ""
+        if 'quranpath_id' in self.kwargs:
+            quranpath_id = self.kwargs['quranpath_id']
+            # course = models.Course.objects.get(pk=quranpath_id)
+            return models.StudentQuranSchoolEnrollment.objects.filter(quran_path=quranpath_id)
+        
+
+ 
+
+
+# #-
+class EnrollmentStuentChapterInQuranList(generics.ListAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    # pagination_class = StandardResultSetPagination
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = ""
+        if 'chapterinquran_id' in self.kwargs:
+            chapterinquran_id = self.kwargs['chapterinquran_id']
+            # course = models.Course.objects.get(pk=chapterinquran_id)
+            return models.StudentQuranSchoolEnrollment.objects.filter(chapter_in_quran=chapterinquran_id)
         
 
 # class EnrolledAllStuentList(generics.ListCreateAPIView):
@@ -5262,20 +5345,22 @@ class StudentQuranSchoolEnrollmentSearchList(generics.ListCreateAPIView):
 #             return models.StudentCourseEnrollment.objects.filter(course__teacher=teacher).distinct()
        
 
-# class EnrolledStuentPkList(generics.ListCreateAPIView):
-#     queryset = models.StudentCourseEnrollment.objects.all()
-#     serializer_class = serializers.StudentCourseEnrollSerializer
-#     pagination_class = StandardResultSetPagination
-#     permission_classes = [AllowAny]
-#     # permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         qs = ""
-#         if 'student_id' in self.kwargs:
-#             student_id = self.kwargs['student_id']
-#             student = models.User.objects.get(pk=student_id)
-#             return models.StudentCourseEnrollment.objects.filter(student=student).distinct()
+class EnrollmentQuranSchoolStuentPkList(generics.ListCreateAPIView):
+    queryset = models.StudentQuranSchoolEnrollment.objects.all()
+    serializer_class = serializers.StudentQuranSchoolEnrollmentSerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = ""
+        if 'student_id' in self.kwargs:
+            student_id = self.kwargs['student_id']
+            student = models.User.objects.get(pk=student_id)
+            return models.StudentQuranSchoolEnrollment.objects.filter(student=student).distinct()
         
+
 
 # class EnrolledRecomemdedStuentList(generics.ListCreateAPIView):
 #     queryset = models.StudentCourseEnrollment.objects.all()
@@ -5476,7 +5561,29 @@ class AdminDashboardStatsView(generics.GenericAPIView):
         famoussayings_count = models.FamousSayings.objects.count()
 
         # 
-        coupons_course_count = models.CouponCourse.objects.count()
+        famoussayings_count = models.FamousSayings.objects.count()
+
+        # 
+        interview_dates_count = models.InterviewDate.objects.count()
+        quran_paths_count = models.QuranPath.objects.count()
+        class_rooms_count = models.ClassRoom.objects.count()
+        review_levels_count = models.ReviewLevel.objects.count()
+        chapter_in_qurans_count = models.ChapterInQuran.objects.count()
+
+        # 
+        quran_circles_count = models.QuranCircle.objects.count()
+        live_quran_circles_count = models.LiveQuranCircle.objects.count()
+        quran_exams_count = models.QuranExam.objects.count()
+        presence_and_absences_count = models.PresenceAndAbsence.objects.count()
+        file_and_librarys_count = models.FileAndLibrary.objects.count()
+        teacher_notes_count = models.TeacherNote.objects.count()
+        certificate_qurans_count = models.CertificateQuran.objects.count()
+
+        # 
+        total_enrolled_quran_school_count = models.StudentQuranSchoolEnrollment.objects.count()
+        
+        # 
+        coupons_course_count = models.CouponCourse.objects.filter(is_visible=True).count()
         
         # 
         total_enrolled_students = models.StudentCourseEnrollment.objects.count()
@@ -5527,8 +5634,25 @@ class AdminDashboardStatsView(generics.GenericAPIView):
   
             # 
             admin_famoussayings_count = models.FamousSayings.objects.filter(user=user_id).count()
+  
+            # 
+            admin_interview_dates_count = models.InterviewDate.objects.filter(user=user_id).count()
+            admin_quran_paths_count = models.QuranPath.objects.filter(user=user_id).count()
+            admin_class_rooms_count = models.ClassRoom.objects.filter(user=user_id).count()
+            admin_review_levels_count = models.ReviewLevel.objects.filter(user=user_id).count()
+            admin_chapter_in_qurans_count = models.ChapterInQuran.objects.filter(user=user_id).count()
 
             # 
+            admin_quran_circles_count = models.QuranCircle.objects.filter(user=user_id).count()
+            admin_live_quran_circles_count = models.LiveQuranCircle.objects.filter(user=user_id).count()
+            admin_quran_exams_count = models.QuranExam.objects.filter(user=user_id).count()
+            admin_presence_and_absences_count = models.PresenceAndAbsence.objects.filter(user=user_id).count()
+            admin_file_and_librarys_count = models.FileAndLibrary.objects.filter(user=user_id).count()
+            admin_teacher_notes_count = models.TeacherNote.objects.filter(user=user_id).count()
+            admin_certificate_qurans_count = models.CertificateQuran.objects.filter(user=user_id).count()
+
+            # 
+            coupon_course_count = models.CouponCourse.objects.filter(user=user_id).count()
             admin_coupon_course_count = models.CouponCourse.objects.filter(user=user_id).count()
             
             # 
@@ -5562,6 +5686,22 @@ class AdminDashboardStatsView(generics.GenericAPIView):
 
             # 
             admin_famoussayings_count = 0
+
+            # 
+            admin_interview_dates_count = 0
+            admin_quran_paths_count = 0
+            admin_class_rooms_count = 0
+            admin_review_levels_count = 0
+            admin_chapter_in_qurans_count = 0
+
+            # 
+            admin_quran_circles_count = 0
+            admin_live_quran_circles_count = 0
+            admin_quran_exams_count = 0
+            admin_presence_and_absences_count = 0
+            admin_file_and_librarys_count = 0
+            admin_teacher_notes_count = 0
+            admin_certificate_qurans_count = 0 
             
             # 
             admin_coupon_course_count = 0
@@ -5632,9 +5772,41 @@ class AdminDashboardStatsView(generics.GenericAPIView):
             # 
             'famoussayings_count': famoussayings_count,
             'admin_famoussayings_count': admin_famoussayings_count,
+
+            # 
+            'admin_famoussayings_count': admin_famoussayings_count,
             
             # 
-            'coupons_course_count': coupons_course_count,
+            'interview_dates_count': interview_dates_count,
+            'quran_paths_count': quran_paths_count,
+            'class_rooms_count': class_rooms_count,
+            'review_levels_count': review_levels_count,
+            'chapter_in_qurans_count': chapter_in_qurans_count,
+
+            # 
+            'quran_circles_count': quran_circles_count,
+            'live_quran_circles_count': live_quran_circles_count,
+            'quran_exams_count': quran_exams_count,
+            'presence_and_absences_count': presence_and_absences_count,
+            'file_and_librarys_count': file_and_librarys_count,
+            'teacher_notes_count': teacher_notes_count,
+            'certificate_qurans_count': certificate_qurans_count,
+
+            # 
+            'admin_interview_dates_count': admin_interview_dates_count,
+            'admin_quran_paths_count': admin_quran_paths_count,
+            'admin_class_rooms_count': admin_class_rooms_count,
+            'admin_review_levels_count': admin_review_levels_count,
+            'admin_chapter_in_qurans_count': admin_chapter_in_qurans_count,
+
+            # 
+            'admin_quran_circles_count': admin_quran_circles_count,
+            'admin_live_quran_circles_count': admin_live_quran_circles_count,
+            'admin_quran_exams_count': admin_quran_exams_count,
+            'admin_presence_and_absences_count': admin_presence_and_absences_count,
+            'admin_file_and_librarys_count': admin_file_and_librarys_count,
+            'admin_teacher_notes_count': admin_teacher_notes_count,
+            'admin_certificate_qurans_count': admin_certificate_qurans_count, 
 
             # 
             'total_enrolled_students': total_enrolled_students,
@@ -5709,9 +5881,12 @@ class StudentDashboardStatsView(generics.GenericAPIView):
             # 
             student_courses_enrollment_count = models.StudentCourseEnrollment.objects.filter(student=user_id).count()
             student_favorite_course_count = models.StudentFavoriteCourse.objects.filter(student=user_id).count()
-
+            
             # 
             student_packages_course_count = models.PackageCourse.objects.filter(user=user_id).count()
+
+            # 
+            student_quran_schools_enrollment_count = models.StudentQuranSchoolEnrollment.objects.filter(student=user_id).count() 
 
             # 
             student_proofreadingservices_count = models.ProofreadingService.objects.filter(user=user_id).count()
@@ -5733,6 +5908,9 @@ class StudentDashboardStatsView(generics.GenericAPIView):
             student_packages_course_count = 0
 
             # 
+            student_quran_schools_enrollment_count = 0
+
+            # 
             student_proofreadingservices_count = 0
             student_proofreadingservices_replay_count = 0
 
@@ -5751,6 +5929,9 @@ class StudentDashboardStatsView(generics.GenericAPIView):
 
             # 
             "student_packages_course_count": student_packages_course_count,
+
+            # 
+            "student_quran_schools_enrollment_count": student_quran_schools_enrollment_count,
 
             # 
             "student_proofreadingservices_count": student_proofreadingservices_count,

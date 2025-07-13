@@ -181,10 +181,20 @@ class SuperuserProfile(models.Model):
         return f"{self.id}): ({self.user.email})"
 
     def save(self, *args, **kwargs):
+
+        # # 
+        # if self.pk:
+        #     old_instance = SuperuserProfile.objects.get(pk=self.pk)
+        #     if old_instance.image and old_instance.image != self.image:
+        #         default_storage.delete(old_instance.image.path)
+
+        # التحقق مما إذا كان هذا تحديثًا لملف موجود (وليس إنشاءً جديدًا)
         if self.pk:
             old_instance = SuperuserProfile.objects.get(pk=self.pk)
+            # التحقق مما إذا كانت هناك صورة قديمة وليست الصورة الافتراضية
             if old_instance.image and old_instance.image != self.image:
-                default_storage.delete(old_instance.image.path)
+                if old_instance.image.name != "user/default-user.png":
+                    default_storage.delete(old_instance.image.path)
 
         super(SuperuserProfile, self).save(*args, **kwargs)
 
@@ -323,10 +333,14 @@ class AdminProfile(models.Model):
         return f"{self.id}): ({self.user.email})"
 
     def save(self, *args, **kwargs):
+
+        # التحقق مما إذا كان هذا تحديثًا لملف موجود (وليس إنشاءً جديدًا)
         if self.pk:
             old_instance = AdminProfile.objects.get(pk=self.pk)
+            # التحقق مما إذا كانت هناك صورة قديمة وليست الصورة الافتراضية
             if old_instance.image and old_instance.image != self.image:
-                default_storage.delete(old_instance.image.path)
+                if old_instance.image.name != "user/default-user.png":
+                    default_storage.delete(old_instance.image.path)
 
         super(AdminProfile, self).save(*args, **kwargs)
 
@@ -452,10 +466,13 @@ class TeacherProfile(models.Model):
 
 
     def save(self, *args, **kwargs):
+        # التحقق مما إذا كان هذا تحديثًا لملف موجود (وليس إنشاءً جديدًا)
         if self.pk:
             old_instance = TeacherProfile.objects.get(pk=self.pk)
+            # التحقق مما إذا كانت هناك صورة قديمة وليست الصورة الافتراضية
             if old_instance.image and old_instance.image != self.image:
-                default_storage.delete(old_instance.image.path)
+                if old_instance.image.name != "user/default-user.png":
+                    default_storage.delete(old_instance.image.path)
 
         super(TeacherProfile, self).save(*args, **kwargs)
 
@@ -602,10 +619,13 @@ class StaffProfile(models.Model):
         return f"{self.id}): ({self.phone_number})"
 
     def save(self, *args, **kwargs):
+        # التحقق مما إذا كان هذا تحديثًا لملف موجود (وليس إنشاءً جديدًا)
         if self.pk:
             old_instance = StaffProfile.objects.get(pk=self.pk)
+            # التحقق مما إذا كانت هناك صورة قديمة وليست الصورة الافتراضية
             if old_instance.image and old_instance.image != self.image:
-                default_storage.delete(old_instance.image.path)
+                if old_instance.image.name != "user/default-user.png":
+                    default_storage.delete(old_instance.image.path)
 
         super(StaffProfile, self).save(*args, **kwargs)
 
@@ -701,10 +721,13 @@ class StudentProfile(models.Model):
         return f"{self.id}): [{self.user}]"
 
     def save(self, *args, **kwargs):
+        # التحقق مما إذا كان هذا تحديثًا لملف موجود (وليس إنشاءً جديدًا)
         if self.pk:
-            old_instance = StudentProfile.objects.get(pk=self.pk)
+            old_instance = StaffProfile.objects.get(pk=self.pk)
+            # التحقق مما إذا كانت هناك صورة قديمة وليست الصورة الافتراضية
             if old_instance.image and old_instance.image != self.image:
-                default_storage.delete(old_instance.image.path)
+                if old_instance.image.name != "user/default-user.png":
+                    default_storage.delete(old_instance.image.path)
                 
         super(StudentProfile, self).save(*args, **kwargs)
 
