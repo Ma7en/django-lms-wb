@@ -281,10 +281,10 @@ XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 # EMAIL_HOST = "smtp.gmail.com"
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER, "m9ee9m@gmail.com")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-# FROM_EMAIL = os.getenv("FROM_EMAIL", "m9ee9m@gmail.com")
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_HOST_USER = "m9ee9m@gmail.com"
+# EMAIL_HOST_PASSWORD = "adlbfmpzzkndnfpz"
+# FROM_EMAIL = "m9ee9m@gmail.com"
+# DEFAULT_FROM_EMAIL = "m9ee9m@gmail.com"
 
 
 # =====================================================================================
@@ -301,9 +301,9 @@ EMAIL_HOST_USER = "no-reply@localhost"
 
 # =====================================================================================
 # Payment
-HYPERPAY_BASE_URL = os.environ.get('HYPERPAY_BASE_URL', 'https://eu-test.oppwa.com')
-HYPERPAY_ENTITY_ID = os.getenv("HYPERPAY_ENTITY_ID")
-HYPERPAY_TOKEN = os.getenv("HYPERPAY_TOKEN")
+# HYPERPAY_BASE_URL = os.environ.get('HYPERPAY_BASE_URL', 'https://eu-test.oppwa.com')
+# HYPERPAY_ENTITY_ID = os.getenv("HYPERPAY_ENTITY_ID")
+# HYPERPAY_TOKEN = os.getenv("HYPERPAY_TOKEN")
 
 
 # =====================================================================================
