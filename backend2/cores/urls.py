@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
 
+from .views import create_payment_link, fawaterk_webhook
 
 
 #
@@ -2446,7 +2447,8 @@ urlpatterns = [
     ),
     # =================================================================
 
- 
+    path('create-payment/', create_payment_link),
+    path('fawaterk-webhook/', fawaterk_webhook),
 
 
 ]

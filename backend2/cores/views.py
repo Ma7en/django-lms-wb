@@ -3,7 +3,8 @@ import random
 import requests
 import uuid
 
-
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 # 
 from django.shortcuts import render
@@ -16,9 +17,17 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django_filters.rest_framework import DjangoFilterBackend
+
+
 from django.db.models import F
 
-
+#for pymentgatway
+import requests
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+from .models import Course, StudentCourseEnrollment ,Powerpoint, StudentPowerpointEnrollment
 
 # 
 from reportlab.lib.pagesizes import letter
@@ -53,8 +62,9 @@ from rest_framework.permissions import (
 
 
 # 
-from accounts.serializers import *
-# from backend2.accounts.serializers import *
+
+
+#from backend2.accounts.serializers import *
 
 
 
@@ -70,6 +80,123 @@ from . import serializers
 # Create your views here.
 
 
+#pymentgaway viwes
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def create_payment_link(request):
+    try:
+        user = request.user
+        product_type = request.data.get("type")  # "course" or "powerpoint"
+        product_id = request.data.get("id")
+
+        # تحديد المنتج
+        if product_type == "course":
+            product = Course.objects.filter(id=product_id).first()
+        elif product_type == "powerpoint":
+            product = Powerpoint.objects.filter(id=product_id).first()
+        else:
+            return Response({"error": "Invalid product type"}, status=400)
+
+        if not product:
+            return Response({"error": "Product not found"}, status=404)
+
+        # إنشاء الطلب لفواتيرك
+        payload = json.dumps({
+            "cartTotal": str(product.price_after_discount()),
+            "currency": "EGP",
+            "customer": {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "phone": "0123456789",  # ضع رقم حقيقي لو متاح
+                "address": "Test Address"
+            },
+            "redirectionUrls": {
+                "successUrl": "https://alfateh1.vercel.app/",
+                "failUrl": "http://localhost:5174/",
+                "pendingUrl": "https://alfateh1.vercel.app/"
+            },
+            "cartItems": [
+                {
+                    "name": f"{product_type}:{product.title}",
+                    "price": str(product.price_after_discount()),
+                    "quantity": "1"
+                }
+            ]
+        })
+
+        headers = {
+            'Authorization': 'Bearer fa9bf5a1cfa4c4febfb960281f2e9249bb8bfc1d7c293817af',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.post(
+            "https://app.fawaterk.com/api/v2/createInvoiceLink",
+            headers=headers,
+            data=payload
+        )
+
+        return Response(response.json())
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+
+@csrf_exempt
+def fawaterk_webhook(request):
+    try:
+        data = json.loads(request.body)
+        invoice_id = data.get("invoice_id")
+        status = data.get("status")
+
+        if status == "PAID":
+            email = data.get("customer", {}).get("email")
+            product_name = data.get("products")[0].get("name")
+
+            if not email or not product_name:
+                return JsonResponse({"error": "Missing email or product name"}, status=400)
+
+            # Format: "course:Title" or "powerpoint:Title"
+            product_type, title = product_name.split(":", 1)
+
+            User = get_user_model()
+            user = User.objects.filter(email=email).first()
+            if not user:
+                return JsonResponse({"error": "User not found"}, status=404)
+
+            if product_type == "course":
+                course = Course.objects.filter(title=title.strip()).first()
+                if course:
+                    StudentCourseEnrollment.objects.get_or_create(
+                        student=user,
+                        course=course,
+                        defaults={
+                            "price": course.price_after_discount(),
+                            "payment_id": invoice_id
+                        }
+                    )
+                    return JsonResponse({"message": "Course payment recorded"})
+
+            elif product_type == "powerpoint":
+                ppt = Powerpoint.objects.filter(title=title.strip()).first()
+                if ppt:
+                    StudentPowerpointEnrollment.objects.get_or_create(
+                        student=user,
+                        powerpoint=ppt,
+                        defaults={
+                            "price": ppt.price_after_discount(),
+                            "payment_id": invoice_id
+                        }
+                    )
+                    return JsonResponse({"message": "Powerpoint payment recorded"})
+
+            return JsonResponse({"error": "No matching product found"}, status=404)
+
+        return JsonResponse({"message": "Status not PAID"})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 # ******************************************************************************
 # ==============================================================================
@@ -110,7 +237,7 @@ class CategorySectionListApp(generics.ListAPIView):
     # pagination_class = StandardResultSetPagination
     permission_classes = [AllowAny]
 
-        
+
 
 class CategorySectionResultList(generics.ListCreateAPIView):
     queryset = models.CategorySection.objects.all()
@@ -145,7 +272,7 @@ class CategorySectionSearchList(generics.ListCreateAPIView):
         qs = super().get_queryset()
 
         if 'searchstring' in self.kwargs:
-            search = self.kwargs['searchstring'] 
+            search = self.kwargs['searchstring']
             qs = qs.filter(
                 Q(title__icontains=search)
                 |Q(description__icontains=search)
@@ -179,7 +306,7 @@ class SectionCourseListAdmin(generics.ListCreateAPIView):
     serializer_class = serializers.SectionCourseSerializer
     permission_classes = [IsAuthenticated]
 
-        
+
 
 class SectionCourseResultList(generics.ListCreateAPIView):
     queryset = models.SectionCourse.objects.all()
